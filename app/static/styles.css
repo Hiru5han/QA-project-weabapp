@@ -1,0 +1,39 @@
+body {
+  font-family: "Arial", sans-serif;
+}
+
+.container {
+  margin-top: 50px;
+}
+/* header */
+h2 {
+  color: #333;
+}
+
+.table th,
+.table td {
+  vertical-align: middle;
+}
+/* ticket header */
+.table th {
+  background-color: #f8f9fa;
+}
+/* hover on ticket */
+.table-hover tbody tr:hover {
+  background-color: #f1f1f1;
+}
+
+.btn-primary,
+.btn-secondary {
+  margin-right: 10px;
+}
+/* botton text */
+.btn-info {
+  color: #fff;
+}
+
+.btn-info:hover {
+  color: #fff;
+  background-color: #117a8b;
+  border-color: #117a8b;
+}
