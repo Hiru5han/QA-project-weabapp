@@ -1,39 +1,90 @@
 body {
-  font-family: "Arial", sans-serif;
+  font-family: "Roboto", sans-serif;
+  background-color: #f8f9fa;
 }
 
 .container {
   margin-top: 50px;
 }
-/* header */
+
 h2 {
-  color: #333;
+  color: #007bff; /* Primary Color */
 }
 
 .table th,
 .table td {
   vertical-align: middle;
 }
-/* ticket header */
+
 .table th {
-  background-color: #f8f9fa;
+  background-color: #e9ecef;
 }
-/* hover on ticket */
+
 .table-hover tbody tr:hover {
   background-color: #f1f1f1;
 }
 
-.btn-primary,
-.btn-secondary {
-  margin-right: 10px;
-}
-/* botton text */
-.btn-info {
-  color: #fff;
+.card {
+  border: none;
+  margin-top: 20px;
 }
 
-.btn-info:hover {
-  color: #fff;
-  background-color: #117a8b;
-  border-color: #117a8b;
+.card-header {
+  background-color: #007bff; /* Primary Color */
+  color: #ffffff;
+  font-size: 1.25rem;
+  font-weight: 500;
+}
+
+.btn-primary,
+.btn-secondary,
+.btn-success,
+.btn-warning {
+  margin-right: 10px;
+}
+
+.btn-outline-primary {
+  border-color: #007bff; /* Primary Color */
+  color: #007bff;
+}
+
+.btn-outline-primary:hover {
+  background-color: #007bff;
+  color: #ffffff;
+}
+
+.badge {
+  font-size: 0.875em;
+}
+
+.text-primary {
+  color: #007bff !important; /* Primary Color */
+}
+
+.badge-role-support {
+  background-color: #003090; /* Secondary Color for support role */
+  color: white;
+}
+
+.badge-role-admin {
+  background-color: #900000; /* Primary Color for admin role */
+  color: white;
+}
+
+.badge-role-user {
+  background-color: #00902e; /* Accent Color for user role */
+  color: white;
+}
+
+.list-unstyled {
+  margin-top: 20px;
+}
+
+.list-unstyled li {
+  border-bottom: 1px solid #e9ecef;
+  padding: 10px 0;
+}
+
+.list-unstyled li:last-child {
+  border-bottom: none;
 }
