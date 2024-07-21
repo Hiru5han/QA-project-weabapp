@@ -99,19 +99,3 @@ helpdesk-ticketing-system/
 ## Configuration
 
 Configuration is managed through the `config.py` file in the `app/` directory. Ensure to update the database URI and other configurations as per your environment.
-
-## Contributing
-
-Contributions are welcome! Please fork the repository and create a pull request with your changes.
-
-## License
-
-This project is licensed under the MIT License.
-
-## Contact
-
-For any queries, please contact [yourname@example.com].
-
----
-
-This README provides a clear guide on how to set up, run, and use the application, ensuring that anyone can get started with your Help Desk Ticketing System easily. Adjust the placeholder values like the repository URL, email, and other specifics as needed.
