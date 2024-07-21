@@ -1,0 +1,28 @@
+{% extends "base.html" %} {% block content %}
+<h2>Ticket Details</h2>
+<p><strong>Title:</strong> {{ ticket.title }}</p>
+<p><strong>Description:</strong> {{ ticket.description }}</p>
+<p><strong>Status:</strong> {{ ticket.status }}</p>
+<p><strong>Priority:</strong> {{ ticket.priority }}</p>
+
+<h3>Comments</h3>
+<form method="POST">
+  <div class="form-group">
+    <label for="comment_text">Add a comment</label>
+    <textarea
+      class="form-control"
+      id="comment_text"
+      name="comment_text"
+      rows="3"
+      required
+    ></textarea>
+  </div>
+  <button type="submit" class="btn btn-primary">Add Comment</button>
+</form>
+
+<ul>
+  {% for comment in ticket.ticket_comments %}
+  <li><strong>{{ comment.user.name }}:</strong> {{ comment.comment_text }}</li>
+  {% endfor %}
+</ul>
+{% endblock %}

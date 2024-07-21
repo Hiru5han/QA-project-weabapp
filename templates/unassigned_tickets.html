@@ -1,0 +1,41 @@
+{% extends "base.html" %} {% block content %}
+<h2>Unassigned Tickets</h2>
+<table class="table">
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Description</th>
+      <th>Priority</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for ticket in unassigned_tickets %}
+    <tr>
+      <td>{{ ticket.title }}</td>
+      <td>{{ ticket.description }}</td>
+      <td>{{ ticket.priority }}</td>
+      <td>
+        <form method="POST" style="display: inline">
+          <input type="hidden" name="ticket_id" value="{{ ticket.id }}" />
+          {% if current_user.role == 'support' %}
+          <button type="submit" class="btn btn-primary">Assign to Me</button>
+          {% elif current_user.role == 'admin' %}
+          <select
+            name="assigned_to"
+            class="form-control"
+            style="display: inline; width: auto"
+          >
+            {% for staff in support_staff %}
+            <option value="{{ staff.id }}">{{ staff.name }}</option>
+            {% endfor %}
+          </select>
+          <button type="submit" class="btn btn-primary">Assign</button>
+          {% endif %}
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
