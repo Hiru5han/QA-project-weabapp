@@ -1,28 +1,48 @@
-{% extends "base.html" %} {% block content %}
+{% extends "base.html" %}
+
+{% block content %}
 <h2>Ticket Details</h2>
 <p><strong>Title:</strong> {{ ticket.title }}</p>
 <p><strong>Description:</strong> {{ ticket.description }}</p>
 <p><strong>Status:</strong> {{ ticket.status }}</p>
 <p><strong>Priority:</strong> {{ ticket.priority }}</p>
 
+{% if current_user.role == 'support' or current_user.role == 'admin' %}
+<form method="POST">
+    <div class="form-group">
+        <label for="status">Change Status</label>
+        <select class="form-control" id="status" name="status">
+            <option value="open" {% if ticket.status == 'open' %}selected{% endif %}>Open</option>
+            <option value="in-progress" {% if ticket.status == 'in-progress' %}selected{% endif %}>In Progress</option>
+            <option value="closed" {% if ticket.status == 'closed' %}selected{% endif %}>Closed</option>
+        </select>
+    </div>
+    {% if current_user.role == 'admin' %}
+    <div class="form-group">
+        <label for="priority">Change Priority</label>
+        <select class="form-control" id="priority" name="priority">
+            <option value="low" {% if ticket.priority == 'low' %}selected{% endif %}>Low</option>
+            <option value="medium" {% if ticket.priority == 'medium' %}selected{% endif %}>Medium</option>
+            <option value="high" {% if ticket.priority == 'high' %}selected{% endif %}>High</option>
+        </select>
+    </div>
+    {% endif %}
+    <button type="submit" class="btn btn-primary">Update Ticket</button>
+</form>
+{% endif %}
+
 <h3>Comments</h3>
 <form method="POST">
-  <div class="form-group">
-    <label for="comment_text">Add a comment</label>
-    <textarea
-      class="form-control"
-      id="comment_text"
-      name="comment_text"
-      rows="3"
-      required
-    ></textarea>
-  </div>
-  <button type="submit" class="btn btn-primary">Add Comment</button>
+    <div class="form-group">
+        <label for="comment_text">Add a comment</label>
+        <textarea class="form-control" id="comment_text" name="comment_text" rows="3" required></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Add Comment</button>
 </form>
 
 <ul>
-  {% for comment in ticket.ticket_comments %}
-  <li><strong>{{ comment.user.name }}:</strong> {{ comment.comment_text }}</li>
-  {% endfor %}
+    {% for comment in comments %}
+        <li><strong>{{ comment.user.name }}:</strong> {{ comment.comment_text }} <em>on {{ comment.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</em></li>
+    {% endfor %}
 </ul>
 {% endblock %}

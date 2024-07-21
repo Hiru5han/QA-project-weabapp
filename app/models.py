@@ -38,7 +38,8 @@ class Comment(db.Model):
     ticket_id = db.Column(db.Integer, db.ForeignKey('ticket.id'))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     comment_text = db.Column(db.Text, nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    created_at = db.Column(
+        db.DateTime, default=datetime.utcnow)  # Add timestamp
 
     ticket = db.relationship('Ticket', backref='ticket_comments')
     user = db.relationship('User', backref='user_comments')
