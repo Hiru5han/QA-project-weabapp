@@ -53,11 +53,9 @@
             <td>{{ ticket.title }}</td>
             <td>{{ ticket.description }}</td>
             <td>
-              <span
-                class="badge {% if ticket.priority == 'high' %}bg-danger{% elif ticket.priority == 'medium' %}bg-warning{% else %}bg-info{% endif %}"
+              <span class="badge badge-priority-{{ ticket.priority }}"
+                >{{ ticket.priority }}</span
               >
-                {{ ticket.priority }}
-              </span>
             </td>
             <td>{{ ticket.status }}</td>
             <td>

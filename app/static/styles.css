@@ -76,6 +76,21 @@ h2 {
   color: white;
 }
 
+.badge-priority-low {
+  background-color: #17a2b8; /* Info Color for low priority */
+  color: rgb(0, 0, 0);
+}
+
+.badge-priority-medium {
+  background-color: #ffc107; /* Warning Color for medium priority */
+  color: rgb(0, 0, 0);
+}
+
+.badge-priority-high {
+  background-color: #dc3545; /* Danger Color for high priority */
+  color: white;
+}
+
 .list-unstyled {
   margin-top: 20px;
 }
