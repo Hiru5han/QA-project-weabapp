@@ -17,22 +17,31 @@
       href="{{ url_for('static', filename='styles.css') }}"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
 
     <title>Help Desk</title>
   </head>
   <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg">
       <a class="navbar-brand" href="#">Help Desk</a>
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ml-auto">
           <li class="nav-item">
-            <a class="nav-link" href="{{ url_for('main.dashboard') }}"
+            <a
+              class="nav-link {% if request.endpoint == 'main.dashboard' %}active{% endif %}"
+              href="{{ url_for('main.dashboard') }}"
               >Dashboard</a
             >
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="{{ url_for('main.logout') }}">Logout</a>
+            <a
+              class="nav-link {% if request.endpoint == 'main.logout' %}active{% endif %}"
+              href="{{ url_for('main.logout') }}"
+              >Logout</a
+            >
           </li>
         </ul>
       </div>
@@ -43,4 +52,6 @@
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  </body>
+</html>
