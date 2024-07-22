@@ -77,13 +77,13 @@ h2 {
 }
 
 .badge-priority-low {
-  background-color: #17a2b8; /* Info Color for low priority */
-  color: white;
+  background-color: #00f1e5; /* Info Color for low priority */
+  color: rgb(0, 0, 0);
 }
 
 .badge-priority-medium {
   background-color: #ffc107; /* Warning Color for medium priority */
-  color: white;
+  color: rgb(0, 0, 0);
 }
 
 .badge-priority-high {
@@ -106,7 +106,7 @@ h2 {
 
 /* Navbar Customization */
 .navbar {
-  background-color: #343a40; /* Custom background color */
+  background-color: #000000; /* Custom background color */
 }
 
 .navbar .navbar-brand,
@@ -119,7 +119,7 @@ h2 {
 }
 
 .navbar .nav-link.active {
-  color: #007bff; /* Active link color */
-  background-color: #495057; /* Active link background color */
+  color: #000000; /* Active link color */
+  background-color: #ffffff; /* Active link background color */
   border-radius: 5px; /* Optional: rounded corners */
 }
