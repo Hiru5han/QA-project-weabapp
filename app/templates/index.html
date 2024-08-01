@@ -1,20 +1,33 @@
-{% extends "base.html" %} {% block content %}
+{% extends "base.html" %}
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+
 <div class="jumbotron">
-  <h1 class="display-4">Help Desk Ticketing System</h1>
-  <p class="lead">A simple and efficient way to manage IT support requests.</p>
+  <div class="d-flex justify-content-center">
+    <h1 class="display-4">Help Desk Ticketing System</h1>
+  </div>
+  <div class="d-flex justify-content-center">
+    <p class="lead">
+      A simple and efficient way to manage IT support requests.
+    </p>
+  </div>
   <hr class="my-4" />
-  <p>Login or register to get started.</p>
-  <a
-    class="btn btn-primary btn-lg"
-    href="{{ url_for('main.login') }}"
-    role="button"
-    >Login</a
-  >
-  <a
-    class="btn btn-secondary btn-lg"
-    href="{{ url_for('main.register') }}"
-    role="button"
-    >Register</a
-  >
+  <div class="d-flex justify-content-center">
+    <p>Login or register to get started.</p>
+  </div>
+  <div class="d-flex justify-content-center">
+    <a
+      class="btn btn-primary btn-lg mx-2"
+      href="{{ url_for('main.login') }}"
+      role="button"
+      >Login</a
+    >
+    <a
+      class="btn btn-secondary btn-lg mx-2"
+      href="{{ url_for('main.register') }}"
+      role="button"
+      >Register</a
+    >
+  </div>
 </div>
 {% endblock %}

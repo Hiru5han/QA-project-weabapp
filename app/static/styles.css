@@ -1,14 +1,17 @@
 body {
   font-family: "Roboto", sans-serif;
   background-color: #f8f9fa;
+  margin: 0;
+  color: #343a40; /* Text Colour */
 }
 
+/* General Styles */
 .container {
   margin-top: 50px;
 }
 
 h2 {
-  color: #007bff; /* Primary Color */
+  color: #007bff; /* Primary Colour */
 }
 
 .table th,
@@ -27,13 +30,15 @@ h2 {
 .card {
   border: none;
   margin-top: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .card-header {
-  background-color: #007bff; /* Primary Color */
+  background-color: #007bff; /* Primary Colour */
   color: #ffffff;
   font-size: 1.25rem;
   font-weight: 500;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .btn-primary,
@@ -43,8 +48,28 @@ h2 {
   margin-right: 10px;
 }
 
+.btn-primary {
+  background-color: #007bff;
+  border-color: #007bff;
+}
+
+.btn-secondary {
+  background-color: #6c757d;
+  border-color: #6c757d;
+}
+
+.btn-success {
+  background-color: #28a745;
+  border-color: #28a745;
+}
+
+.btn-warning {
+  background-color: #ffc107;
+  border-color: #ffc107;
+}
+
 .btn-outline-primary {
-  border-color: #007bff; /* Primary Color */
+  border-color: #007bff; /* Primary Colour */
   color: #007bff;
 }
 
@@ -54,41 +79,45 @@ h2 {
 }
 
 .badge {
-  font-size: 0.875em;
+  font-size: 1.2em;
 }
 
 .text-primary {
-  color: #007bff !important; /* Primary Color */
+  color: #007bff !important; /* Primary Colour */
+  font-size: 2.2em;
 }
 
 .badge-role-support {
-  background-color: #003090; /* Secondary Color for support role */
+  background-color: #28a745; /* Secondary Colour for support role */
   color: white;
 }
 
 .badge-role-admin {
-  background-color: #900000; /* Primary Color for admin role */
+  background-color: #dc3545; /* Red for admin role */
   color: white;
 }
 
 .badge-role-user {
-  background-color: #00902e; /* Accent Color for user role */
+  background-color: #17a2b8; /* Teal for user role */
   color: white;
 }
 
 .badge-priority-low {
-  background-color: #00f1e5; /* Info Color for low priority */
+  background-color: #28a745; /* Info Colour for low priority */
   color: rgb(0, 0, 0);
+  display: block;
 }
 
 .badge-priority-medium {
-  background-color: #ffc107; /* Warning Color for medium priority */
+  background-color: #ffc107; /* Warning Colour for medium priority */
   color: rgb(0, 0, 0);
+  display: block;
 }
 
 .badge-priority-high {
-  background-color: #dc3545; /* Danger Color for high priority */
+  background-color: #dc3545; /* Danger Colour for high priority */
   color: white;
+  display: block;
 }
 
 .list-unstyled {
@@ -104,22 +133,133 @@ h2 {
   border-bottom: none;
 }
 
-/* Navbar Customization */
+/* Navbar Customisation */
 .navbar {
-  background-color: #000000; /* Custom background color */
+  background-color: #0056b3; /* Navbar Colour */
 }
 
 .navbar .navbar-brand,
 .navbar .nav-link {
-  color: #ffffff; /* Custom text color */
+  color: #ffffff; /* Custom text colour */
 }
 
 .navbar .nav-link:hover {
-  color: #f8f9fa; /* Hover text color */
+  color: #f8f9fa; /* Hover text colour */
 }
 
 .navbar .nav-link.active {
-  color: #000000; /* Active link color */
-  background-color: #ffffff; /* Active link background color */
+  color: #000000; /* Active link colour */
+  background-color: #ffffff; /* Active link background colour */
   border-radius: 5px; /* Optional: rounded corners */
+}
+
+.status-badge {
+  display: inline-block; /* Ensure it remains inline */
+  text-align: center; /* Centre the text */
+  width: auto; /* Adjust width as needed */
+}
+
+.badge-status-open {
+  background-color: #28a745; /* Green for open */
+  color: white;
+}
+
+.badge-status-in-progress {
+  background-color: #ffc107; /* Yellow for in-progress */
+  color: black;
+}
+
+.badge-status-closed {
+  background-color: #dc3545; /* Red for closed */
+  color: white;
+}
+
+/* Login Page Specific Styles */
+.login-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 40vh;
+  margin: 0;
+  margin-top: 50px; /* Same margin as container */
+}
+
+.login-card {
+  background-color: #ffffff;
+  padding: 2rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+}
+
+.login-title {
+  text-align: centre;
+  margin-bottom: 1rem;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.login-page .btn-primary {
+  width: 100%;
+  padding: 0.75rem;
+  font-size: 1rem;
+  border-radius: 0.5rem;
+}
+
+/* Jumbotron Styles */
+.jumbotron {
+  background-color: #ffffff;
+  border-radius: 0.5rem;
+  padding: 2rem;
+  max-width: 600px;
+  margin: 2rem auto;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: centre;
+  margin-top: 50px; /* Same margin as container and login-page */
+}
+
+.jumbotron h1 {
+  font-size: 2.5rem;
+}
+
+.jumbotron p.lead {
+  font-size: 1.25rem;
+}
+
+.jumbotron .btn {
+  font-size: 1rem;
+}
+
+.jumbotron .my-4 {
+  margin-top: 1.5rem !important;
+  margin-bottom: 1.5rem !important;
+}
+
+.d-flex.justify-content-center {
+  display: flex;
+  justify-content: centre;
+  margin-bottom: 1rem;
+}
+
+.flashes {
+  margin-top: 20px;
+}
+.alert {
+  padding: 15px;
+  margin-bottom: 20px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+}
+.alert-warning {
+  color: #856404;
+  background-color: #fff3cd;
+  border-color: #ffeeba;
+}
+.alert-success {
+  color: #155724;
+  background-color: #d4edda;
+  border-color: #c3e6cb;
 }

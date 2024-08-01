@@ -1,67 +1,109 @@
-{% extends "base.html" %}
-
-{% block content %}
+{% extends "base.html" %} {% block content %}
 <div class="container mt-5">
+    <!-- Ticket Header Section -->
+    <div class="row mb-2 align-items-center">
+        <div class="col text-center">
+            <h2 class="text-primary mb-0">Ticket Details</h2>
+            <p class="lead">Sample description</p>
+        </div>
+    </div>
+    <div class="row mb-2 align-items-center">
+        <div class="col-md-4 text-start d-flex justify-content-start align-items-center">
+            <p class="mb-0"><strong>Priority:</strong> 
+                <span class="badge text-white status-badge {% if ticket.priority == 'high' %}bg-danger{% elif ticket.priority == 'medium' %}bg-warning{% else %}bg-info{% endif %}">
+                    {{ ticket.priority }}
+                </span>
+            </p>
+        </div>
+        <div class="col-md-4 text-center">
+            <!-- This column is now empty since the header has been moved -->
+        </div>
+        <div class="col-md-4 text-end d-flex justify-content-end align-items-center">
+            <p class="mb-0"><strong>Status:</strong>
+            <span class="badge status-badge ms-2 {% if ticket.status == 'open' %}bg-success{% elif ticket.status == 'in-progress' %}bg-warning{% else %}bg-secondary{% endif %}">
+                {{ ticket.status }}
+            </span>
+            </p>
+        </div>
+    </div>
+
+    <!-- Ticket Info Section -->
     <div class="row mb-4">
         <div class="col-12">
-            <h2 class="text-primary">Ticket Details</h2>
-        </div>
-    </div>
-    <div class="row mb-2">
-        <div class="col-md-6">
-            <p><strong>Title:</strong> {{ ticket.title }}</p>
-        </div>
-        <div class="col-md-6 text-end">
-            <p><strong>Priority:</strong> <span class="badge {% if ticket.priority == 'high' %}bg-danger{% elif ticket.priority == 'medium' %}bg-warning{% else %}bg-info{% endif %}">{{ ticket.priority }}</span></p>
-        </div>
-    </div>
-    <div class="row mb-2">
-        <div class="col-md-6">
-            <p><strong>Status:</strong> {{ ticket.status }}</p>
-        </div>
-        <div class="col-md-6 text-end">
-            {% if current_user.role == 'support' or current_user.role == 'admin' %}
-            <form method="POST" class="d-inline-block">
-                <div class="form-group d-flex align-items-center">
-                    <label for="status" class="me-2"><strong>Status:</strong></label>
-                    <select class="form-control me-2" id="status" name="status">
-                        <option value="open" {% if ticket.status == 'open' %}selected{% endif %}>Open</option>
-                        <option value="in-progress" {% if ticket.status == 'in-progress' %}selected{% endif %}>In Progress</option>
-                        <option value="closed" {% if ticket.status == 'closed' %}selected{% endif %}>Closed</option>
-                    </select>
-                    <button type="submit" class="btn btn-primary btn-sm">Update</button>
+            <div class="card">
+                <div class="card-body">
+                    <div class="row mb-2">
+                        <div class="col-md-6">
+                            <p><strong>Title:</strong> {{ ticket.title }}</p>
+                        </div>
+                    </div>
+
+                    <!-- Status Update and Delete Section -->
+                    <div class="row mb-2 align-items-center">
+                        <div class="col-md-6 d-flex align-items-center">
+                            {% if current_user.role == 'support' or current_user.role == 'admin' %}
+                            <form method="POST" class="d-flex align-items-center">
+                                <label for="status" class="me-2"><strong>Update Status:</strong></label>
+                                <select class="form-control me-2" id="status" name="status">
+                                    <option value="open" {% if ticket.status == 'open' %}selected{% endif %}>Open</option>
+                                    <option value="in-progress" {% if ticket.status == 'in-progress' %}selected{% endif %}>In Progress</option>
+                                    <option value="closed" {% if ticket.status == 'closed' %}selected{% endif %}>Closed</option>
+                                </select>
+                                <button type="submit" class="btn btn-primary btn-sm">Update</button>
+                            </form>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6 text-end">
+                            {% if current_user.role == 'admin' %}
+                            <form method="POST" action="{{ url_for('main.delete_ticket', ticket_id=ticket.id) }}" class="d-inline-block">
+                                <button type="submit" class="btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i> Delete Ticket</button>
+                            </form>
+                            {% endif %}
+                        </div>
+                    </div>
                 </div>
-            </form>
-            {% endif %}
+            </div>
         </div>
     </div>
+
+    <!-- Description Section -->
     <div class="row mb-4">
         <div class="col-12">
-            <p><strong>Description:</strong> {{ ticket.description }}</p>
+            <div class="card">
+                <div class="card-body">
+                    <p><strong>Description:</strong> {{ ticket.description }}</p>
+                </div>
+            </div>
         </div>
     </div>
-    <div class="row">
+
+    <!-- Comments Section -->
+    <div class="row mb-4">
         <div class="col-12">
-            <h3>Comments</h3>
-            <form method="POST" class="mb-3">
-                <div class="form-group">
-                    <label for="comment_text">Add a comment</label>
-                    <textarea class="form-control" id="comment_text" name="comment_text" rows="3" required></textarea>
+            <div class="card">
+                <div class="card-body">
+                    <h3>Comments</h3>
+                    <form method="POST" class="mb-3">
+                        <div class="form-group">
+                            <label for="comment_text">Add a comment</label>
+                            <textarea class="form-control" id="comment_text" name="comment_text" rows="3" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary mt-2">Add Comment</button>
+                    </form>
+                    <ul class="list-unstyled">
+                        {% for comment in comments %}
+                        <li class="d-flex justify-content-between border-bottom py-2">
+                            <div>
+                                <strong>{{ comment.user.name }}:</strong> {{ comment.comment_text }}
+                            </div>
+                            <div class="text-muted">
+                                <em>{{ comment.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</em>
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
                 </div>
-                <button type="submit" class="btn btn-primary mt-2">Add Comment</button>
-            </form>
-            <ul class="list-unstyled">
-                {% for comment in comments %}
-                <li class="d-flex justify-content-between border-bottom py-2">
-                    <div>
-                        <strong>{{ comment.user.name }}:</strong> {{ comment.comment_text }}
-                    </div>
-                    <div class="text-muted">
-                        <em>{{ comment.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</em>
-                    </div>
-                </li>
-                {% endfor %}
-            </ul>
+            </div>
         </div>
     </div>
 </div>

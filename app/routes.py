@@ -1,5 +1,7 @@
+import re
 from flask import Blueprint, render_template, redirect, url_for, request, flash
 from flask_login import login_user, login_required, logout_user, current_user
+from werkzeug.security import generate_password_hash, check_password_hash
 from .models import User, Ticket, Comment, db
 
 bp = Blueprint("main", __name__)
@@ -7,7 +9,7 @@ bp = Blueprint("main", __name__)
 
 @bp.route("/")
 def index():
-    print("Rendering index page")  # Debug information
+    print("Rendering index page")
     return render_template("index.html")
 
 
@@ -16,21 +18,21 @@ def login():
     if request.method == "POST":
         email = request.form.get("email")
         password = request.form.get("password")
-        print(f"Login attempt with Email: {email}, Password: {password}")  # Debug information
+        print(f"Login attempt with Email: {email}, Password: {password}")
         user = User.query.filter_by(email=email).first()
         if user:
-            print(f"User found: {user.email}")  # Debug information
-            if user.password == password:
-                print(f"Password match for user: {user.email}")  # Debug information
+            print(f"User found: {user.email}")
+            if check_password_hash(user.password, password):
+                print(f"Password match for user: {user.email}")
                 login_user(user)
                 return redirect(url_for("main.dashboard"))
             else:
-                print(f"Password mismatch for user: {user.email}")  # Debug information
+                print(f"Password mismatch for user: {user.email}")
         else:
-            print("No user found with that email")  # Debug information
-        flash("Login failed. Check your email and password.")
+            print("No user found with that email")
+        flash("Login failed. Check your email and password.", "warning")
     else:
-        print("Rendering login page")  # Debug information
+        print("Rendering login page")
     return render_template("login.html")
 
 
@@ -42,37 +44,82 @@ def register():
         password = request.form.get("password")
         role = request.form.get("role")
 
+        # Check if the name contains numbers
+        if any(char.isdigit() for char in name):
+            flash("Name cannot contain numbers.", "warning")
+            return redirect(url_for("main.register"))
+
+        # Check if the name is empty
+        if not name.strip():
+            flash("Name cannot be empty.", "warning")
+            return redirect(url_for("main.register"))
+
+        # Check if the email format is valid
+        email_regex = r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
+        if not re.match(email_regex, email):
+            flash("Invalid email address.", "warning")
+            return redirect(url_for("main.register"))
+
         # Check if the email already exists
         existing_user = User.query.filter_by(email=email).first()
         if existing_user:
-            flash("Email address already in use.")
+            flash("Email address already in use.", "warning")
             return redirect(url_for("main.register"))
 
-        print(f"Registering new user with Name: {name}, Email: {
-              email}, Role: {role}")  # Debug information
-        new_user = User(name=name, email=email, password=password, role=role)
+        # Check if the password meets complexity requirements
+        if len(password) < 8:
+            flash("Password must be at least 8 characters long.", "warning")
+            return redirect(url_for("main.register"))
+        if not any(char.isdigit() for char in password):
+            flash("Password must contain at least one number.", "warning")
+            return redirect(url_for("main.register"))
+        if not any(char.isupper() for char in password):
+            flash("Password must contain at least one uppercase letter.", "warning")
+            return redirect(url_for("main.register"))
+        if not any(char.islower() for char in password):
+            flash("Password must contain at least one lowercase letter.", "warning")
+            return redirect(url_for("main.register"))
+        if not any(char in "!@#$%^&*()_+-=[]{}|;:,.<>?/" for char in password):
+            flash("Password must contain at least one special character.", "warning")
+            return redirect(url_for("main.register"))
+
+        # Check if the role is valid
+        valid_roles = {"admin", "support", "regular"}
+        if role not in valid_roles:
+            flash("Invalid role selected.", "warning")
+            return redirect(url_for("main.register"))
+
+        print(f"Registering new user with Name: {name}, Email: {email}, Role: {role}")
+        new_user = User(
+            name=name,
+            email=email,
+            password=generate_password_hash(password, method="pbkdf2:sha256"),
+            role=role,
+        )
         db.session.add(new_user)
         db.session.commit()
         login_user(new_user)
         return redirect(url_for("main.dashboard"))
     else:
-        print("Rendering register page")  # Debug information
+        print("Rendering register page")
     return render_template("register.html")
 
 
 @bp.route("/dashboard")
 @login_required
 def dashboard():
-    print(f"Loading dashboard for user: {current_user.email}, Role: {current_user.role}")  # Debug information
+    print(
+        f"Loading dashboard for user: {current_user.email}, Role: {current_user.role}"
+    )
     if current_user.role == "admin":
         tickets = Ticket.query.all()
-        print("Admin user: loading all tickets")  # Debug information
+        print("Admin user: loading all tickets")
     elif current_user.role == "support":
         tickets = Ticket.query.filter_by(assigned_to=current_user.id).all()
-        print("Support user: loading assigned tickets")  # Debug information
+        print("Support user: loading assigned tickets")
     else:
         tickets = Ticket.query.filter_by(user_id=current_user.id).all()
-        print("Regular user: loading own tickets")  # Debug information
+        print("Regular user: loading own tickets")
     return render_template("dashboard.html", tickets=tickets)
 
 
@@ -83,7 +130,9 @@ def create_ticket():
         title = request.form.get("title")
         description = request.form.get("description")
         priority = request.form.get("priority")
-        print(f"Creating ticket with Title: {title}, Description: {description}, Priority: {priority}")  # Debug information
+        print(
+            f"Creating ticket with Title: {title}, Description: {description}, Priority: {priority}"
+        )
         new_ticket = Ticket(
             title=title,
             description=description,
@@ -95,47 +144,57 @@ def create_ticket():
         db.session.commit()
         return redirect(url_for("main.dashboard"))
     else:
-        print("Rendering create ticket page")  # Debug information
+        print("Rendering create ticket page")
     return render_template("create_ticket.html")
 
 
-@bp.route('/ticket/<int:ticket_id>', methods=['GET', 'POST'])
+@bp.route("/ticket/<int:ticket_id>", methods=["GET", "POST"])
 @login_required
 def ticket_details(ticket_id):
-    print(f"Loading ticket details for ticket ID: {ticket_id}")  # Debug information
+    print(f"Loading ticket details for ticket ID: {ticket_id}")
     ticket = Ticket.query.get_or_404(ticket_id)
-    if request.method == 'POST':
-        if 'comment_text' in request.form:
-            comment_text = request.form.get('comment_text')
-            print(f"Adding comment to ticket ID: {ticket_id}, Comment: {comment_text}")  # Debug information
-            new_comment = Comment(comment_text=comment_text, ticket_id=ticket.id, user_id=current_user.id)
+    if request.method == "POST":
+        if "comment_text" in request.form:
+            comment_text = request.form.get("comment_text")
+            print(f"Adding comment to ticket ID: {ticket_id}, Comment: {comment_text}")
+            new_comment = Comment(
+                comment_text=comment_text, ticket_id=ticket.id, user_id=current_user.id
+            )
             db.session.add(new_comment)
-        if 'status' in request.form:
-            status = request.form.get('status')
+        if "status" in request.form:
+            status = request.form.get("status")
             if ticket.status != status:
                 ticket.status = status
                 # Add a comment about the status change
                 status_comment_text = f"Status changed to {status}."
-                status_comment = Comment(comment_text=status_comment_text, ticket_id=ticket.id, user_id=current_user.id)
+                status_comment = Comment(
+                    comment_text=status_comment_text,
+                    ticket_id=ticket.id,
+                    user_id=current_user.id,
+                )
                 db.session.add(status_comment)
-        if 'priority' in request.form and current_user.role == 'admin':
-            priority = request.form.get('priority')
+        if "priority" in request.form and current_user.role == "admin":
+            priority = request.form.get("priority")
             if ticket.priority != priority:
                 ticket.priority = priority
                 # Add a comment about the priority change
                 priority_comment_text = f"Priority changed to {priority}."
-                priority_comment = Comment(comment_text=priority_comment_text, ticket_id=ticket.id, user_id=current_user.id)
+                priority_comment = Comment(
+                    comment_text=priority_comment_text,
+                    ticket_id=ticket.id,
+                    user_id=current_user.id,
+                )
                 db.session.add(priority_comment)
         db.session.commit()
-        return redirect(url_for('main.ticket_details', ticket_id=ticket_id))
+        return redirect(url_for("main.ticket_details", ticket_id=ticket_id))
     comments = Comment.query.filter_by(ticket_id=ticket.id).all()
-    return render_template('ticket_details.html', ticket=ticket, comments=comments)
+    return render_template("ticket_details.html", ticket=ticket, comments=comments)
 
 
 @bp.route("/logout")
 @login_required
 def logout():
-    print(f"Logging out user: {current_user.email}")  # Debug information
+    print(f"Logging out user: {current_user.email}")
     logout_user()
     return redirect(url_for("main.index"))
 
@@ -144,11 +203,11 @@ def logout():
 @login_required
 def unassigned_tickets():
     if current_user.role != "support" and current_user.role != "admin":
-        flash("Only support staff and admins can view this page.")
+        flash("Only support staff and admins can view this page.", "warning")
         return redirect(url_for("main.dashboard"))
 
     unassigned_tickets = Ticket.query.filter_by(assigned_to=None).all()
-    print(f"Unassigned tickets: {unassigned_tickets}")  # Debug information
+    print(f"Unassigned tickets: {unassigned_tickets}")
 
     if request.method == "POST":
         ticket_id = request.form.get("ticket_id")
@@ -170,7 +229,7 @@ def unassigned_tickets():
         db.session.add(new_comment)
         db.session.commit()
 
-        flash("Ticket assigned successfully.")
+        flash("Ticket assigned successfully.", "success")
         return redirect(url_for("main.unassigned_tickets"))
 
     support_staff = User.query.filter_by(role="support").all()
@@ -185,7 +244,7 @@ def unassigned_tickets():
 @login_required
 def assign_ticket(ticket_id):
     if current_user.role != "admin":
-        flash("Only admins can assign tickets.")
+        flash("Only admins can assign tickets.", "warning")
         return redirect(url_for("main.dashboard"))
 
     ticket = Ticket.query.get_or_404(ticket_id)
@@ -205,9 +264,39 @@ def assign_ticket(ticket_id):
         db.session.add(new_comment)
         db.session.commit()
 
-        flash("Ticket assigned successfully.")
+        flash("Ticket assigned successfully.", "success")
         return redirect(url_for("main.dashboard"))
 
     return render_template(
         "assign_ticket.html", ticket=ticket, support_staff=support_staff
     )
+
+
+@bp.route("/delete_ticket/<int:ticket_id>", methods=["POST"])
+@login_required
+def delete_ticket(ticket_id):
+    if current_user.role != "admin":
+        flash("You do not have permission to delete tickets.", "warning")
+        return redirect(url_for("main.dashboard"))
+
+    ticket = Ticket.query.get_or_404(ticket_id)
+    db.session.delete(ticket)
+    db.session.commit()
+    flash("Ticket has been deleted.", "success")
+    return redirect(url_for("main.dashboard"))
+
+
+@bp.route("/update_status/<int:ticket_id>", methods=["POST"])
+@login_required
+def update_status(ticket_id):
+    ticket = Ticket.query.get_or_404(ticket_id)
+    if current_user.role != "admin" and current_user.role != "support":
+        flash("You do not have permission to update the status.", "warning")
+        return redirect(url_for("main.ticket_details", ticket_id=ticket.id))
+
+    status = request.form.get("status")
+    if status:
+        ticket.status = status
+        db.session.commit()
+        flash("Status has been updated.", "success")
+    return redirect(url_for("main.ticket_details", ticket_id=ticket.id))

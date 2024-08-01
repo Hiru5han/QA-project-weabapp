@@ -1,33 +1,35 @@
 {% extends "base.html" %} {% block content %}
 <div class="container mt-5">
+  <div class="row mb-2">
+    <div class="col-12 text-center">
+      <h2 class="text-primary mb-0">Dashboard</h2>
+      <p class="lead">Welcome, {{ current_user.name }}!</p>
+    </div>
+  </div>
   <div class="row mb-4">
-    <div class="col-12 d-flex justify-content-between align-items-center">
-      <div>
-        <h2 class="text-primary">Dashboard</h2>
-        <p class="lead">Welcome, {{ current_user.name }}!</p>
-        <p>
-          Your role:
-          <span class="badge badge-role-{{ current_user.role }}"
-            >{{ current_user.role }}</span
-          >
-        </p>
-      </div>
-      <div>
-        <a
-          class="btn btn-success me-2"
-          href="{{ url_for('main.create_ticket') }}"
+    <div class="col-6 d-flex align-items-center">
+      <p class="mb-0">
+        Your role:
+        <span class="badge badge-role-{{ current_user.role }}"
+          >{{ current_user.role }}</span
         >
-          <i class="fas fa-plus"></i> Create Ticket
-        </a>
-        {% if current_user.role == 'support' or current_user.role == 'admin' %}
-        <a
-          class="btn btn-warning"
-          href="{{ url_for('main.unassigned_tickets') }}"
-        >
-          <i class="fas fa-tasks"></i> View Unassigned Tickets
-        </a>
-        {% endif %}
-      </div>
+      </p>
+    </div>
+    <div class="col-6 d-flex justify-content-end align-items-center">
+      <a
+        class="btn btn-success me-2"
+        href="{{ url_for('main.create_ticket') }}"
+      >
+        <i class="fas fa-plus"></i> Create Ticket
+      </a>
+      {% if current_user.role == 'support' or current_user.role == 'admin' %}
+      <a
+        class="btn btn-warning"
+        href="{{ url_for('main.unassigned_tickets') }}"
+      >
+        <i class="fas fa-tasks"></i> View Unassigned Tickets
+      </a>
+      {% endif %}
     </div>
   </div>
 
@@ -40,7 +42,6 @@
         <thead>
           <tr>
             <th>Title</th>
-            <th>Description</th>
             <th>Priority</th>
             <th>Status</th>
             <th>Assigned To</th>
@@ -51,13 +52,16 @@
           {% for ticket in tickets %}
           <tr>
             <td>{{ ticket.title }}</td>
-            <td>{{ ticket.description }}</td>
             <td>
               <span class="badge badge-priority-{{ ticket.priority }}"
                 >{{ ticket.priority }}</span
               >
             </td>
-            <td>{{ ticket.status }}</td>
+            <td>
+              <span class="badge badge-status-{{ ticket.status|lower }}"
+                >{{ ticket.status }}</span
+              >
+            </td>
             <td>
               {{ ticket.assignee.name if ticket.assignee else 'Unassigned' }}
             </td>
@@ -68,6 +72,17 @@
               >
                 <i class="fas fa-eye"></i> View
               </a>
+              {% if current_user.role == 'admin' %}
+              <form
+                method="POST"
+                action="{{ url_for('main.delete_ticket', ticket_id=ticket.id) }}"
+                style="display: inline"
+              >
+                <button type="submit" class="btn btn-outline-danger btn-sm">
+                  <i class="fas fa-trash"></i> Delete
+                </button>
+              </form>
+              {% endif %}
             </td>
           </tr>
           {% endfor %}
