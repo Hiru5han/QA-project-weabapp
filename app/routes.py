@@ -301,3 +301,21 @@ def update_status(ticket_id):
         db.session.commit()
         flash("Status has been updated.", "success")
     return redirect(url_for("main.ticket_details", ticket_id=ticket.id))
+
+
+@bp.route("/assigned_tickets", methods=["GET", "POST"])
+@login_required
+def assigned_tickets():
+    if current_user.role != "support" and current_user.role != "admin":
+        flash("Only support staff and admins can view this page.", "warning")
+        return redirect(url_for("main.dashboard"))
+
+    assigned_tickets = Ticket.query.filter(Ticket.assigned_to.isnot(None)).all()
+    print(f"Assigned tickets: {assigned_tickets}")
+
+    support_staff = User.query.filter_by(role="support").all()
+    return render_template(
+        "assigned_tickets.html",
+        assigned_tickets=assigned_tickets,
+        support_staff=support_staff,
+    )

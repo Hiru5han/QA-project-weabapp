@@ -263,3 +263,7 @@ h2 {
   background-color: #d4edda;
   border-color: #c3e6cb;
 }
+
+.btn-wide {
+  width: 200; /* Adjust the width as needed */
+}
