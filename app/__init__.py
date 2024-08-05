@@ -10,7 +10,7 @@ migrate = Migrate()
 
 def create_app():
     app = Flask(__name__, instance_relative_config=True)
-    app.config.from_pyfile('config.py')
+    app.config.from_pyfile("config.py")
 
     db.init_app(app)
     login_manager.init_app(app)
@@ -23,6 +23,7 @@ def create_app():
         return User.query.get(int(user_id))
 
     from . import routes
+
     app.register_blueprint(routes.bp)
 
     return app

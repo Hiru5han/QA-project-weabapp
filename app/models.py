@@ -12,10 +12,20 @@ class User(UserMixin, db.Model):
     role = db.Column(db.String(50), nullable=False)
 
     created_tickets = db.relationship(
-        'Ticket', foreign_keys='Ticket.user_id', backref='creator')
+        "Ticket",
+        foreign_keys="Ticket.user_id",
+        backref="creator",
+        overlaps="assigned_tickets",
+    )
     assigned_tickets = db.relationship(
-        'Ticket', foreign_keys='Ticket.assigned_to', backref='assignee')
-    comments = db.relationship('Comment', backref='commenter')
+        "Ticket",
+        foreign_keys="Ticket.assigned_to",
+        backref="assignee",
+        overlaps="created_tickets",
+    )
+    user_comments = db.relationship(
+        "Comment", backref="commenter", overlaps="commenter,comments"
+    )
 
 
 class Ticket(db.Model):
@@ -28,18 +38,18 @@ class Ticket(db.Model):
     priority = db.Column(db.String(50), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(
-        db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-    assigned_to = db.Column(db.Integer, db.ForeignKey('user.id'))
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+        db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow
+    )
+    assigned_to = db.Column(db.Integer, db.ForeignKey("user.id"))
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
 
 
 class Comment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    ticket_id = db.Column(db.Integer, db.ForeignKey('ticket.id'))
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    ticket_id = db.Column(db.Integer, db.ForeignKey("ticket.id"))
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
     comment_text = db.Column(db.Text, nullable=False)
-    created_at = db.Column(
-        db.DateTime, default=datetime.utcnow)  # Add timestamp
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)  # Add timestamp
 
-    ticket = db.relationship('Ticket', backref='ticket_comments')
-    user = db.relationship('User', backref='user_comments')
+    ticket = db.relationship("Ticket", backref="ticket_comments")
+    user = db.relationship("User", backref="comments", overlaps="comments")

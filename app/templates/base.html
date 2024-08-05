@@ -26,7 +26,13 @@
   </head>
   <body>
     <nav class="navbar navbar-expand-lg">
-      <a class="navbar-brand" href="#">Help Desk</a>
+      <a class="navbar-brand" href="#">
+        <img
+          src="{{ url_for('static', filename='logo.png') }}"
+          alt="Help Desk Logo"
+          style="height: 40px"
+        />
+      </a>
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ml-auto">
           {% if current_user.is_authenticated %}
@@ -37,8 +43,8 @@
           </li>
           <li class="nav-item">
             <a class="nav-link" href="{{ url_for('main.logout') }}">Logout</a>
+            {% endif %}
           </li>
-          {% endif %}
         </ul>
       </div>
     </nav>

@@ -25,6 +25,7 @@ def login():
             if check_password_hash(user.password, password):
                 print(f"Password match for user: {user.email}")
                 login_user(user)
+                print(f"User logged in: {current_user.is_authenticated}")
                 return redirect(url_for("main.dashboard"))
             else:
                 print(f"Password mismatch for user: {user.email}")
@@ -120,7 +121,7 @@ def dashboard():
     else:
         tickets = Ticket.query.filter_by(user_id=current_user.id).all()
         print("Regular user: loading own tickets")
-    return render_template("dashboard.html", tickets=tickets)
+    return render_template("dashboard.html", tickets=tickets, page_title="Your Tickets")
 
 
 @bp.route("/create_ticket", methods=["GET", "POST"])
