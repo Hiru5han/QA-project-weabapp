@@ -46,32 +46,32 @@
     <div class="card-body">
       <table class="table table-striped table-hover">
         <thead>
-          <tr>
-            <th>Title</th>
-            <th>Priority</th>
-            <th>Status</th>
-            <th>Assigned To</th>
-            <th>Actions</th>
+          <tr class="d-flex justify-content-between">
+            <th class="col text-center">Title</th>
+            <th class="col text-center">Priority</th>
+            <th class="col text-center">Status</th>
+            <th class="col text-center">Assigned To</th>
+            <th class="col text-center">Actions</th>
           </tr>
         </thead>
         <tbody>
           {% for ticket in tickets %}
-          <tr>
-            <td>{{ ticket.title }}</td>
-            <td>
+          <tr class="d-flex justify-content-between">
+            <td class="col text-center">{{ ticket.title }}</td>
+            <td class="col text-center">
               <span class="badge badge-priority-{{ ticket.priority }}"
                 >{{ ticket.priority }}</span
               >
             </td>
-            <td>
+            <td class="col text-center">
               <span class="badge badge-status-{{ ticket.status|lower }}"
                 >{{ ticket.status }}</span
               >
             </td>
-            <td>
+            <td class="col text-center">
               {{ ticket.assignee.name if ticket.assignee else 'Unassigned' }}
             </td>
-            <td>
+            <td class="col text-center">
               <a
                 href="{{ url_for('main.ticket_details', ticket_id=ticket.id) }}"
                 class="btn btn-outline-primary btn-sm"
