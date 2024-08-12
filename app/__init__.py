@@ -7,7 +7,6 @@ db = SQLAlchemy()
 login_manager = LoginManager()
 migrate = Migrate()
 
-
 def create_app():
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_pyfile("config.py")
@@ -23,7 +22,6 @@ def create_app():
         return User.query.get(int(user_id))
 
     from . import routes
-
     app.register_blueprint(routes.bp)
 
     return app
