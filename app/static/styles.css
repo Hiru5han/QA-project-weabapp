@@ -102,22 +102,45 @@ h2 {
   color: white;
 }
 
+/* Ensure consistent width for status and priority badges */
+.badge-status {
+  display: block;
+  width: 100%; /* Allows the badge to take the full width of its container */
+  text-align: center; /* Centre the text */
+}
+
+/* Ensure the container for status and priority badges is constrained */
+.badge-container {
+  display: flex;
+  justify-content: center; /* Centre align the badges */
+  align-items: center;
+  width: 100px; /* This width should match the width you want for the badges */
+}
+
+/* Apply existing styles while using the consistent width */
+.badge-priority-low,
+.badge-priority-medium,
+.badge-priority-high,
+.badge-status-open,
+.badge-status-in-progress,
+.badge-status-closed {
+  text-align: center;
+  width: 100%; /* Full width of the container */
+}
+
 .badge-priority-low {
   background-color: #28a745; /* Info Colour for low priority */
   color: rgb(255, 255, 255);
-  display: block;
 }
 
 .badge-priority-medium {
-  background-color: #ffc107; /* Warning Colour for medium priority */
+  background-color: #fd7e14; /* Warning Colour for medium priority */
   color: rgb(0, 0, 0);
-  display: block;
 }
 
 .badge-priority-high {
   background-color: #dc3545; /* Danger Colour for high priority */
   color: white;
-  display: block;
 }
 
 .list-unstyled {
@@ -160,18 +183,18 @@ h2 {
 }
 
 .badge-status-open {
-  background-color: #28a745; /* Green for open */
+  background-color: #20c997; /* Green for open */
   color: white;
 }
 
 .badge-status-in-progress {
-  background-color: #ffc107; /* Yellow for in-progress */
-  color: black;
+  background-color: #007bff; /* Yellow for in-progress */
+  color: rgb(255, 255, 255);
 }
 
 .badge-status-closed {
-  background-color: #dc3545; /* Red for closed */
-  color: white;
+  background-color: #6c757d; /* Red for closed */
+  color: rgb(0, 0, 0);
 }
 
 /* Login Page Specific Styles */
