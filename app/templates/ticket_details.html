@@ -1,12 +1,23 @@
-{% extends "base.html" %} {% block content %}
+{% extends "base.html" %} 
+{% block content %}
 <div class="container mt-5">
-    <!-- Ticket Header Section -->
+    <!-- Back Button and Ticket Title Section -->
     <div class="row mb-2 align-items-center">
-        <div class="col text-center">
+        <div class="col-md-2 text-start">
+            <a href="{{ url_for('main.dashboard') }}">
+                <img src="{{ url_for('static', filename='back-arrow-3095.png') }}" alt="Back to Dashboard" class="back-button-icon">
+            </a>
+        </div>
+        <div class="col-md-8 text-center">
             <h2 class="text-primary mb-0">Ticket Details</h2>
             <p class="lead">Sample description</p>
         </div>
+        <div class="col-md-2">
+            <!-- This empty column helps to center the title -->
+        </div>
     </div>
+
+    <!-- Ticket Header Section -->
     <div class="row mb-2 align-items-center">
         <div class="col-md-4 text-start d-flex justify-content-start align-items-center">
             <p class="mb-0"><strong>Priority:</strong> 

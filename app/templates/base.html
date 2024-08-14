@@ -32,6 +32,13 @@
           alt="Help Desk Logo"
           style="height: 40px"
         />
+        {% if current_user.is_authenticated %}
+        <div class="role-badge">
+          <span class="badge badge-role-{{ current_user.role }}"
+            >{{ current_user.role }}</span
+          >
+        </div>
+        {% endif %}
       </a>
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ml-auto">
@@ -43,8 +50,8 @@
           </li>
           <li class="nav-item">
             <a class="nav-link" href="{{ url_for('main.logout') }}">Logout</a>
-            {% endif %}
           </li>
+          {% endif %}
         </ul>
       </div>
     </nav>

@@ -290,3 +290,23 @@ h2 {
 .btn-wide {
   width: 200; /* Adjust the width as needed */
 }
+
+.back-button-icon {
+  width: 60px;
+  height: 60px;
+  vertical-align: middle;
+}
+
+.role-badge {
+  display: inline-block;
+  margin-left: 10px;
+  vertical-align: middle;
+}
+
+.badge-danger {
+  background-color: #dc3545;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 18px;
+}
