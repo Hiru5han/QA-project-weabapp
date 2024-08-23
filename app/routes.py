@@ -238,6 +238,7 @@ def unassigned_tickets():
         "unassigned_tickets.html",
         unassigned_tickets=unassigned_tickets,
         support_staff=support_staff,
+        view='unassigned'  # Pass 'view' as 'unassigned' to the template
     )
 
 
@@ -318,4 +319,5 @@ def assigned_tickets():
         "assigned_tickets.html",
         assigned_tickets=assigned_tickets,
         support_staff=support_staff,
+        view='assigned'  # Pass 'view' as 'assigned' to the template
     )

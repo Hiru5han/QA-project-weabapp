@@ -500,6 +500,7 @@ body.dark-mode #theme-toggle-icon {
   border-radius: 0 20px 20px 20px;
 }
 
+/* Toggle Group Styling */
 .toggle-group {
   border: 1px solid #ddd;
   border-radius: 8px;
@@ -507,26 +508,31 @@ body.dark-mode #theme-toggle-icon {
   display: inline-flex;
 }
 
+/* Individual Toggle Button Styling */
 .btn-toggle {
   background-color: white;
   color: black;
-  padding: 10px 20px;
+  padding: 8px 16px;
   border: none;
   border-radius: 0;
   font-weight: bold;
   cursor: pointer;
   transition: background-color 0.3s ease, color 0.3s ease;
+  text-decoration: none; /* Ensures links look like buttons */
 }
 
+/* Active Toggle Button Styling */
 .btn-toggle.active {
-  background-color: #6f42c1; /* Active background color */
-  color: white; /* Active text color */
+  background-color: #6f42c1; /* Adjust to your desired active color */
+  color: white;
 }
 
+/* Hover Effect for Inactive Toggle Buttons */
 .btn-toggle:not(.active):hover {
   background-color: #f0f0f0;
 }
 
+/* Rounded Corners for Toggle Buttons */
 .toggle-group .btn-toggle:first-child {
   border-top-left-radius: 8px;
   border-bottom-left-radius: 8px;
