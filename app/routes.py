@@ -26,7 +26,14 @@ def login():
                 print(f"Password match for user: {user.email}")
                 login_user(user)
                 print(f"User logged in: {current_user.is_authenticated}")
-                return redirect(url_for("main.dashboard"))
+                
+                # Redirect based on the user's role
+                if user.role == "admin":
+                    return redirect(url_for("main.dashboard"))
+                elif user.role == "support":
+                    return redirect(url_for("main.assigned_tickets"))
+                else:
+                    return redirect(url_for("main.dashboard"))
             else:
                 print(f"Password mismatch for user: {user.email}")
         else:
