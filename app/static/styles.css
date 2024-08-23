@@ -44,6 +44,12 @@ h2 {
   align-items: center;
 }
 
+.card-header .text-center {
+  flex-grow: 1;
+  margin: 0;
+  text-align: center;
+}
+
 .btn-primary,
 .btn-secondary,
 .btn-success,
@@ -492,4 +498,41 @@ body.dark-mode #theme-toggle-icon {
   padding: 1rem;
   background-color: #1e1e1e;
   border-radius: 0 20px 20px 20px;
+}
+
+.toggle-group {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  display: inline-flex;
+}
+
+.btn-toggle {
+  background-color: white;
+  color: black;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 0;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.btn-toggle.active {
+  background-color: #6f42c1; /* Active background color */
+  color: white; /* Active text color */
+}
+
+.btn-toggle:not(.active):hover {
+  background-color: #f0f0f0;
+}
+
+.toggle-group .btn-toggle:first-child {
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+}
+
+.toggle-group .btn-toggle:last-child {
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
 }
