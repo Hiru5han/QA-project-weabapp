@@ -24,7 +24,8 @@
 
     <title>Help Desk</title>
   </head>
-  <body>
+  <body class="light-mode">
+    <!-- Default to light mode -->
     <nav class="navbar navbar-expand-lg">
       <a class="navbar-brand" href="#">
         <img
@@ -52,6 +53,11 @@
             <a class="nav-link" href="{{ url_for('main.logout') }}">Logout</a>
           </li>
           {% endif %}
+          <li class="nav-item">
+            <button id="theme-toggle-button" class="btn btn-link nav-link">
+              <i id="theme-toggle-icon" class="fas fa-sun"></i>
+            </button>
+          </li>
         </ul>
       </div>
     </nav>
@@ -62,5 +68,6 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="{{ url_for('static', filename='theme-toggle.js') }}"></script>
   </body>
 </html>

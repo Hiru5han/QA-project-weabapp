@@ -6,16 +6,10 @@
       <p class="lead">Welcome, {{ current_user.name }}!</p>
     </div>
   </div>
+
+  <!-- Grouped Button Layout -->
   <div class="row mb-4">
-    <!-- <div class="col-6 d-flex align-items-center">
-      <p class="mb-0">
-        Your role:
-        <span class="badge badge-role-{{ current_user.role }}"
-          >{{ current_user.role }}</span
-        >
-      </p>
-    </div> -->
-    <div class="col-6 d-flex justify-content-end align-items-center">
+    <div class="col-12 d-flex justify-content-center align-items-center">
       <a
         class="btn btn-success me-2"
         href="{{ url_for('main.create_ticket') }}"

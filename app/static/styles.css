@@ -34,7 +34,7 @@ h2 {
 }
 
 .card-header {
-  background-color: #007bff; /* Primary Colour */
+  background-color: #fdfdfd; /* Primary Colour */
   color: #ffffff;
   font-size: 1.25rem;
   font-weight: 500;
@@ -309,4 +309,183 @@ h2 {
   padding: 5px 10px;
   border-radius: 5px;
   font-size: 18px;
+}
+
+/* Dark Mode */
+body.dark-mode {
+  background-color: #1b1b1b; /* Darker background */
+  color: #dcdcdc; /* Light grey text */
+}
+
+body.dark-mode h2 {
+  color: #79a8ff; /* Softer blue for headings */
+}
+
+body.dark-mode .table td {
+  color: #dcdcdc; /* Light grey text for better readability */
+}
+
+body.dark-mode .table th {
+  color: #dcdcdc; /* Light grey text for better readability */
+  background-color: #2a2a2a; /* Darker grey for table header */
+}
+
+body.dark-mode .table td a {
+  color: #79a8ff; /* Ensure links are visible */
+}
+
+body.dark-mode .table td a:hover {
+  color: #a3c1ff; /* Lighter blue on hover for links */
+}
+
+body.dark-mode .table-hover tbody tr:hover {
+  background-color: #333333; /* A bit brighter for hover effect */
+}
+
+body.dark-mode .card {
+  background-color: #242424; /* Dark slate for cards */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Darker shadow for contrast */
+}
+
+body.dark-mode .card-header {
+  background-color: #3a3a5a; /* Muted blue */
+  color: #dcdcdc; /* Consistent light text */
+}
+
+body.dark-mode .btn-primary {
+  background-color: #3a3a5a; /* Muted blue */
+  border-color: #3a3a5a;
+}
+
+body.dark-mode .btn-secondary {
+  background-color: #444444; /* Muted grey-blue */
+  border-color: #444444;
+}
+
+body.dark-mode .btn-success {
+  background-color: #22a873; /* Fresh teal */
+  border-color: #22a873;
+}
+
+body.dark-mode .btn-warning {
+  background-color: #e1a400; /* Warm yellow-orange */
+  border-color: #e1a400;
+}
+
+body.dark-mode .btn-outline-primary {
+  border-color: #79a8ff; /* Vibrant blue */
+  color: #79a8ff;
+}
+
+body.dark-mode .btn-outline-primary:hover {
+  background-color: #79a8ff;
+  color: #1b1b1b;
+}
+
+body.dark-mode .badge-role-support {
+  background-color: #22a873; /* Consistent teal */
+}
+
+body.dark-mode .badge-role-admin {
+  background-color: #d65a6f; /* Soft pink-red */
+}
+
+body.dark-mode .badge-role-user {
+  background-color: #987ce8; /* Light purple */
+}
+
+body.dark-mode .badge-status-open {
+  background-color: #22a873; /* Consistent teal */
+}
+
+body.dark-mode .badge-status-in-progress {
+  background-color: #79a8ff; /* Vibrant blue */
+}
+
+body.dark-mode .badge-status-closed {
+  background-color: #555555; /* Soft grey */
+}
+
+body.dark-mode .navbar {
+  background-color: #121212; /* Darker navbar */
+}
+
+body.dark-mode .navbar .navbar-brand,
+body.dark-mode .navbar .nav-link {
+  color: #dcdcdc; /* Soft light blue */
+}
+
+body.dark-mode .navbar .nav-link:hover {
+  color: #ffffff; /* Pure white on hover */
+}
+
+body.dark-mode .navbar .nav-link.active {
+  color: #1b1b1b;
+  background-color: #79a8ff; /* Vibrant blue */
+}
+
+body.dark-mode .login-card {
+  background-color: #242424; /* Consistent dark slate */
+  color: #dcdcdc; /* Consistent light text */
+}
+
+body.dark-mode .jumbotron {
+  background-color: #242424; /* Consistent dark slate */
+  color: #dcdcdc; /* Consistent light text */
+}
+
+/* Theme Toggle Button */
+#theme-toggle-button {
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+#theme-toggle-button .fas {
+  transition: color 0.3s ease;
+}
+
+body.light-mode #theme-toggle-icon {
+  color: #f39c12; /* Sun color */
+}
+
+body.dark-mode #theme-toggle-icon {
+  color: #ffcc66; /* Soft warm yellow */
+}
+
+.nav-tabs {
+  border-bottom: none;
+  margin-left: -20px; /* Adjust this value to move the tabs left */
+}
+
+.nav-tabs .nav-link {
+  background: linear-gradient(to bottom, #7bc043, #5aac35);
+  color: white;
+  border: 2px solid black;
+  border-radius: 20px 20px 0 0;
+  margin-right: -10px;
+  padding: 10px 20px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.nav-tabs .nav-link:hover {
+  background-color: #5aac35;
+  color: white;
+}
+
+.nav-tabs .nav-link.active {
+  background-color: #3d7722;
+  color: white;
+  border-color: black;
+  border-bottom-color: transparent;
+}
+
+.nav-tabs .nav-link.active:hover {
+  background-color: #3d7722;
+}
+
+.tab-content {
+  border: 2px solid black;
+  padding: 1rem;
+  background-color: #1e1e1e;
+  border-radius: 0 20px 20px 20px;
 }
