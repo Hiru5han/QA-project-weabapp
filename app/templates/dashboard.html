@@ -7,35 +7,33 @@
     </div>
   </div>
 
-  <!-- Grouped Button Layout -->
-  <div class="row mb-4">
-    <div class="col-12 d-flex justify-content-center align-items-center">
-      <a
-        class="btn btn-success me-2"
-        href="{{ url_for('main.create_ticket') }}"
-      >
-        <i class="fas fa-plus"></i> Create Ticket
-      </a>
-      {% if current_user.role == 'support' or current_user.role == 'admin' %}
-      <a
-        class="btn btn-warning me-2 {% if view == 'unassigned' %}active{% endif %}"
-        href="{{ url_for('main.unassigned_tickets') }}"
-      >
-        <i class="fas fa-tasks"></i> Unassigned Tickets
-      </a>
-      <a
-        class="btn btn-info {% if view == 'assigned' %}active{% endif %}"
-        href="{{ url_for('main.assigned_tickets') }}"
-      >
-        <i class="fas fa-clipboard-check"></i> Assigned Tickets
-      </a>
-      {% endif %}
-    </div>
-  </div>
-
   <div class="card shadow-sm">
-    <div class="card-header bg-primary text-white">
+    <div
+      class="card-header bg-primary text-white d-flex justify-content-between align-items-center"
+    >
       <h3>Your Tickets</h3>
+      <div>
+        <a
+          class="btn btn-success me-2"
+          href="{{ url_for('main.create_ticket') }}"
+        >
+          <i class="fas fa-plus"></i> Create Ticket
+        </a>
+        {% if current_user.role == 'support' or current_user.role == 'admin' %}
+        <a
+          class="btn btn-warning me-2 {% if view == 'unassigned' %}active{% endif %}"
+          href="{{ url_for('main.unassigned_tickets') }}"
+        >
+          <i class="fas fa-tasks"></i> Unassigned Tickets
+        </a>
+        <a
+          class="btn btn-info {% if view == 'assigned' %}active{% endif %}"
+          href="{{ url_for('main.assigned_tickets') }}"
+        >
+          <i class="fas fa-clipboard-check"></i> Assigned Tickets
+        </a>
+        {% endif %}
+      </div>
     </div>
     <div class="card-body">
       <table class="table table-striped table-hover">

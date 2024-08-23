@@ -39,6 +39,9 @@ h2 {
   font-size: 1.25rem;
   font-weight: 500;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .btn-primary,
@@ -61,6 +64,7 @@ h2 {
 .btn-success {
   background-color: #28a745;
   border-color: #28a745;
+  margin-left: auto;
 }
 
 .btn-warning {
