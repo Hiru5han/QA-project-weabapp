@@ -512,8 +512,8 @@ body.dark-mode #theme-toggle-icon {
 .btn-toggle {
   background-color: white;
   color: black;
-  padding: 8px 16px;
-  border: none;
+  padding: 10px 20px;
+  border: 1px solid #ccc; /* Or the border style you need */
   border-radius: 0;
   font-weight: bold;
   cursor: pointer;
@@ -525,6 +525,7 @@ body.dark-mode #theme-toggle-icon {
 .btn-toggle.active {
   background-color: #6f42c1; /* Adjust to your desired active color */
   color: white;
+  border-color: #007bff;
 }
 
 /* Hover Effect for Inactive Toggle Buttons */

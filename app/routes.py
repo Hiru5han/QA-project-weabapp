@@ -29,11 +29,11 @@ def login():
                 
                 # Redirect based on the user's role
                 if user.role == "admin":
-                    return redirect(url_for("main.dashboard"))
+                    return redirect(url_for("main.all_tickets"))
                 elif user.role == "support":
                     return redirect(url_for("main.assigned_tickets"))
                 else:
-                    return redirect(url_for("main.dashboard"))
+                    return redirect(url_for("main.all_tickets"))
             else:
                 print(f"Password mismatch for user: {user.email}")
         else:
@@ -107,28 +107,16 @@ def register():
         db.session.add(new_user)
         db.session.commit()
         login_user(new_user)
-        return redirect(url_for("main.dashboard"))
+        return redirect(url_for("main.all_tickets"))
     else:
         print("Rendering register page")
     return render_template("register.html")
 
 
-@bp.route("/dashboard")
-@login_required
-def dashboard():
-    print(
-        f"Loading dashboard for user: {current_user.email}, Role: {current_user.role}"
-    )
-    if current_user.role == "admin":
-        tickets = Ticket.query.all()
-        print("Admin user: loading all tickets")
-    elif current_user.role == "support":
-        tickets = Ticket.query.filter_by(assigned_to=current_user.id).all()
-        print("Support user: loading assigned tickets")
-    else:
-        tickets = Ticket.query.filter_by(user_id=current_user.id).all()
-        print("Regular user: loading own tickets")
-    return render_template("dashboard.html", tickets=tickets, page_title="Your Tickets")
+@bp.route('/all_tickets')
+def all_tickets():
+    tickets = Ticket.query.all()  # or your logic to get all tickets
+    return render_template('all_tickets.html', tickets=tickets, view='all')
 
 
 @bp.route("/create_ticket", methods=["GET", "POST"])
@@ -150,7 +138,7 @@ def create_ticket():
         )
         db.session.add(new_ticket)
         db.session.commit()
-        return redirect(url_for("main.dashboard"))
+        return redirect(url_for("main.all_tickets"))
     else:
         print("Rendering create ticket page")
     return render_template("create_ticket.html")
@@ -212,7 +200,7 @@ def logout():
 def unassigned_tickets():
     if current_user.role != "support" and current_user.role != "admin":
         flash("Only support staff and admins can view this page.", "warning")
-        return redirect(url_for("main.dashboard"))
+        return redirect(url_for("main.all_tickets"))
 
     unassigned_tickets = Ticket.query.filter_by(assigned_to=None).all()
     print(f"Unassigned tickets: {unassigned_tickets}")
@@ -254,7 +242,7 @@ def unassigned_tickets():
 def assign_ticket(ticket_id):
     if current_user.role != "admin":
         flash("Only admins can assign tickets.", "warning")
-        return redirect(url_for("main.dashboard"))
+        return redirect(url_for("main.all_tickets"))
 
     ticket = Ticket.query.get_or_404(ticket_id)
     support_staff = User.query.filter_by(role="support").all()
@@ -274,7 +262,7 @@ def assign_ticket(ticket_id):
         db.session.commit()
 
         flash("Ticket assigned successfully.", "success")
-        return redirect(url_for("main.dashboard"))
+        return redirect(url_for("main.all_tickets"))
 
     return render_template(
         "assign_ticket.html", ticket=ticket, support_staff=support_staff
@@ -286,13 +274,13 @@ def assign_ticket(ticket_id):
 def delete_ticket(ticket_id):
     if current_user.role != "admin":
         flash("You do not have permission to delete tickets.", "warning")
-        return redirect(url_for("main.dashboard"))
+        return redirect(url_for("main.all_tickets"))
 
     ticket = Ticket.query.get_or_404(ticket_id)
     db.session.delete(ticket)
     db.session.commit()
     flash("Ticket has been deleted.", "success")
-    return redirect(url_for("main.dashboard"))
+    return redirect(url_for("main.all_tickets"))
 
 
 @bp.route("/update_status/<int:ticket_id>", methods=["POST"])
@@ -316,7 +304,7 @@ def update_status(ticket_id):
 def assigned_tickets():
     if current_user.role != "support" and current_user.role != "admin":
         flash("Only support staff and admins can view this page.", "warning")
-        return redirect(url_for("main.dashboard"))
+        return redirect(url_for("main.all_tickets"))
 
     assigned_tickets = Ticket.query.filter(Ticket.assigned_to.isnot(None)).all()
     print(f"Assigned tickets: {assigned_tickets}")

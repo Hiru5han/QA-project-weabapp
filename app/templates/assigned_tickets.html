@@ -31,6 +31,14 @@
         >
           Assigned
         </a>
+        {% if current_user.role == 'admin' %}
+        <a
+          href="{{ url_for('main.all_tickets') }}"
+          class="btn btn-toggle {% if view == 'all' %}active{% endif %}"
+        >
+          All Tickets
+        </a>
+        {% endif %}
       </div>
 
       <!-- Centered Title -->
@@ -61,14 +69,14 @@
           <tr class="d-flex justify-content-between">
             <td class="col text-center">{{ ticket.title }}</td>
             <td class="col text-center">
-              <span class="badge badge-priority-{{ ticket.priority }}"
-                >{{ ticket.priority }}</span
-              >
+              <span class="badge badge-priority-{{ ticket.priority }}">
+                {{ ticket.priority }}
+              </span>
             </td>
             <td class="col text-center">
-              <span class="badge badge-status-{{ ticket.status|lower }}"
-                >{{ ticket.status }}</span
-              >
+              <span class="badge badge-status-{{ ticket.status|lower }}">
+                {{ ticket.status }}
+              </span>
             </td>
             <td class="col text-center">
               {{ ticket.assignee.name if ticket.assignee else 'Unassigned' }}

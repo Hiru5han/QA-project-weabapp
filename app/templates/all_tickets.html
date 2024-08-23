@@ -2,7 +2,7 @@
 <div class="container mt-5">
   <div class="row mb-2">
     <div class="col-12 text-center">
-      <h2 class="text-primary mb-0">Dashboard</h2>
+      <h2 class="text-primary mb-0">All Tickets</h2>
       <p class="lead">Welcome, {{ current_user.name }}!</p>
     </div>
   </div>
@@ -28,6 +28,12 @@
             class="btn btn-toggle {% if view == 'assigned' %}active{% endif %}"
           >
             Assigned
+          </a>
+          <a
+            href="{{ url_for('main.all_tickets') }}"
+            class="btn btn-toggle {% if view == 'all' %}active{% endif %}"
+          >
+            All Tickets
           </a>
         </div>
       </div>
