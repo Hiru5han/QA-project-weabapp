@@ -203,7 +203,7 @@ h2 {
 }
 
 .badge-status-closed {
-  background-color: #6c757d; /* Red for closed */
+  background-color: #5c636a; /* Red for closed */
   color: rgb(0, 0, 0);
 }
 
@@ -405,9 +405,25 @@ body.dark-mode #theme-toggle-icon {
   border-color: #007bff;
 }
 
+body.dark-mode .btn-toggle.active {
+  background-color: #4b2e7f; /* Adjust to your desired active color */
+  color: white;
+  border-color: #007bff;
+}
+
+body.dark-mode .btn-toggle {
+  background-color: #dcdcdc;
+}
+
 /* Hover Effect for Inactive Toggle Buttons */
 .btn-toggle:not(.active):hover {
   background-color: #f0f0f0;
+}
+
+/* Hover Effect for Inactive Toggle Buttons */
+body.dark-mode .btn-toggle:not(.active):hover {
+  background-color: #606060;
+  color: white;
 }
 
 /* Rounded Corners for Toggle Buttons */
@@ -462,7 +478,7 @@ span.invalid {
 
 /* Dark Mode */
 body.dark-mode {
-  background-color: #1b1b1b; /* Darker background */
+  background-color: #1e1e1e; /* Darker background */
   color: #dcdcdc; /* Light grey text */
 }
 
@@ -497,8 +513,8 @@ body.dark-mode .card {
 }
 
 body.dark-mode .card-header {
-  background-color: #3a3a5a; /* Muted blue */
-  color: #dcdcdc; /* Consistent light text */
+  background-color: #2a3b5c !important; /* Apply the new colour with higher specificity */
+  color: #dcdcdc !important; /* Ensure text colour is also applied */
 }
 
 body.dark-mode .btn-primary {
@@ -512,8 +528,8 @@ body.dark-mode .btn-secondary {
 }
 
 body.dark-mode .btn-success {
-  background-color: #22a873; /* Fresh teal */
-  border-color: #22a873;
+  background-color: #1c7430; /* Fresh teal */
+  border-color: #1c7430;
 }
 
 body.dark-mode .btn-warning {
@@ -522,50 +538,50 @@ body.dark-mode .btn-warning {
 }
 
 body.dark-mode .btn-outline-primary {
-  border-color: #79a8ff; /* Vibrant blue */
+  border-color: #ffef79; /* Vibrant blue */
   color: #79a8ff;
 }
 
 body.dark-mode .btn-outline-primary:hover {
-  background-color: #79a8ff;
-  color: #1b1b1b;
+  background-color: #ffef79 !important;
+  color: #000000 !important;
 }
 
 body.dark-mode .badge-role-support {
-  background-color: #22a873; /* Consistent teal */
+  background-color: #1e7e34; /* Consistent teal */
 }
 
 body.dark-mode .badge-role-admin {
-  background-color: #d65a6f; /* Soft pink-red */
+  background-color: #a71d2a; /* Soft pink-red */
 }
 
 body.dark-mode .badge-role-user {
-  background-color: #987ce8; /* Light purple */
+  background-color: #0f778a; /* Light purple */
 }
 
 body.dark-mode .badge-status-open {
-  background-color: #22a873; /* Consistent teal */
+  background-color: #148f77; /* Consistent teal */
 }
 
 body.dark-mode .badge-status-in-progress {
-  background-color: #79a8ff; /* Vibrant blue */
+  background-color: #0056b3; /* Vibrant blue */
 }
 
 body.dark-mode .badge-status-closed {
-  background-color: #555555; /* Soft grey */
+  background-color: #3a3f44; /* Soft grey */
 }
 
 body.dark-mode .navbar {
-  background-color: #121212; /* Darker navbar */
+  background-color: #003366; /* Darker navbar */
 }
 
 body.dark-mode .navbar .navbar-brand,
 body.dark-mode .navbar .nav-link {
-  color: #dcdcdc; /* Soft light blue */
+  color: #e0e0e0; /* Soft light blue */
 }
 
 body.dark-mode .navbar .nav-link:hover {
-  color: #ffffff; /* Pure white on hover */
+  color: #ffffff95; /* Pure white on hover */
 }
 
 body.dark-mode .navbar .nav-link.active {
@@ -581,4 +597,20 @@ body.dark-mode .login-card {
 body.dark-mode .jumbotron {
   background-color: #242424; /* Consistent dark slate */
   color: #dcdcdc; /* Consistent light text */
+}
+
+/* Priority Badge Colours in Dark Mode */
+body.dark-mode .badge-priority-low {
+  background-color: #1e7e34; /* Darker green for low priority */
+  color: #ffffff; /* White text */
+}
+
+body.dark-mode .badge-priority-medium {
+  background-color: #b4691a; /* Darker orange for medium priority */
+  color: #ffffff; /* White text */
+}
+
+body.dark-mode .badge-priority-high {
+  background-color: #a71d2a; /* Darker red for high priority */
+  color: #ffffff; /* White text */
 }
