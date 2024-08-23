@@ -34,8 +34,8 @@ h2 {
 }
 
 .card-header {
-  background-color: #fdfdfd; /* Primary Colour */
-  color: #ffffff;
+  background-color: #007bff; /* Primary Colour */
+  color: #ffffff; /* Set text to white for visibility */
   font-size: 1.25rem;
   font-weight: 500;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -573,4 +573,12 @@ span.invalid {
 /* Adjust the button for toggling password visibility */
 #togglePassword {
   margin-top: 10px;
+}
+
+.register-header {
+  background-color: #007bff; /* Primary Colour for Register page */
+}
+
+.register-header h2 {
+  color: #ffffff !important; /* Ensure the text is white */
 }
