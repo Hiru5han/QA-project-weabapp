@@ -12,6 +12,7 @@
       class="card-header bg-primary text-white d-flex justify-content-between align-items-center"
     >
       <div class="d-flex align-items-center">
+        {% if current_user.role == 'admin' %}
         <div
           class="btn-group toggle-group me-3"
           role="group"
@@ -36,6 +37,7 @@
             All Tickets
           </a>
         </div>
+        {% endif %}
       </div>
       <h3 class="text-center mb-0 flex-grow-1">Your Tickets</h3>
       <div>
