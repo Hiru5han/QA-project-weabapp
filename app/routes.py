@@ -7,14 +7,20 @@ from .models import User, Ticket, Comment, db
 bp = Blueprint("main", __name__)
 
 
-@bp.route("/")
+@bp.route('/')
+@bp.route('/index')
 def index():
-    print("Rendering index page")
-    return render_template("index.html")
+    print(f"User authenticated: {current_user.is_authenticated}")
+    if current_user.is_authenticated:
+        return redirect_based_on_role()
+    return render_template('index.html', title='Welcome')
 
 
 @bp.route("/login", methods=["GET", "POST"])
 def login():
+    if current_user.is_authenticated:
+        return redirect_based_on_role()
+
     if request.method == "POST":
         email = request.form.get("email")
         password = request.form.get("password")
@@ -43,6 +49,13 @@ def login():
         print("Rendering login page")
     return render_template("login.html")
 
+def redirect_based_on_role():
+    if current_user.role == 'admin':
+        return redirect(url_for('main.all_tickets'))
+    elif current_user.role == 'support':
+        return redirect(url_for('main.assigned_tickets'))
+    else:
+        return redirect(url_for('main.all_tickets'))
 
 @bp.route("/register", methods=["GET", "POST"])
 def register():
