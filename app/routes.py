@@ -68,47 +68,47 @@ def register():
         # Check if the name contains numbers
         if any(char.isdigit() for char in name):
             flash("Name cannot contain numbers.", "warning")
-            return redirect(url_for("main.register"))
+            return render_template("register.html", name=name, email=email, role=role)
 
         # Check if the name is empty
         if not name.strip():
             flash("Name cannot be empty.", "warning")
-            return redirect(url_for("main.register"))
+            return render_template("register.html", name=name, email=email, role=role)
 
         # Check if the email format is valid
         email_regex = r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
         if not re.match(email_regex, email):
             flash("Invalid email address.", "warning")
-            return redirect(url_for("main.register"))
+            return render_template("register.html", name=name, email=email, role=role)
 
         # Check if the email already exists
         existing_user = User.query.filter_by(email=email).first()
         if existing_user:
             flash("Email address already in use.", "warning")
-            return redirect(url_for("main.register"))
+            return render_template("register.html", name=name, email=email, role=role)
 
         # Check if the password meets complexity requirements
         if len(password) < 8:
             flash("Password must be at least 8 characters long.", "warning")
-            return redirect(url_for("main.register"))
+            return render_template("register.html", name=name, email=email, role=role)
         if not any(char.isdigit() for char in password):
             flash("Password must contain at least one number.", "warning")
-            return redirect(url_for("main.register"))
+            return render_template("register.html", name=name, email=email, role=role)
         if not any(char.isupper() for char in password):
             flash("Password must contain at least one uppercase letter.", "warning")
-            return redirect(url_for("main.register"))
+            return render_template("register.html", name=name, email=email, role=role)
         if not any(char.islower() for char in password):
             flash("Password must contain at least one lowercase letter.", "warning")
-            return redirect(url_for("main.register"))
+            return render_template("register.html", name=name, email=email, role=role)
         if not any(char in "!@#$%^&*()_+-=[]{}|;:,.<>?/" for char in password):
             flash("Password must contain at least one special character.", "warning")
-            return redirect(url_for("main.register"))
+            return render_template("register.html", name=name, email=email, role=role)
 
         # Check if the role is valid
         valid_roles = {"admin", "support", "regular"}
         if role not in valid_roles:
             flash("Invalid role selected.", "warning")
-            return redirect(url_for("main.register"))
+            return render_template("register.html", name=name, email=email, role=role)
 
         print(f"Registering new user with Name: {name}, Email: {email}, Role: {role}")
         new_user = User(

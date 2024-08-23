@@ -543,3 +543,34 @@ body.dark-mode #theme-toggle-icon {
   border-top-right-radius: 8px;
   border-bottom-right-radius: 8px;
 }
+
+/* General styles for criteria */
+.criteria {
+  display: flex;
+  justify-content: space-between;
+}
+
+.criteria-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.criteria-item span {
+  display: flex;
+  align-items: center;
+  margin: 5px 0;
+  font-weight: bold;
+}
+
+span.valid {
+  color: green;
+}
+
+span.invalid {
+  color: red;
+}
+
+/* Adjust the button for toggling password visibility */
+#togglePassword {
+  margin-top: 10px;
+}
