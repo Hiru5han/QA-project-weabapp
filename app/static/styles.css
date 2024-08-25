@@ -614,3 +614,42 @@ body.dark-mode .badge-priority-high {
   background-color: #a71d2a; /* Darker red for high priority */
   color: #ffffff; /* White text */
 }
+
+.status-priority-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+  width: 100%;
+}
+
+.status-priority-container p {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.clickable-badge {
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 10px;
+  border-radius: 5px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  white-space: nowrap;
+  justify-content: space-between;
+  margin-left: 5px; /* Small margin to create space between "Priority:" and the badge */
+}
+
+.clickable-badge:hover {
+  transform: scale(1.05);
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.clickable-badge i {
+  margin-left: 5px;
+  font-size: 1.2em;
+  opacity: 0.8;
+}

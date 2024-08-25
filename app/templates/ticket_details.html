@@ -1,99 +1,56 @@
 {% extends "base.html" %} 
 {% block content %}
 <div class="container mt-5">
-    <!-- Back Button and Ticket Title Section -->
-    <div class="row mb-2 align-items-center">
-        <div class="col-md-2 text-start">
+    <!-- Back Button, Header, and Priority/Status Section -->
+    <div class="row mb-4 align-items-center">
+        <div class="col-md-2 text-start d-flex align-items-center">
             <a href="{{ url_for('main.all_tickets') }}">
                 <img src="{{ url_for('static', filename='back-arrow-3095.png') }}" alt="Back to Dashboard" class="back-button-icon">
             </a>
         </div>
-        <div class="col-md-8 text-center">
+        <div class="col-md-8 text-center d-flex flex-column align-items-center">
             <h2 class="text-primary mb-0">Ticket Details</h2>
             <p class="lead">Sample description</p>
         </div>
-        <div class="col-md-2">
-            <!-- This empty column helps to center the title -->
+        <div class="col-md-2 text-end">
+            <div class="status-priority-container">
+                <div class="mb-2">
+                    <p class="mb-0">
+                        <span><strong>Priority:</strong></span>
+                        <span class="badge text-white clickable-badge {% if ticket.priority == 'high' %}bg-danger{% elif ticket.priority == 'medium' %}bg-warning{% else %}bg-info{% endif %}" id="priority-badge" data-bs-toggle="tooltip" title="Click to update priority">
+                            {{ ticket.priority }} <i class="fas fa-edit ms-2"></i>
+                        </span>
+                    </p>
+                </div>
+                <div>
+                    <p class="mb-0">
+                        <span><strong>Status:</strong></span>
+                        <span class="badge text-white clickable-badge {% if ticket.status == 'open' %}bg-success{% elif ticket.status == 'in-progress' %}bg-warning{% else %}bg-secondary{% endif %}" id="status-badge" data-bs-toggle="tooltip" title="Click to update status">
+                            {{ ticket.status }} <i class="fas fa-edit ms-2"></i>
+                        </span>
+                    </p>
+                </div>
+            </div>
         </div>
-    </div>
+            </div>
 
-    <!-- Ticket Header Section -->
-    <div class="row mb-2 align-items-center">
-        <div class="col-md-4 text-start d-flex justify-content-start align-items-center">
-            <p class="mb-0"><strong>Priority:</strong> 
-                <span class="badge text-white status-badge {% if ticket.priority == 'high' %}bg-danger{% elif ticket.priority == 'medium' %}bg-warning{% else %}bg-info{% endif %}">
-                    {{ ticket.priority }}
-                </span>
-            </p>
-        </div>
-        <div class="col-md-4 text-center">
-            <!-- This column is now empty since the header has been moved -->
-        </div>
-        <div class="col-md-4 text-end d-flex justify-content-end align-items-center">
-            <p class="mb-0"><strong>Status:</strong>
-            <span class="badge status-badge ms-2 {% if ticket.status == 'open' %}bg-success{% elif ticket.status == 'in-progress' %}bg-warning{% else %}bg-secondary{% endif %}">
-                {{ ticket.status }}
-            </span>
-            </p>
-        </div>
-    </div>
-
-    <!-- Ticket Info Section -->
+    <!-- Description and Comments Section -->
     <div class="row mb-4">
-        <div class="col-12">
+        <div class="col-md-12">
             <div class="card">
                 <div class="card-body">
-                    <div class="row mb-2">
-                        <div class="col-md-6">
-                            <p><strong>Title:</strong> {{ ticket.title }}</p>
-                        </div>
-                    </div>
-
-                    <!-- Status Update and Delete Section -->
-                    <div class="row mb-2 align-items-center">
-                        <div class="col-md-6 d-flex align-items-center">
-                            {% if current_user.role == 'support' or current_user.role == 'admin' %}
-                            <form method="POST" class="d-flex align-items-center">
-                                <label for="status" class="me-2"><strong>Update Status:</strong></label>
-                                <select class="form-control me-2" id="status" name="status">
-                                    <option value="open" {% if ticket.status == 'open' %}selected{% endif %}>Open</option>
-                                    <option value="in-progress" {% if ticket.status == 'in-progress' %}selected{% endif %}>In Progress</option>
-                                    <option value="closed" {% if ticket.status == 'closed' %}selected{% endif %}>Closed</option>
-                                </select>
-                                <button type="submit" class="btn btn-primary btn-sm">Update</button>
-                            </form>
-                            {% endif %}
-                        </div>
-                        <div class="col-md-6 text-end">
-                            {% if current_user.role == 'admin' %}
-                            <form method="POST" action="{{ url_for('main.delete_ticket', ticket_id=ticket.id) }}" class="d-inline-block">
-                                <button type="submit" class="btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i> Delete Ticket</button>
-                            </form>
-                            {% endif %}
-                        </div>
-                    </div>
+                    <h5 class="card-title">Description</h5>
+                    <p>{{ ticket.description }}</p>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Description Section -->
     <div class="row mb-4">
-        <div class="col-12">
+        <div class="col-md-12">
             <div class="card">
                 <div class="card-body">
-                    <p><strong>Description:</strong> {{ ticket.description }}</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Comments Section -->
-    <div class="row mb-4">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-body">
-                    <h3>Comments</h3>
+                    <h5 class="card-title">Comments</h5>
                     <form method="POST" class="mb-3">
                         <div class="form-group">
                             <label for="comment_text">Add a comment</label>
@@ -101,7 +58,7 @@
                         </div>
                         <button type="submit" class="btn btn-primary mt-2">Add Comment</button>
                     </form>
-                    <ul class="list-unstyled">
+                    <ul class="list-unstyled mt-4">
                         {% for comment in comments %}
                         <li class="d-flex justify-content-between border-bottom py-2">
                             <div>
@@ -118,4 +75,72 @@
         </div>
     </div>
 </div>
+
+<!-- Update Modal for Status -->
+<div class="modal fade" id="updateStatusModal" tabindex="-1" aria-labelledby="updateStatusModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="updateStatusModalLabel">Update Status</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form method="POST">
+            <div class="form-group">
+                <label for="status">Select New Status</label>
+                <select class="form-control" id="status" name="status">
+                    <option value="open" {% if ticket.status == 'open' %}selected{% endif %}>Open</option>
+                    <option value="in-progress" {% if ticket.status == 'in-progress' %}selected{% endif %}>In Progress</option>
+                    <option value="closed" {% if ticket.status == 'closed' %}selected{% endif %}>Closed</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary mt-3">Update</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Update Modal for Priority -->
+<div class="modal fade" id="updatePriorityModal" tabindex="-1" aria-labelledby="updatePriorityModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="updatePriorityModalLabel">Update Priority</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form method="POST">
+            <div class="form-group">
+                <label for="priority">Select New Priority</label>
+                <select class="form-control" id="priority" name="priority">
+                    <option value="high" {% if ticket.priority == 'high' %}selected{% endif %}>High</option>
+                    <option value="medium" {% if ticket.priority == 'medium' %}selected{% endif %}>Medium</option>
+                    <option value="low" {% if ticket.priority == 'low' %}selected{% endif %}>Low</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary mt-3">Update</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+    document.getElementById('status-badge').addEventListener('click', function() {
+        var myModal = new bootstrap.Modal(document.getElementById('updateStatusModal'));
+        myModal.show();
+    });
+
+    document.getElementById('priority-badge').addEventListener('click', function() {
+        var myModal = new bootstrap.Modal(document.getElementById('updatePriorityModal'));
+        myModal.show();
+    });
+
+    // Initialize tooltips
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+      return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
+</script>
 {% endblock %}
