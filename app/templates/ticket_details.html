@@ -62,7 +62,7 @@
                         {% for comment in comments %}
                         <li class="d-flex justify-content-between border-bottom py-2">
                             <div>
-                                <strong>{{ comment.user.name }}:</strong> {{ comment.comment_text }}
+                                <strong>{{ comment.commenter.name }}:</strong> {{ comment.comment_text }}
                             </div>
                             <div class="text-muted">
                                 <em>{{ comment.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</em>
