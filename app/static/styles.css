@@ -325,10 +325,18 @@ h2 {
 #theme-toggle-button {
   font-size: 1.5rem;
   cursor: pointer;
+  height: 40px; /* Match the height of the logo */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  margin: 0;
 }
 
 #theme-toggle-button .fas {
   transition: color 0.3s ease;
+  font-size: 40px; /* Increase the icon size to match the logo's proportions */
+  line-height: 40px; /* Vertically center the icon */
 }
 
 body.light-mode #theme-toggle-icon {
