@@ -1,4 +1,4 @@
-{% extends "base.html" %} 
+{% extends "base.html" %}
 {% block content %}
 <div class="container mt-5">
     <!-- Back Button, Header, and Priority/Status Section -->
@@ -16,23 +16,23 @@
             <div class="status-priority-container">
                 <div class="mb-2">
                     <p class="mb-0">
-                        <span><strong>Priority:</strong></span>
-                        <span class="badge text-white clickable-badge {% if ticket.priority == 'high' %}bg-danger{% elif ticket.priority == 'medium' %}bg-warning{% else %}bg-info{% endif %}" id="priority-badge" data-bs-toggle="tooltip" title="Click to update priority">
-                            {{ ticket.priority }} <i class="fas fa-edit ms-2"></i>
+                        <span><strong>Priority: </strong></span>
+                        <span class="badge text-white {% if current_user.role == 'admin' or current_user.role == 'manager' %}clickable-badge{% endif %} {% if ticket.priority == 'high' %}bg-danger{% elif ticket.priority == 'medium' %}bg-warning{% else %}bg-info{% endif %}" id="priority-badge" {% if current_user.role == 'admin' or current_user.role == 'manager' %}data-bs-toggle="tooltip" title="Click to update priority"{% endif %}>
+                            {{ ticket.priority }} {% if current_user.role == 'admin' or current_user.role == 'manager' %}<i class="fas fa-edit ms-2"></i>{% endif %}
                         </span>
                     </p>
                 </div>
                 <div>
                     <p class="mb-0">
-                        <span><strong>Status:</strong></span>
-                        <span class="badge text-white clickable-badge {% if ticket.status == 'open' %}bg-success{% elif ticket.status == 'in-progress' %}bg-warning{% else %}bg-secondary{% endif %}" id="status-badge" data-bs-toggle="tooltip" title="Click to update status">
-                            {{ ticket.status }} <i class="fas fa-edit ms-2"></i>
+                        <span><strong>Status: </strong></span>
+                        <span class="badge text-white {% if current_user.role == 'admin' or current_user.role == 'manager' %}clickable-badge{% endif %} {% if ticket.status == 'open' %}bg-success{% elif ticket.status == 'in-progress' %}bg-warning{% else %}bg-secondary{% endif %}" id="status-badge" {% if current_user.role == 'admin' or current_user.role == 'manager' %}data-bs-toggle="tooltip" title="Click to update status"{% endif %}>
+                            {{ ticket.status }} {% if current_user.role == 'admin' or current_user.role == 'manager' %}<i class="fas fa-edit ms-2"></i>{% endif %}
                         </span>
                     </p>
                 </div>
             </div>
         </div>
-            </div>
+    </div>
 
     <!-- Description and Comments Section -->
     <div class="row mb-4">
@@ -76,6 +76,7 @@
     </div>
 </div>
 
+{% if current_user.role == 'admin' or current_user.role == 'manager' %}
 <!-- Update Modal for Status -->
 <div class="modal fade" id="updateStatusModal" tabindex="-1" aria-labelledby="updateStatusModalLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -125,7 +126,9 @@
     </div>
   </div>
 </div>
+{% endif %}
 
+{% if current_user.role == 'admin' or current_user.role == 'manager' %}
 <script>
     document.getElementById('status-badge').addEventListener('click', function() {
         var myModal = new bootstrap.Modal(document.getElementById('updateStatusModal'));
@@ -143,4 +146,5 @@
       return new bootstrap.Tooltip(tooltipTriggerEl)
     })
 </script>
+{% endif %}
 {% endblock %}
