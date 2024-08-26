@@ -331,6 +331,7 @@ h2 {
   justify-content: center;
   padding: 0;
   margin: 0;
+  margin-left: 10px; /* Adjust the value to your preference */
 }
 
 #theme-toggle-button .fas {
@@ -660,4 +661,47 @@ body.dark-mode .badge-priority-high {
   margin-left: 5px;
   font-size: 1.2em;
   opacity: 0.8;
+}
+
+.logout-badge {
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 10px;
+  border-radius: 5px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  white-space: nowrap;
+  justify-content: space-between;
+  margin-left: 5px; /* Small margin to create space between "Priority:" and the badge */
+  color: #fff; /* White text for visibility */
+  background-color: #dc3545; /* Red background specific to logout */
+  text-decoration: none; /* Remove underline from link */
+}
+
+body.dark-mode .logout-badge {
+  background-color: #a71d2a; /* Red background specific to logout */
+}
+
+.logout-badge:hover {
+  transform: scale(1.05);
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  background-color: #c82333; /* Darker red on hover */
+  color: #fff; /* Keep the text white */
+}
+
+body.dark-mode .logout-badge:hover {
+  background-color: #6b121b; /* Darker red on hover */
+}
+
+.logout-badge i {
+  margin-left: 5px;
+  margin-right: 10px; /* Adjust the value to your preference */
+  font-size: 1.2em;
+  opacity: 0.8;
+}
+
+.navbar-nav {
+  display: flex;
+  align-items: center; /* Vertically aligns children (Logout button and toggle button) */
 }
