@@ -14,7 +14,6 @@ import pytest
 from flask import url_for
 from app.models import User, db
 
-
 @pytest.fixture
 def test_user(app):
     """
@@ -28,10 +27,8 @@ def test_user(app):
     :rtype: User
     """
     with app.app_context():
-        # Check if the user already exists
         user = User.query.filter_by(email="test@example.com").first()
         if not user:
-            # Create a test user if none exists
             user = User(name="Test User", email="test@example.com", password="password", role="admin")
             db.session.add(user)
             db.session.commit()
@@ -73,10 +70,8 @@ def test_authenticated_user_navbar(client, app, test_user):
         with app.app_context():
             from flask_login import login_user
 
-            # Simulate a user logging in
             login_user(test_user)
 
-            # Follow the redirect after login
             response = client.get(url_for('main.index'), follow_redirects=True)
             assert response.status_code == 200
             assert b"Logout" in response.data
@@ -101,10 +96,8 @@ def test_redirect_for_authenticated_user(client, app, test_user):
         with app.app_context():
             from flask_login import login_user
 
-            # Simulate a user logging in
             login_user(test_user)
 
-            # Perform the request
             response = client.get(url_for('main.index'))
             assert response.status_code == 302  # Expecting a redirect
             assert url_for('main.all_tickets') in response.headers['Location']
@@ -128,12 +121,10 @@ def test_logout_functionality(client, app, test_user):
         with app.app_context():
             from flask_login import login_user, logout_user
 
-            # Simulate a user logging in
             login_user(test_user)
 
-            # Logout the user
             response = client.get(url_for('main.logout'), follow_redirects=True)
             assert response.status_code == 200
             assert b"Login" in response.data
             assert b"Register" in response.data
-            assert not b"Logout" in response.data
+            assert b"Logout" not in response.data

@@ -1,9 +1,19 @@
 import pytest
 from app import create_app
 from app.models import User, db
+from werkzeug.security import generate_password_hash
 
 @pytest.fixture
 def app():
+    """
+    Create and configure a new app instance for each test.
+
+    This fixture sets up the application with an in-memory database
+    and creates a test user for authentication-related tests.
+
+    :return: Flask application instance
+    :rtype: Flask
+    """
     app = create_app()
     app.config.update({
         "TESTING": True,
@@ -14,8 +24,9 @@ def app():
     with app.app_context():
         db.create_all()
 
-        # Create a test user
-        user = User(name="Test User", email="test@example.com", password="password", role="Admin")
+        # Create a test user with hashed password
+        hashed_password = generate_password_hash("password", method='pbkdf2:sha256')
+        user = User(name="Test User", email="test@example.com", password=hashed_password, role="Admin")
         db.session.add(user)
         db.session.commit()
 
@@ -26,8 +37,30 @@ def app():
 
 @pytest.fixture
 def client(app):
+    """
+    A test client for the app.
+
+    This fixture provides a test client that can be used to send
+    requests to the application during tests.
+
+    :param app: The Flask application instance.
+    :type app: Flask
+    :return: Test client
+    :rtype: FlaskClient
+    """
     return app.test_client()
 
 @pytest.fixture
 def runner(app):
+    """
+    A test runner for the app's Click commands.
+
+    This fixture provides a runner for testing the app's command-line
+    commands using the Flask CLI.
+
+    :param app: The Flask application instance.
+    :type app: Flask
+    :return: Test CLI runner
+    :rtype: FlaskCliRunner
+    """
     return app.test_cli_runner()
