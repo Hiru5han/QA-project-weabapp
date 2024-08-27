@@ -1,15 +1,3 @@
-"""
-Test suite for the base HTML template.
-
-This test suite covers various scenarios related to the `base.html` template,
-including whether certain elements are rendered correctly depending on the
-authentication status of the user.
-
-Attributes:
-    client (FlaskClient): The test client for making requests to the application.
-    app (Flask): The application instance.
-"""
-
 import pytest
 from flask import url_for
 from app.models import User, db
