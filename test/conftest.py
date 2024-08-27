@@ -65,23 +65,23 @@ def runner(app):
     """
     return app.test_cli_runner()
 
-# @pytest.fixture
-# def existing_user(app):
-#     """
-#     Fixture to create an existing user in the database for duplicate email tests.
+@pytest.fixture
+def existing_user(app):
+    """
+    Fixture to create an existing user in the database for duplicate email tests.
     
-#     :param app: The Flask application instance.
-#     :type app: Flask
-#     :return: The created user instance.
-#     :rtype: User
-#     """
-#     with app.app_context():
-#         user = User(
-#             name="Existing User",
-#             email="existing@example.com",
-#             password=generate_password_hash("ValidPassword1!", method="pbkdf2:sha256"),
-#             role="admin"
-#         )
-#         db.session.add(user)
-#         db.session.commit()
-#     return user
+    :param app: The Flask application instance.
+    :type app: Flask
+    :return: The created user instance.
+    :rtype: User
+    """
+    with app.app_context():
+        user = User(
+            name="Existing User",
+            email="existing@example.com",
+            password=generate_password_hash("ValidPassword1!", method="pbkdf2:sha256"),
+            role="admin"
+        )
+        db.session.add(user)
+        db.session.commit()
+    return user
