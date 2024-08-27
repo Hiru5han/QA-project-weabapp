@@ -7,15 +7,19 @@ db = SQLAlchemy()
 login_manager = LoginManager()
 migrate = Migrate()
 
-def create_app():
+def create_app(config=None):
     app = Flask(__name__, instance_relative_config=True)
-    app.config.from_pyfile("config.py")  # Ensure this file exists in the instance folder
+
+    if config:
+        app.config.from_object(config)
+    else:
+        app.config.from_pyfile("config.py")  # Default to development config
 
     db.init_app(app)
     login_manager.init_app(app)
     migrate.init_app(app, db)
 
-    from .models import User  # Make sure User model is correctly defined
+    from .models import User  # Ensure User model is correctly defined
 
     @login_manager.user_loader
     def load_user(user_id):
