@@ -34,7 +34,7 @@ h2 {
 }
 
 .card-header {
-  background-color: #007bff; /* Primary Colour */
+  background-color: #283593 !important; /* Primary Colour */
   color: #ffffff; /* Set text to white for visibility */
   font-size: 1.25rem;
   font-weight: 500;
@@ -168,7 +168,7 @@ h2 {
 
 /* Navbar Customisation */
 .navbar {
-  background-color: #0056b3; /* Navbar Colour */
+  background-color: #283593; /* Navbar Colour */
 }
 
 .navbar .navbar-brand,
@@ -409,9 +409,9 @@ body.dark-mode #theme-toggle-icon {
 
 /* Active Toggle Button Styling */
 .btn-toggle.active {
-  background-color: #6f42c1; /* Adjust to your desired active color */
+  background-color: #00bcd4; /* Adjust to your desired active color */
   color: white;
-  border-color: #007bff;
+  border-color: #00838f;
 }
 
 body.dark-mode .btn-toggle.active {
@@ -426,7 +426,9 @@ body.dark-mode .btn-toggle {
 
 /* Hover Effect for Inactive Toggle Buttons */
 .btn-toggle:not(.active):hover {
-  background-color: #f0f0f0;
+  background-color: #80deea; /* Adjust to your desired active color */
+  color: #37474f;
+  border-color: #4dd0e1;
 }
 
 /* Hover Effect for Inactive Toggle Buttons */
