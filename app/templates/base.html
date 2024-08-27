@@ -34,10 +34,11 @@
           style="height: 40px"
         />
         {% if current_user.is_authenticated %}
-        <div class="role-badge">
-          <span class="badge badge-role-{{ current_user.role }}"
+        <div class="role-container">
+          <span class="badge badge-role-{{ current_user.role | lower }}"
             >{{ current_user.role }}</span
           >
+          <span class="user-info">Signed in as: {{ current_user.name }}</span>
         </div>
         {% endif %}
       </a>

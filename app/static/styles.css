@@ -97,20 +97,22 @@ h2 {
   font-size: 2.2em;
 }
 
-.badge-role-support {
+/* .badge-role-support {
   background-color: #28a745; /* Secondary Colour for support role */
-  color: white;
-}
+/* color: white; */
+/* } */
 
-.badge-role-admin {
+/* .badge-role-admin {
   background-color: #dc3545; /* Red for admin role */
-  color: white;
-}
+/* color: white; */
+/* */
+*/
+/* } */
 
-.badge-role-user {
+/* .badge-role-user {
   background-color: #17a2b8; /* Teal for user role */
-  color: white;
-}
+  /* color: white; */
+/* } */
 
 /* Ensure consistent width for status and priority badges */
 .badge-status {
@@ -174,6 +176,11 @@ h2 {
 .navbar .navbar-brand,
 .navbar .nav-link {
   color: #ffffff; /* Custom text colour */
+}
+
+.navbar-brand {
+  display: flex;
+  align-items: center;
 }
 
 .navbar .nav-link:hover {
@@ -308,8 +315,14 @@ h2 {
 }
 
 .role-badge {
+  margin-left: 15px;
+  padding: 5px 10px;
+  background-color: #dc3545; /* Red background to match the badge style */
+  color: white;
+  border-radius: 5px;
+  font-weight: bold;
   display: inline-block;
-  margin-left: 10px;
+  font-size: 1rem; /* Adjust font size as needed */
   vertical-align: middle;
 }
 
@@ -675,10 +688,11 @@ body.dark-mode .badge-priority-high {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   white-space: nowrap;
   justify-content: space-between;
-  margin-left: 5px; /* Small margin to create space between "Priority:" and the badge */
   color: #fff; /* White text for visibility */
   background-color: #dc3545; /* Red background specific to logout */
   text-decoration: none; /* Remove underline from link */
+  margin-left: auto;
+  font-weight: bold;
 }
 
 body.dark-mode .logout-badge {
@@ -706,4 +720,57 @@ body.dark-mode .logout-badge:hover {
 .navbar-nav {
   display: flex;
   align-items: center; /* Vertically aligns children (Logout button and toggle button) */
+}
+
+.role-container {
+  display: flex;
+  align-items: center;
+}
+
+.badge-role-admin,
+.badge-role-support,
+.badge-role-user {
+  padding: 0 15px; /* Adjust padding for horizontal centering */
+  border-radius: 5px;
+  font-weight: bold;
+  font-size: 1.2rem; /* Keep font size as needed */
+  margin-right: 10px; /* Space between badge and text */
+  margin-left: 10px;
+  height: 38px; /* Ensure consistent height */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 38px; /* Set line-height to match the height of the badge */
+  text-align: center; /* Ensure text is centered */
+}
+
+.user-info {
+  color: white;
+  font-size: 1rem;
+  font-weight: 400;
+}
+
+/* Ensures proper alignment and spacing */
+.role-container .badge {
+  display: inline-block;
+}
+
+.badge-role {
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-weight: bold;
+  font-size: 1rem;
+  margin-right: 10px;
+}
+
+.badge-role-admin {
+  background-color: #dc3545; /* Red for admin role */
+}
+
+.badge-role-support {
+  background-color: #28a745; /* Green for support role */
+}
+
+.badge-role-user {
+  background-color: #17a2b8; /* Teal for user role */
 }
