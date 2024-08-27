@@ -34,12 +34,7 @@ def login():
                 print(f"User logged in: {current_user.is_authenticated}")
                 
                 # Redirect based on the user's role
-                if user.role == "admin":
-                    return redirect(url_for("main.all_tickets"))
-                elif user.role == "support":
-                    return redirect(url_for("main.assigned_tickets"))
-                else:
-                    return redirect(url_for("main.all_tickets"))
+                return redirect_based_on_role()
             else:
                 print(f"Password mismatch for user: {user.email}")
         else:
@@ -47,6 +42,7 @@ def login():
         flash("Login failed. Check your email and password.", "warning")
     else:
         print("Rendering login page")
+    
     return render_template("login.html")
 
 def redirect_based_on_role():
