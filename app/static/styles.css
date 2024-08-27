@@ -428,9 +428,9 @@ body.dark-mode #theme-toggle-icon {
 }
 
 body.dark-mode .btn-toggle.active {
-  background-color: #4b2e7f; /* Adjust to your desired active color */
-  color: white;
-  border-color: #007bff;
+  background-color: #02818a; /* Darker version of #00bcd4 */
+  color: #eceff1; /* Light grey for better contrast */
+  border-color: #005662; /* Darker version of #00838f */
 }
 
 body.dark-mode .btn-toggle {
@@ -444,10 +444,11 @@ body.dark-mode .btn-toggle {
   border-color: #4dd0e1;
 }
 
-/* Hover Effect for Inactive Toggle Buttons */
+/* Hover Effect for Inactive Toggle Buttons - Night Mode */
 body.dark-mode .btn-toggle:not(.active):hover {
-  background-color: #606060;
-  color: white;
+  background-color: #4a9daa; /* Darker version of #80deea */
+  color: #eceff1; /* Lightened text color for better contrast */
+  border-color: #2e99a5; /* Darker version of #4dd0e1 */
 }
 
 /* Rounded Corners for Toggle Buttons */
