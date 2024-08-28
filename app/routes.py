@@ -10,6 +10,14 @@ bp = Blueprint("main", __name__)
 @bp.route('/')
 @bp.route('/index')
 def index():
+    """
+    Renders the index page or redirects to a role-based page if the user is authenticated.
+
+    Returns
+    -------
+    str
+        Rendered template for the index page or a redirect to a role-based page.
+    """
     print(f"User authenticated: {current_user.is_authenticated}")
     if current_user.is_authenticated:
         return redirect_based_on_role()
@@ -18,6 +26,15 @@ def index():
 
 @bp.route("/login", methods=["GET", "POST"])
 def login():
+    """
+    Handles the login process. If the user is authenticated, redirects based on role.
+    On POST, attempts to log the user in with the provided credentials.
+
+    Returns
+    -------
+    str
+        Rendered template for the login page or a redirect to a role-based page.
+    """
     if current_user.is_authenticated:
         return redirect_based_on_role()
 
@@ -46,6 +63,14 @@ def login():
     return render_template("login.html")
 
 def redirect_based_on_role():
+    """
+    Redirects the user to a different page based on their role.
+
+    Returns
+    -------
+    Response
+        A redirect response to the appropriate page for the user's role.
+    """
     if current_user.role == 'admin':
         return redirect(url_for('main.all_tickets'))
     elif current_user.role == 'support':
@@ -55,6 +80,15 @@ def redirect_based_on_role():
 
 @bp.route("/register", methods=["GET", "POST"])
 def register():
+    """
+    Handles the user registration process. Validates input, checks for existing users,
+    and creates a new user if valid.
+
+    Returns
+    -------
+    str
+        Rendered template for the registration page or a redirect to the all_tickets page.
+    """
     if request.method == "POST":
         name = request.form.get("name")
         email = request.form.get("email")
@@ -124,6 +158,14 @@ def register():
 
 @bp.route('/all_tickets')
 def all_tickets():
+    """
+    Renders a page displaying all tickets.
+
+    Returns
+    -------
+    str
+        Rendered template for the all_tickets page with all tickets.
+    """
     tickets = Ticket.query.all()  # or your logic to get all tickets
     return render_template('all_tickets.html', tickets=tickets, view='all')
 
@@ -131,6 +173,14 @@ def all_tickets():
 @bp.route("/create_ticket", methods=["GET", "POST"])
 @login_required
 def create_ticket():
+    """
+    Handles the creation of a new ticket. On POST, validates and saves the new ticket.
+
+    Returns
+    -------
+    str
+        Rendered template for the create_ticket page or a redirect to the all_tickets page.
+    """
     if request.method == "POST":
         title = request.form.get("title")
         description = request.form.get("description")
@@ -156,6 +206,19 @@ def create_ticket():
 @bp.route("/ticket/<int:ticket_id>", methods=["GET", "POST"])
 @login_required
 def ticket_details(ticket_id):
+    """
+    Displays the details of a specific ticket. Allows for comments and status/priority updates.
+
+    Parameters
+    ----------
+    ticket_id : int
+        The ID of the ticket to display.
+
+    Returns
+    -------
+    str
+        Rendered template for the ticket_details page.
+    """
     print(f"Loading ticket details for ticket ID: {ticket_id}")
     ticket = Ticket.query.get_or_404(ticket_id)
     if request.method == "POST":
@@ -199,6 +262,14 @@ def ticket_details(ticket_id):
 @bp.route("/logout")
 @login_required
 def logout():
+    """
+    Logs the current user out and redirects to the index page.
+
+    Returns
+    -------
+    Response
+        A redirect response to the index page.
+    """
     print(f"Logging out user: {current_user.email}")
     logout_user()
     return redirect(url_for("main.index"))
@@ -207,6 +278,14 @@ def logout():
 @bp.route("/unassigned_tickets", methods=["GET", "POST"])
 @login_required
 def unassigned_tickets():
+    """
+    Displays unassigned tickets and allows support staff or admins to assign them.
+
+    Returns
+    -------
+    str
+        Rendered template for the unassigned_tickets page.
+    """
     if current_user.role != "support" and current_user.role != "admin":
         flash("Only support staff and admins can view this page.", "warning")
         return redirect(url_for("main.all_tickets"))
@@ -249,6 +328,19 @@ def unassigned_tickets():
 @bp.route("/assign_ticket/<int:ticket_id>", methods=["GET", "POST"])
 @login_required
 def assign_ticket(ticket_id):
+    """
+    Allows admins to assign a ticket to a support staff member.
+
+    Parameters
+    ----------
+    ticket_id : int
+        The ID of the ticket to assign.
+
+    Returns
+    -------
+    str
+        Rendered template for the assign_ticket page or a redirect to the all_tickets page.
+    """
     if current_user.role != "admin":
         flash("Only admins can assign tickets.", "warning")
         return redirect(url_for("main.all_tickets"))
@@ -281,6 +373,19 @@ def assign_ticket(ticket_id):
 @bp.route("/delete_ticket/<int:ticket_id>", methods=["POST"])
 @login_required
 def delete_ticket(ticket_id):
+    """
+    Allows admins to delete a specific ticket.
+
+    Parameters
+    ----------
+    ticket_id : int
+        The ID of the ticket to delete.
+
+    Returns
+    -------
+    Response
+        A redirect response to the all_tickets page after deleting the ticket.
+    """
     if current_user.role != "admin":
         flash("You do not have permission to delete tickets.", "warning")
         return redirect(url_for("main.all_tickets"))
@@ -295,6 +400,19 @@ def delete_ticket(ticket_id):
 @bp.route("/update_status/<int:ticket_id>", methods=["POST"])
 @login_required
 def update_status(ticket_id):
+    """
+    Allows support staff or admins to update the status of a specific ticket.
+
+    Parameters
+    ----------
+    ticket_id : int
+        The ID of the ticket to update.
+
+    Returns
+    -------
+    Response
+        A redirect response to the ticket details page after updating the status.
+    """
     ticket = Ticket.query.get_or_404(ticket_id)
     if current_user.role != "admin" and current_user.role != "support":
         flash("You do not have permission to update the status.", "warning")
@@ -311,6 +429,14 @@ def update_status(ticket_id):
 @bp.route("/assigned_tickets", methods=["GET", "POST"])
 @login_required
 def assigned_tickets():
+    """
+    Displays tickets assigned to support staff or admins.
+
+    Returns
+    -------
+    str
+        Rendered template for the assigned_tickets page.
+    """
     if current_user.role != "support" and current_user.role != "admin":
         flash("Only support staff and admins can view this page.", "warning")
         return redirect(url_for("main.all_tickets"))
