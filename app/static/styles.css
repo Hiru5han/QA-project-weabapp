@@ -97,23 +97,6 @@ h2 {
   font-size: 2.2em;
 }
 
-/* .badge-role-support {
-  background-color: #28a745; /* Secondary Colour for support role */
-/* color: white; */
-/* } */
-
-/* .badge-role-admin {
-  background-color: #dc3545; /* Red for admin role */
-/* color: white; */
-/* */
-*/
-/* } */
-
-/* .badge-role-user {
-  background-color: #17a2b8; /* Teal for user role */
-  /* color: white; */
-/* } */
-
 /* Ensure consistent width for status and priority badges */
 .badge-status {
   display: block;
@@ -580,7 +563,7 @@ body.dark-mode .badge-role-admin {
   background-color: #a71d2a; /* Soft pink-red */
 }
 
-body.dark-mode .badge-role-user {
+body.dark-mode .badge-role-regular {
   background-color: #0f778a; /* Light purple */
 }
 
@@ -728,23 +711,6 @@ body.dark-mode .logout-badge:hover {
   align-items: center;
 }
 
-.badge-role-admin,
-.badge-role-support,
-.badge-role-user {
-  padding: 0 15px; /* Adjust padding for horizontal centering */
-  border-radius: 5px;
-  font-weight: bold;
-  font-size: 1.2rem; /* Keep font size as needed */
-  margin-right: 10px; /* Space between badge and text */
-  margin-left: 10px;
-  height: 38px; /* Ensure consistent height */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  line-height: 38px; /* Set line-height to match the height of the badge */
-  text-align: center; /* Ensure text is centered */
-}
-
 .user-info {
   color: white;
   font-size: 1rem;
@@ -756,12 +722,21 @@ body.dark-mode .logout-badge:hover {
   display: inline-block;
 }
 
-.badge-role {
-  padding: 5px 10px;
+.badge-role-admin,
+.badge-role-support,
+.badge-role-regular {
+  padding: 0 15px; /* Adjust padding for horizontal centering */
   border-radius: 5px;
   font-weight: bold;
-  font-size: 1rem;
+  font-size: 1.2rem; /* Consistent font size */
   margin-right: 10px;
+  margin-left: 10px;
+  height: 38px; /* Consistent height */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 38px; /* Ensure text is vertically centered */
+  text-align: center;
 }
 
 .badge-role-admin {
@@ -772,6 +747,6 @@ body.dark-mode .logout-badge:hover {
   background-color: #28a745; /* Green for support role */
 }
 
-.badge-role-user {
-  background-color: #17a2b8; /* Teal for user role */
+.badge-role-regular {
+  background-color: #17a2b8; /* Teal for regular role */
 }
