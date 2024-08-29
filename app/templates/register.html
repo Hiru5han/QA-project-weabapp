@@ -12,8 +12,12 @@
                     {% with messages = get_flashed_messages(with_categories=true) %} 
                     {% if messages %}
                     <div class="flashes">
+                        {% set seen_messages = [] %}
                         {% for category, message in messages %}
-                        <div class="alert alert-{{ category }}">{{ message }}</div>
+                            {% if message not in seen_messages %}
+                                <div class="alert alert-{{ category }}">{{ message }}</div>
+                                {% set seen_messages = seen_messages + [message] %}
+                            {% endif %}
                         {% endfor %}
                     </div>
                     {% endif %} 
@@ -81,14 +85,14 @@
             const password = passwordInput.value;
 
             // Check the length
-            if (password.length >= 6) {
+            if (password.length >= 8) {
                 lengthCriteria.classList.add("valid");
                 lengthCriteria.classList.remove("invalid");
-                lengthCriteria.innerHTML = "✓ 6 characters minimum";
+                lengthCriteria.innerHTML = "✓ 8 characters minimum";
             } else {
                 lengthCriteria.classList.add("invalid");
                 lengthCriteria.classList.remove("valid");
-                lengthCriteria.innerHTML = "✗ 6 characters minimum";
+                lengthCriteria.innerHTML = "✗ 8 characters minimum";
             }
 
             // Check for numbers

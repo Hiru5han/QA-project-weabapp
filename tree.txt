@@ -25,6 +25,25 @@
 │       ├── register.html
 │       ├── ticket_details.html
 │       └── unassigned_tickets.html
+├── htmlcov
+│   ├── class_index.html
+│   ├── coverage_html_cb_6fb7b396.js
+│   ├── favicon_32_cb_58284776.png
+│   ├── function_index.html
+│   ├── index.html
+│   ├── keybd_closed_cb_ce680311.png
+│   ├── run_py.html
+│   ├── status.json
+│   ├── style_cb_8e611ae1.css
+│   ├── z_36f028580bb02cc8___init___py.html
+│   ├── z_36f028580bb02cc8_conftest_py.html
+│   ├── z_36f028580bb02cc8_test_config_py.html
+│   ├── z_5f5a17c013354698___init___py.html
+│   ├── z_5f5a17c013354698_models_py.html
+│   ├── z_5f5a17c013354698_routes_py.html
+│   ├── z_cb9fd7c543aa674d_test_base_html_py.html
+│   ├── z_cb9fd7c543aa674d_test_login_html_py.html
+│   └── z_cb9fd7c543aa674d_test_register_html_py.html
 ├── instance
 │   ├── config.py
 │   └── helpdesk.db
@@ -34,12 +53,18 @@
 │   ├── env.py
 │   ├── script.py.mako
 │   └── versions
-│       └── ec234863fd95_initial_migration_after_reset.py
+│       └── 103cbde02d85_.py
 ├── requirements.txt
 ├── run.py
 ├── test
-│   ├── test_base_html.py
-│   └── test_config.py
+│   ├── __init__.py
+│   ├── conftest.py
+│   ├── templates
+│   │   ├── test_base_html.py
+│   │   ├── test_login_html.py
+│   │   └── test_register_html.py
+│   ├── test_config.py
+│   └── tree.txt
 ├── tree.txt
 ├── venv
 │   ├── bin
@@ -48,6 +73,9 @@
 │   │   ├── activate.csh
 │   │   ├── activate.fish
 │   │   ├── alembic
+│   │   ├── coverage
+│   │   ├── coverage-3.9
+│   │   ├── coverage3
 │   │   ├── flask
 │   │   ├── mako-render
 │   │   ├── pip
@@ -319,6 +347,68 @@
 │   │           │   ├── RECORD
 │   │           │   ├── REQUESTED
 │   │           │   ├── WHEEL
+│   │           │   └── top_level.txt
+│   │           ├── coverage
+│   │           │   ├── __init__.py
+│   │           │   ├── __main__.py
+│   │           │   ├── annotate.py
+│   │           │   ├── bytecode.py
+│   │           │   ├── cmdline.py
+│   │           │   ├── collector.py
+│   │           │   ├── config.py
+│   │           │   ├── context.py
+│   │           │   ├── control.py
+│   │           │   ├── core.py
+│   │           │   ├── data.py
+│   │           │   ├── debug.py
+│   │           │   ├── disposition.py
+│   │           │   ├── env.py
+│   │           │   ├── exceptions.py
+│   │           │   ├── execfile.py
+│   │           │   ├── files.py
+│   │           │   ├── html.py
+│   │           │   ├── htmlfiles
+│   │           │   │   ├── coverage_html.js
+│   │           │   │   ├── favicon_32.png
+│   │           │   │   ├── index.html
+│   │           │   │   ├── keybd_closed.png
+│   │           │   │   ├── pyfile.html
+│   │           │   │   ├── style.css
+│   │           │   │   └── style.scss
+│   │           │   ├── inorout.py
+│   │           │   ├── jsonreport.py
+│   │           │   ├── lcovreport.py
+│   │           │   ├── misc.py
+│   │           │   ├── multiproc.py
+│   │           │   ├── numbits.py
+│   │           │   ├── parser.py
+│   │           │   ├── phystokens.py
+│   │           │   ├── plugin.py
+│   │           │   ├── plugin_support.py
+│   │           │   ├── py.typed
+│   │           │   ├── python.py
+│   │           │   ├── pytracer.py
+│   │           │   ├── regions.py
+│   │           │   ├── report.py
+│   │           │   ├── report_core.py
+│   │           │   ├── results.py
+│   │           │   ├── sqldata.py
+│   │           │   ├── sqlitedb.py
+│   │           │   ├── sysmon.py
+│   │           │   ├── templite.py
+│   │           │   ├── tomlconfig.py
+│   │           │   ├── tracer.cpython-39-darwin.so
+│   │           │   ├── tracer.pyi
+│   │           │   ├── types.py
+│   │           │   ├── version.py
+│   │           │   └── xmlreport.py
+│   │           ├── coverage-7.6.1.dist-info
+│   │           │   ├── INSTALLER
+│   │           │   ├── LICENSE.txt
+│   │           │   ├── METADATA
+│   │           │   ├── RECORD
+│   │           │   ├── WHEEL
+│   │           │   ├── entry_points.txt
 │   │           │   └── top_level.txt
 │   │           ├── distutils-precedence.pth
 │   │           ├── exceptiongroup
@@ -1094,6 +1184,23 @@
 │   │           │   ├── WHEEL
 │   │           │   ├── entry_points.txt
 │   │           │   └── top_level.txt
+│   │           ├── pytest-cov.pth
+│   │           ├── pytest_cov
+│   │           │   ├── __init__.py
+│   │           │   ├── compat.py
+│   │           │   ├── embed.py
+│   │           │   ├── engine.py
+│   │           │   └── plugin.py
+│   │           ├── pytest_cov-5.0.0.dist-info
+│   │           │   ├── AUTHORS.rst
+│   │           │   ├── INSTALLER
+│   │           │   ├── LICENSE
+│   │           │   ├── METADATA
+│   │           │   ├── RECORD
+│   │           │   ├── REQUESTED
+│   │           │   ├── WHEEL
+│   │           │   ├── entry_points.txt
+│   │           │   └── top_level.txt
 │   │           ├── pytest_flask
 │   │           │   ├── __init__.py
 │   │           │   ├── _internal.py
@@ -1669,4 +1776,4 @@
 │   └── pyvenv.cfg
 └── vercel.json
 
-195 directories, 1475 files
+202 directories, 1575 files
