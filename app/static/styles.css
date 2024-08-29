@@ -292,9 +292,12 @@ h2 {
 }
 
 .back-button-icon {
-  width: 60px;
-  height: 60px;
-  vertical-align: middle;
+  font-size: 48px;
+  color: #007bff; /* Change this to your desired colour */
+}
+
+.back-button-icon:hover {
+  color: #0056b3; /* Darker shade on hover */
 }
 
 .role-badge {

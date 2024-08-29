@@ -4,8 +4,8 @@
     <!-- Back Button, Header, and Priority/Status Section -->
     <div class="row mb-4 align-items-center">
         <div class="col-md-2 text-start d-flex align-items-center">
-            <a href="{{ url_for('main.all_tickets') }}">
-                <img src="{{ url_for('static', filename='back_button.png') }}" alt="Back to Dashboard" class="back-button-icon">
+            <a href="javascript:void(0)" onclick="window.history.back();">
+                <i class="fas fa-chevron-left back-button-icon"></i>
             </a>
         </div>
         <div class="col-md-8 text-center d-flex flex-column align-items-center">
@@ -145,6 +145,14 @@
     var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
       return new bootstrap.Tooltip(tooltipTriggerEl)
     })
+
+    function goBack() {
+        if (document.referrer) {
+            window.history.back();
+        } else {
+            window.location.href = "{{ url_for('main.all_tickets') }}";
+        }
+    }
 </script>
 {% endif %}
 {% endblock %}
