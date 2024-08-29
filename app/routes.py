@@ -185,17 +185,18 @@ def create_ticket():
         title = request.form.get("title")
         description = request.form.get("description")
         priority = request.form.get("priority")
+        status = request.form.get("status")  # Get status value from the form
         assigned_to_id = request.form.get("assigned_to")  # Get assigned_to value from the form
 
         print(
-            f"Creating ticket with Title: {title}, Description: {description}, Priority: {priority}"
+            f"Creating ticket with Title: {title}, Description: {description}, Priority: {priority}, Status: {status}"
         )
 
         new_ticket = Ticket(
             title=title,
             description=description,
             priority=priority,
-            status="open",
+            status=status,
             user_id=current_user.id,
         )
 

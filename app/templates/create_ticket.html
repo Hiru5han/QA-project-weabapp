@@ -26,7 +26,16 @@
     </select>
   </div>
 
-  {% if current_user.role == 'admin' %}
+  {% if current_user.role in ['admin', 'support'] %}
+  <div class="form-group">
+    <label for="status">Current State</label>
+    <select class="form-control" id="status" name="status" required>
+      <option value="open">Open</option>
+      <option value="in-progress">In-Progress</option>
+      <option value="closed">Closed</option>
+    </select>
+  </div>
+  {% endif %} {% if current_user.role == 'admin' %}
   <div class="form-group">
     <label for="assigned_to">Assign to Support User</label>
     <select class="form-control" id="assigned_to" name="assigned_to">
