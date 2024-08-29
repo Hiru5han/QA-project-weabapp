@@ -197,25 +197,6 @@ h2 {
   color: rgb(0, 0, 0);
 }
 
-/* Login Page Specific Styles */
-.login-page {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 40vh;
-  margin: 0;
-  margin-top: 50px; /* Same margin as container */
-}
-
-.login-card {
-  background-color: #ffffff;
-  padding: 2rem;
-  border-radius: 0.5rem;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  width: 100%;
-  max-width: 400px;
-}
-
 .login-header {
   display: flex;
   align-items: center;
@@ -297,6 +278,17 @@ h2 {
 
 .btn-wide {
   width: 200; /* Adjust the width as needed */
+}
+
+.back-button {
+  margin-right: auto; /* Push the back button to the far left */
+  display: flex;
+  align-items: center;
+  text-decoration: none; /* Remove the underline */
+}
+
+.back-button:hover {
+  text-decoration: none; /* Ensure no underline appears on hover */
 }
 
 .back-button-icon {
@@ -485,14 +477,6 @@ span.invalid {
 /* Adjust the button for toggling password visibility */
 #togglePassword {
   margin-top: 10px;
-}
-
-.register-header {
-  background-color: #007bff; /* Primary Colour for Register page */
-}
-
-.register-header h2 {
-  color: #ffffff !important; /* Ensure the text is white */
 }
 
 /* Dark Mode */
@@ -760,4 +744,93 @@ body.dark-mode .logout-badge:hover {
 
 .badge-role-regular {
   background-color: #17a2b8; /* Teal for regular role */
+}
+
+/* General Container Styling */
+.auth-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 40vh;
+  padding: 20px; /* Additional padding to handle small viewport heights */
+  background-color: #f8f9fa; /* Background colour */
+}
+
+/* Auth Card Styling */
+.auth-card {
+  width: 100%;
+  max-width: 400px;
+  padding: 2rem;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box; /* Ensure padding is included in width */
+}
+
+/* Header Styling */
+.auth-header {
+  border-bottom: 1px solid #dee2e6;
+  padding-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.auth-title {
+  font-size: 1.5rem;
+  color: #007bff; /* Ensure the text colour matches */
+  margin: 0 auto; /* Ensure the title is centred */
+  text-align: center;
+  flex-grow: 1; /* Allow the title to take up available space */
+}
+
+/* Form Styling */
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-control {
+  width: 100%;
+  padding: 0.75rem;
+  margin-top: 0.5rem;
+  border-radius: 4px;
+  border: 1px solid #ced4da;
+}
+
+.btn-outline-secondary {
+  border-color: #6c757d;
+  color: #6c757d;
+  width: 100%;
+  padding: 0.75rem;
+  margin-top: 10px;
+}
+
+/* Flash Messages */
+.flashes .alert {
+  margin-bottom: 1rem;
+}
+
+span.valid {
+  color: green;
+}
+
+span.invalid {
+  color: red;
+}
+
+.criteria {
+  display: flex;
+  justify-content: space-between;
+}
+
+.criteria-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.criteria-item span {
+  display: flex;
+  align-items: center;
+  margin: 5px 0;
+  font-weight: bold;
 }

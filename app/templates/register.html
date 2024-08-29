@@ -1,140 +1,78 @@
-{% extends "base.html" %} 
-{% block content %}
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header register-header text-center">
-                    <h2>Register</h2>
-                </div>            
-                <div class="card-body">
-                    <!-- Include a section to display flash messages -->
-                    {% with messages = get_flashed_messages(with_categories=true) %} 
-                    {% if messages %}
-                    <div class="flashes">
-                        {% set seen_messages = [] %}
-                        {% for category, message in messages %}
-                            {% if message not in seen_messages %}
-                                <div class="alert alert-{{ category }}">{{ message }}</div>
-                                {% set seen_messages = seen_messages + [message] %}
-                            {% endif %}
-                        {% endfor %}
-                    </div>
-                    {% endif %} 
-                    {% endwith %}
-                    
-                    <form method="POST">
-                        <div class="form-group">
-                            <label for="name">Name</label>
-                            <input type="text" class="form-control" id="name" name="name" value="{{ name or '' }}" required />
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="email">Email address</label>
-                            <input type="email" class="form-control" id="email" name="email" value="{{ email or '' }}" required />
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="password">Password</label>
-                            <input type="password" class="form-control" id="password" name="password" required />
-                            <button type="button" id="togglePassword" class="btn btn-outline-secondary mt-2">Show</button>
-                            
-                            <!-- Password requirements -->
-                            <div id="password-requirements" class="form-text text-muted mt-2">
-                                <div class="criteria">
-                                    <div class="criteria-item">
-                                        <span id="length" class="invalid">✗ 8 characters minimum</span>
-                                        <span id="number" class="invalid">✗ One number</span>
-                                    </div>
-                                    <div class="criteria-item">
-                                        <span id="uppercase" class="invalid">✗ One uppercase letter</span>
-                                        <span id="special" class="invalid">✗ One special character !@#$%^&*</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="role">Role</label>
-                            <select class="form-control" id="role" name="role" required>
-                                <option value="admin" {% if role == 'admin' %}selected{% endif %}>Admin</option>
-                                <option value="support" {% if role == 'support' %}selected{% endif %}>Support</option>
-                                <option value="regular" {% if role == 'regular' %}selected{% endif %}>Regular</option>
-                            </select>
-                        </div>
-                        
-                        <button type="submit" class="btn btn-primary mt-3">Register</button>
-                    </form>
-                </div>
-            </div>
-        </div>
+{% extends "base.html" %} {% block content %}
+<div class="auth-page">
+  <div class="auth-card">
+    <div class="auth-header d-flex align-items-center mb-4">
+      <a
+        href="javascript:void(0);"
+        onclick="window.history.back();"
+        class="back-button me-2"
+      >
+        <i class="fas fa-chevron-left back-button-icon"></i>
+      </a>
+      <h2 class="auth-title mb-0">Register</h2>
     </div>
+    <form method="POST">
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input
+          type="text"
+          class="form-control"
+          id="name"
+          name="name"
+          required
+        />
+      </div>
+      <div class="form-group">
+        <label for="email">Email address</label>
+        <input
+          type="email"
+          class="form-control"
+          id="email"
+          name="email"
+          required
+        />
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input
+          type="password"
+          class="form-control"
+          id="password"
+          name="password"
+          required
+        />
+        <button
+          type="button"
+          id="togglePassword"
+          class="btn btn-outline-secondary mt-2"
+        >
+          Show
+        </button>
+        <div id="password-requirements" class="form-text text-muted mt-2">
+          <div class="criteria">
+            <div class="criteria-item">
+              <span id="length" class="invalid">✗ 8 characters minimum</span>
+              <span id="number" class="invalid">✗ One number</span>
+            </div>
+            <div class="criteria-item">
+              <span id="uppercase" class="invalid">✗ One uppercase letter</span>
+              <span id="special" class="invalid"
+                >✗ One special character !@#$%^&*</span
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="role">Role</label>
+        <select class="form-control" id="role" name="role" required>
+          <option value="admin">Admin</option>
+          <option value="support">Support</option>
+          <option value="regular">Regular</option>
+        </select>
+      </div>
+      <button type="submit" class="btn btn-primary mt-3">Register</button>
+    </form>
+  </div>
 </div>
-
-<!-- Inline JavaScript -->
-<script type="text/javascript">
-    document.addEventListener("DOMContentLoaded", function() {
-        const passwordInput = document.getElementById("password");
-        const lengthCriteria = document.getElementById("length");
-        const numberCriteria = document.getElementById("number");
-        const uppercaseCriteria = document.getElementById("uppercase");
-        const specialCriteria = document.getElementById("special");
-        const togglePassword = document.getElementById("togglePassword");
-
-        passwordInput.addEventListener("input", function() {
-            const password = passwordInput.value;
-
-            // Check the length
-            if (password.length >= 8) {
-                lengthCriteria.classList.add("valid");
-                lengthCriteria.classList.remove("invalid");
-                lengthCriteria.innerHTML = "✓ 8 characters minimum";
-            } else {
-                lengthCriteria.classList.add("invalid");
-                lengthCriteria.classList.remove("valid");
-                lengthCriteria.innerHTML = "✗ 8 characters minimum";
-            }
-
-            // Check for numbers
-            if (/\d/.test(password)) {
-                numberCriteria.classList.add("valid");
-                numberCriteria.classList.remove("invalid");
-                numberCriteria.innerHTML = "✓ One number";
-            } else {
-                numberCriteria.classList.add("invalid");
-                numberCriteria.classList.remove("valid");
-                numberCriteria.innerHTML = "✗ One number";
-            }
-
-            // Check for uppercase letters
-            if (/[A-Z]/.test(password)) {
-                uppercaseCriteria.classList.add("valid");
-                uppercaseCriteria.classList.remove("invalid");
-                uppercaseCriteria.innerHTML = "✓ One uppercase letter";
-            } else {
-                uppercaseCriteria.classList.add("invalid");
-                uppercaseCriteria.classList.remove("valid");
-                uppercaseCriteria.innerHTML = "✗ One uppercase letter";
-            }
-
-            // Check for special characters
-            if (/[!@#$%^&*]/.test(password)) {
-                specialCriteria.classList.add("valid");
-                specialCriteria.classList.remove("invalid");
-                specialCriteria.innerHTML = "✓ One special character !@#$%^&*";
-            } else {
-                specialCriteria.classList.add("invalid");
-                specialCriteria.classList.remove("valid");
-                specialCriteria.innerHTML = "✗ One special character !@#$%^&*";
-            }
-        });
-
-        // Toggle password visibility
-        togglePassword.addEventListener("click", function () {
-            const type = passwordInput.getAttribute("type") === "password" ? "text" : "password";
-            passwordInput.setAttribute("type", type);
-            this.textContent = type === "password" ? "Show" : "Hide";
-        });
-    });
-</script>
 {% endblock %}

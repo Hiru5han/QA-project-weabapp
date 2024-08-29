@@ -1,25 +1,16 @@
 {% extends "base.html" %} {% block content %}
-<link
-  rel="stylesheet"
-  type="text/css"
-  href="{{ url_for('static', filename='styles.css') }}"
-/>
-
-<div class="login-page">
-  <div class="login-card">
-    <div class="login-header d-flex align-items-center mb-4">
-      <!-- Back Button Section -->
+<div class="auth-page">
+  <div class="auth-card">
+    <div class="auth-header d-flex align-items-center mb-4">
       <a
         href="javascript:void(0);"
         onclick="window.history.back();"
-        class="me-2"
+        class="back-button me-2"
       >
         <i class="fas fa-chevron-left back-button-icon"></i>
       </a>
-      <!-- Login Title -->
-      <h2 class="login-title mb-0">Login</h2>
+      <h2 class="auth-title mb-0">Login</h2>
     </div>
-
     <form method="POST">
       <div class="form-group">
         <label for="email">Email address</label>
