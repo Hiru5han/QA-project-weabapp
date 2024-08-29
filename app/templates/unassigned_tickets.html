@@ -1,5 +1,4 @@
-{% extends "base.html" %}
-{% block content %}
+{% extends "base.html" %} {% block content %}
 <div class="container mt-5">
   <!-- Dashboard Header -->
   <div class="row mb-2">
@@ -11,17 +10,32 @@
 
   <!-- Header with Toggle, Title, and Create Button -->
   <div class="card shadow-sm">
-    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+    <div
+      class="card-header bg-primary text-white d-flex justify-content-between align-items-center"
+    >
       <!-- Toggle Buttons on the Left -->
-      <div class="btn-group toggle-group" role="group" aria-label="Ticket Status Toggle">
-        <a href="{{ url_for('main.unassigned_tickets') }}" class="btn btn-toggle {% if view == 'unassigned' %}active{% endif %}">
+      <div
+        class="btn-group toggle-group"
+        role="group"
+        aria-label="Ticket Status Toggle"
+      >
+        <a
+          href="{{ url_for('main.unassigned_tickets') }}"
+          class="btn btn-toggle {% if view == 'unassigned' %}active{% endif %}"
+        >
           Unassigned
         </a>
-        <a href="{{ url_for('main.assigned_tickets') }}" class="btn btn-toggle {% if view == 'assigned' %}active{% endif %}">
+        <a
+          href="{{ url_for('main.assigned_tickets') }}"
+          class="btn btn-toggle {% if view == 'assigned' %}active{% endif %}"
+        >
           Assigned
         </a>
         {% if current_user.role == 'admin' %}
-        <a href="{{ url_for('main.all_tickets') }}" class="btn btn-toggle {% if view == 'all' %}active{% endif %}">
+        <a
+          href="{{ url_for('main.all_tickets') }}"
+          class="btn btn-toggle {% if view == 'all' %}active{% endif %}"
+        >
           All Tickets
         </a>
         {% endif %}
@@ -47,7 +61,8 @@
             <th class="col text-center">Priority</th>
             <th class="col text-center">Status</th>
             {% if current_user.role == 'admin' %}
-            <th class="col text-center">Assign To</th> <!-- New column only for admin -->
+            <th class="col text-center">Assign To</th>
+            <!-- New column only for admin -->
             {% endif %}
             <th class="col text-center">Actions</th>
           </tr>
@@ -68,30 +83,42 @@
             </td>
             {% if current_user.role == 'admin' %}
             <td class="col text-center">
-              <form method="POST" action="{{ url_for('main.unassigned_tickets') }}">
+              <form
+                method="POST"
+                action="{{ url_for('main.unassigned_tickets') }}"
+              >
                 <input type="hidden" name="ticket_id" value="{{ ticket.id }}" />
-                <select name="assigned_to" class="form-select form-select-sm">
-                  <option value="{{ current_user.id }}">Assign to Me ({{ current_user.name }})</option>
-                  {% for staff in support_staff %}
-                  {% if staff.id != current_user.id %}
+                <select
+                  name="assigned_to"
+                  class="form-select form-select-sm mb-2"
+                >
+                  <option value="{{ current_user.id }}">
+                    Assign to Me ({{ current_user.name }})
+                  </option>
+                  {% for staff in support_staff %} {% if staff.id !=
+                  current_user.id %}
                   <option value="{{ staff.id }}">{{ staff.name }}</option>
-                  {% endif %}
-                  {% endfor %}
+                  {% endif %} {% endfor %}
                 </select>
+                <button type="submit" class="btn btn-outline-success btn-sm">
+                  <i class="fas fa-user-plus"></i> Assign
+                </button>
+              </form>
             </td>
             {% endif %}
             <td class="col text-center">
-                {% if current_user.role == 'admin' %}
-                <button type="submit" class="btn btn-outline-success btn-sm me-2">
-                  <i class="fas fa-user-plus"></i> Assign
-                </button>
-                </form>
-                {% endif %}
-              <a href="{{ url_for('main.ticket_details', ticket_id=ticket.id) }}" class="btn btn-outline-primary btn-sm">
+              <a
+                href="{{ url_for('main.ticket_details', ticket_id=ticket.id) }}"
+                class="btn btn-outline-primary btn-sm"
+              >
                 <i class="fas fa-eye"></i> View
               </a>
               {% if current_user.role == 'admin' %}
-              <form method="POST" action="{{ url_for('main.delete_ticket', ticket_id=ticket.id) }}" style="display: inline">
+              <form
+                method="POST"
+                action="{{ url_for('main.delete_ticket', ticket_id=ticket.id) }}"
+                style="display: inline"
+              >
                 <button type="submit" class="btn btn-outline-danger btn-sm">
                   <i class="fas fa-trash"></i> Delete
                 </button>
