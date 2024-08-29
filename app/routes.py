@@ -243,6 +243,7 @@ def ticket_details(ticket_id):
     """
     print(f"Loading ticket details for ticket ID: {ticket_id}")
     ticket = Ticket.query.get_or_404(ticket_id)
+    
     if request.method == "POST":
         if "comment_text" in request.form:
             comment_text = request.form.get("comment_text")
@@ -251,6 +252,7 @@ def ticket_details(ticket_id):
                 comment_text=comment_text, ticket_id=ticket.id, user_id=current_user.id
             )
             db.session.add(new_comment)
+        
         if "status" in request.form:
             status = request.form.get("status")
             if ticket.status != status:
@@ -263,6 +265,7 @@ def ticket_details(ticket_id):
                     user_id=current_user.id,
                 )
                 db.session.add(status_comment)
+        
         if "priority" in request.form and current_user.role == "admin":
             priority = request.form.get("priority")
             if ticket.priority != priority:
@@ -275,10 +278,26 @@ def ticket_details(ticket_id):
                     user_id=current_user.id,
                 )
                 db.session.add(priority_comment)
+        
+        if "assignee" in request.form and current_user.role == "admin":
+            new_assignee_id = request.form.get("assignee")
+            if ticket.assigned_to != new_assignee_id:
+                ticket.assigned_to = new_assignee_id
+                # Add a comment about the assignee change
+                assignee_comment_text = f"Assignee changed to {User.query.get(new_assignee_id).name}."
+                assignee_comment = Comment(
+                    comment_text=assignee_comment_text,
+                    ticket_id=ticket.id,
+                    user_id=current_user.id,
+                )
+                db.session.add(assignee_comment)
+
         db.session.commit()
         return redirect(url_for("main.ticket_details", ticket_id=ticket_id))
+    
     comments = Comment.query.filter_by(ticket_id=ticket.id).all()
-    return render_template("ticket_details.html", ticket=ticket, comments=comments)
+    users = User.query.all()  # Fetch all users for the assignee dropdown
+    return render_template("ticket_details.html", ticket=ticket, comments=comments, users=users)
 
 
 @bp.route("/logout")

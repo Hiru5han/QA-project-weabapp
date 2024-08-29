@@ -22,7 +22,7 @@
                         </span>
                     </p>
                 </div>
-                <div>
+                <div class="mb-2">
                     <p class="mb-0">
                         <span><strong>Status: </strong></span>
                         <span class="badge text-white {% if current_user.role == 'admin' or current_user.role == 'manager' %}clickable-badge{% endif %} {% if ticket.status == 'open' %}bg-success{% elif ticket.status == 'in-progress' %}bg-warning{% else %}bg-secondary{% endif %}" id="status-badge" {% if current_user.role == 'admin' or current_user.role == 'manager' %}data-bs-toggle="tooltip" title="Click to update status"{% endif %}>
@@ -30,7 +30,15 @@
                         </span>
                     </p>
                 </div>
-            </div>
+                <div>
+                    <p class="mb-0">
+                        <span><strong>Assignee: </strong></span>
+                        <span class="badge badge-assignee clickable-badge" id="assignee-badge" data-bs-toggle="tooltip" title="Click to update assignee">
+                            {{ ticket.assignee.name }} <i class="fas fa-edit ms-2"></i>
+                        </span>
+                    </p>
+                </div>
+                            </div>
         </div>
     </div>
 
@@ -126,6 +134,33 @@
     </div>
   </div>
 </div>
+
+<!-- Update Modal for Assignee -->
+<div class="modal fade" id="updateAssigneeModal" tabindex="-1" aria-labelledby="updateAssigneeModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="updateAssigneeModalLabel">Update Assignee</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form method="POST">
+            <div class="form-group">
+                <label for="assignee">Select New Assignee</label>
+                <select class="form-control" id="assignee" name="assignee">
+                    {% for user in users %}
+                    <option value="{{ user.id }}" {% if ticket.assignee_id == user.id %}selected{% endif %}>
+                        {{ user.name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary mt-3">Update</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
 {% endif %}
 
 {% if current_user.role == 'admin' or current_user.role == 'manager' %}
@@ -137,6 +172,11 @@
 
     document.getElementById('priority-badge').addEventListener('click', function() {
         var myModal = new bootstrap.Modal(document.getElementById('updatePriorityModal'));
+        myModal.show();
+    });
+
+    document.getElementById('assignee-badge').addEventListener('click', function() {
+        var myModal = new bootstrap.Modal(document.getElementById('updateAssigneeModal'));
         myModal.show();
     });
 

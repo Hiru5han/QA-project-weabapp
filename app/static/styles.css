@@ -834,3 +834,24 @@ span.invalid {
   margin: 5px 0;
   font-weight: bold;
 }
+
+/* Assignee Badge Styling - Centered Text */
+.badge-assignee {
+  background-color: #17a2b8; /* Example Colour: A Teal Blue for Assignee */
+  color: #ffffff; /* White text color */
+  padding: 0.5rem 1rem; /* Adjust padding for better spacing */
+  border-radius: 0.25rem; /* Rounded corners */
+  display: inline-flex; /* Ensures it's an inline flex box */
+  align-items: center; /* Center items vertically */
+  justify-content: center; /* Center items horizontally */
+  font-size: 1.2rem; /* Adjust font size for readability */
+}
+
+.badge-assignee i {
+  margin-left: 0.5rem; /* Adds space between text and icon */
+}
+
+.badge-assignee:hover {
+  background-color: #138496; /* Slightly darker on hover */
+  color: #ffffff; /* Maintain white text on hover */
+}
