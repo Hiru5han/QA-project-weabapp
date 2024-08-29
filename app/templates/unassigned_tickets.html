@@ -62,7 +62,6 @@
             <th class="col text-center">Status</th>
             {% if current_user.role == 'admin' %}
             <th class="col text-center">Assign To</th>
-            <!-- New column only for admin -->
             {% endif %}
             <th class="col text-center">Actions</th>
           </tr>
@@ -107,6 +106,23 @@
             </td>
             {% endif %}
             <td class="col text-center">
+              {% if current_user.role == 'support' %}
+              <form
+                method="POST"
+                action="{{ url_for('main.unassigned_tickets') }}"
+                style="display: inline"
+              >
+                <input type="hidden" name="ticket_id" value="{{ ticket.id }}" />
+                <input
+                  type="hidden"
+                  name="assigned_to"
+                  value="{{ current_user.id }}"
+                />
+                <button type="submit" class="btn btn-outline-success btn-sm">
+                  <i class="fas fa-user-plus"></i> Assign to Me
+                </button>
+              </form>
+              {% endif %}
               <a
                 href="{{ url_for('main.ticket_details', ticket_id=ticket.id) }}"
                 class="btn btn-outline-primary btn-sm"
