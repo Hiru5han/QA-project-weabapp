@@ -16,6 +16,7 @@
       required
     ></textarea>
   </div>
+
   <div class="form-group">
     <label for="priority">Priority</label>
     <select class="form-control" id="priority" name="priority" required>
@@ -24,6 +25,19 @@
       <option value="high">High</option>
     </select>
   </div>
+
+  {% if current_user.role == 'admin' %}
+  <div class="form-group">
+    <label for="assigned_to">Assign to Support User</label>
+    <select class="form-control" id="assigned_to" name="assigned_to">
+      <option value="">-- Select Support User --</option>
+      {% for staff in support_staff %}
+      <option value="{{ staff.id }}">{{ staff.name }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  {% endif %}
+
   <button type="submit" class="btn btn-primary">Create</button>
 </form>
 {% endblock %}

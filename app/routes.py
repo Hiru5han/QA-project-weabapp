@@ -185,9 +185,12 @@ def create_ticket():
         title = request.form.get("title")
         description = request.form.get("description")
         priority = request.form.get("priority")
+        assigned_to_id = request.form.get("assigned_to")  # Get assigned_to value from the form
+
         print(
             f"Creating ticket with Title: {title}, Description: {description}, Priority: {priority}"
         )
+
         new_ticket = Ticket(
             title=title,
             description=description,
@@ -195,12 +198,24 @@ def create_ticket():
             status="open",
             user_id=current_user.id,
         )
+
+        # If the user is an admin and has selected a user to assign the ticket to
+        if current_user.role == 'admin' and assigned_to_id:
+            new_ticket.assigned_to = assigned_to_id
+
         db.session.add(new_ticket)
         db.session.commit()
         return redirect(url_for("main.all_tickets"))
+
     else:
         print("Rendering create ticket page")
-    return render_template("create_ticket.html")
+
+    # If the user is an admin, query the list of support staff
+    support_staff = []
+    if current_user.role == 'admin':
+        support_staff = User.query.filter_by(role='support').all()
+
+    return render_template("create_ticket.html", support_staff=support_staff)
 
 
 @bp.route("/ticket/<int:ticket_id>", methods=["GET", "POST"])
