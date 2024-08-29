@@ -278,14 +278,6 @@ def logout():
 @bp.route("/unassigned_tickets", methods=["GET", "POST"])
 @login_required
 def unassigned_tickets():
-    """
-    Displays unassigned tickets and allows support staff or admins to assign them.
-
-    Returns
-    -------
-    str
-        Rendered template for the unassigned_tickets page.
-    """
     if current_user.role != "support" and current_user.role != "admin":
         flash("Only support staff and admins can view this page.", "warning")
         return redirect(url_for("main.all_tickets"))
@@ -296,17 +288,28 @@ def unassigned_tickets():
     if request.method == "POST":
         ticket_id = request.form.get("ticket_id")
         ticket = Ticket.query.get(ticket_id)
+
         if current_user.role == "support":
             ticket.assigned_to = current_user.id
             comment_text = f"Ticket assigned to {current_user.name}."
         elif current_user.role == "admin":
             assigned_to_id = request.form.get("assigned_to")
-            ticket.assigned_to = assigned_to_id
+            print(f"Assigned to ID: {assigned_to_id}")  # Debugging line
+            if not assigned_to_id:
+                flash("No assignee selected.", "error")
+                return redirect(url_for("main.unassigned_tickets"))
+                
             assignee = User.query.get(assigned_to_id)
+            
+            if assignee is None:
+                flash("The selected user does not exist.", "error")
+                return redirect(url_for("main.unassigned_tickets"))
+
+            ticket.assigned_to = assigned_to_id
             comment_text = f"Ticket assigned to {assignee.name}."
+        
         db.session.commit()
 
-        # Add a comment about the assignment
         new_comment = Comment(
             comment_text=comment_text, ticket_id=ticket.id, user_id=current_user.id
         )
@@ -321,7 +324,7 @@ def unassigned_tickets():
         "unassigned_tickets.html",
         unassigned_tickets=unassigned_tickets,
         support_staff=support_staff,
-        view='unassigned'  # Pass 'view' as 'unassigned' to the template
+        view='unassigned'
     )
 
 
