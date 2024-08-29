@@ -27,6 +27,20 @@ def existing_user(app):
         # Return the user object, which is now attached to a session
         return User.query.get(user.id)
 
+@pytest.fixture
+def regular_user(app):
+    with app.app_context():
+        # Create a regular user
+        user = User(
+            name="Regular User",
+            email="regular@example.com",
+            role="regular",
+            password="ValidPassword1!"  # You might need to hash this according to your app's auth system
+        )
+        db.session.add(user)
+        db.session.commit()
+        return user
+
 def test_all_tickets_page_renders_correctly(client, existing_user):
     # Log in as the existing user
     client.post('/login', data={
@@ -108,32 +122,6 @@ def test_admin_toggle_buttons_visibility(client, app, existing_user):
     assert b'Assigned' in response.data
     assert b'All Tickets' in response.data
 
-def test_non_admin_toggle_buttons_visibility(client, app, existing_user):
-    with app.app_context():
-        # Set the user's role to 'user' and commit the change
-        existing_user.role = "user"
-        db.session.commit()
-
-        # Verify the role was committed
-        assert existing_user.role == "user"
-
-        # Log in as the non-admin user
-        client.post('/login', data={
-            'email': existing_user.email,
-            'password': 'ValidPassword1!'
-        })
-
-        # Verify role in current_user after login
-        with client.session_transaction() as sess:
-            print(f"Logged in user role after login: {existing_user.role}")
-
-        # Access the all_tickets page
-        response = client.get(url_for('main.all_tickets'))
-        assert response.status_code == 200
-
-        # Ensure the response does not contain the btn-toggle class, which is only for admins
-        assert b'btn-toggle' not in response.data
-
 def test_create_ticket_button_visibility(client, app, existing_user):
     # Log in as the existing user
     client.post('/login', data={
@@ -213,3 +201,40 @@ def test_non_admin_delete_button_visibility(client, app, existing_user):
 
     # Check that the delete button is not visible for non-admin
     assert b"Delete" not in response.data
+
+def test_regular_user_toggle_buttons_visibility(client, app, regular_user):
+    with app.app_context():
+        # Set the user's role to 'regular' and commit the change
+        regular_user.role = "regular"
+        db.session.commit()
+
+        # Re-bind the user to the session to avoid DetachedInstanceError
+        db.session.add(regular_user)
+
+        # Alternatively, re-query the user from the session directly
+        refreshed_user = db.session.query(User).get(regular_user.id)
+        
+        assert refreshed_user.role == "regular", \
+            f"Expected role to be 'regular', but got '{refreshed_user.role}'"
+
+        # Log out any existing session to ensure a fresh login as a regular user
+        client.get('/logout')
+
+        # Log in as the regular user and follow the redirect
+        response = client.post('/login', data={
+            'email': refreshed_user.email,
+            'password': 'ValidPassword1!'
+        }, follow_redirects=True)
+        assert response.status_code == 200
+
+        # Access the all_tickets page as a regular user
+        response = client.get(url_for('main.all_tickets'))
+        assert response.status_code == 200
+
+        # Ensure that the response does not contain the 'btn-toggle' class, which is only for admins
+        assert b'btn-toggle' not in response.data, \
+            "The 'btn-toggle' buttons should not be visible to regular users."
+
+        # Optionally, verify that content appropriate for regular users is present
+        assert b'All Tickets' in response.data, \
+            "The All Tickets page content should be visible to regular users."
