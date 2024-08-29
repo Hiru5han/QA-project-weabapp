@@ -185,7 +185,13 @@ def create_ticket():
         title = request.form.get("title")
         description = request.form.get("description")
         priority = request.form.get("priority")
-        status = request.form.get("status")  # Get status value from the form
+        
+        # Default status to 'open' if the user is not admin or support
+        if current_user.role in ['admin', 'support']:
+            status = request.form.get("status")
+        else:
+            status = "open"
+
         assigned_to_id = request.form.get("assigned_to")  # Get assigned_to value from the form
 
         print(
