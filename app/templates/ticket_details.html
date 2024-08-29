@@ -4,7 +4,7 @@
     <!-- Back Button, Header, and Priority/Status Section -->
     <div class="row mb-4 align-items-center">
         <div class="col-md-2 text-start d-flex align-items-center">
-            <a href="javascript:void(0)" onclick="window.history.back();">
+            <a href="javascript:void(0)" onclick="goBack();">
                 <i class="fas fa-chevron-left back-button-icon"></i>
             </a>
         </div>
@@ -38,7 +38,7 @@
                         </span>
                     </p>
                 </div>
-                            </div>
+            </div>
         </div>
     </div>
 
@@ -165,6 +165,21 @@
 
 {% if current_user.role == 'admin' or current_user.role == 'manager' %}
 <script>
+    // Store the previous page's URL if it's not already stored
+    if (!sessionStorage.getItem('previousPageUrl')) {
+        sessionStorage.setItem('previousPageUrl', document.referrer);
+    }
+
+    // Handle back navigation
+    function goBack() {
+        const previousPageUrl = sessionStorage.getItem('previousPageUrl');
+        if (previousPageUrl) {
+            window.location.href = previousPageUrl;
+        } else {
+            window.location.href = "{{ url_for('main.all_tickets') }}";
+        }
+    }
+
     document.getElementById('status-badge').addEventListener('click', function() {
         var myModal = new bootstrap.Modal(document.getElementById('updateStatusModal'));
         myModal.show();
@@ -176,23 +191,27 @@
     });
 
     document.getElementById('assignee-badge').addEventListener('click', function() {
-        var myModal = new bootstrap.Modal(document.getElementById('updateAssigneeModal'));
-        myModal.show();
-    });
+    var myModal = new bootstrap.Modal(document.getElementById('updateAssigneeModal'));
+    myModal.show();
+
+    const assigneeSelect = document.getElementById('assignee');
+    const selectedOption = assigneeSelect.querySelector('option[selected]');
+    
+    if (selectedOption) {
+        // Remove and reinsert the selected option at the top
+        assigneeSelect.removeChild(selectedOption);
+        assigneeSelect.insertBefore(selectedOption, assigneeSelect.firstChild);
+
+        // Ensure it is selected
+        selectedOption.selected = true;
+    }
+});
 
     // Initialize tooltips
     var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
     var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
       return new bootstrap.Tooltip(tooltipTriggerEl)
     })
-
-    function goBack() {
-        if (document.referrer) {
-            window.history.back();
-        } else {
-            window.location.href = "{{ url_for('main.all_tickets') }}";
-        }
-    }
 </script>
 {% endif %}
 {% endblock %}
