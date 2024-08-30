@@ -2,10 +2,12 @@ from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_migrate import Migrate
+from flask_wtf import CSRFProtect  # Import CSRFProtect
 
 db = SQLAlchemy()
 login_manager = LoginManager()
 migrate = Migrate()
+csrf = CSRFProtect()  # Initialize CSRFProtect
 
 def create_app(config=None):
     """
@@ -38,6 +40,7 @@ def create_app(config=None):
     db.init_app(app)
     login_manager.init_app(app)
     migrate.init_app(app, db)
+    csrf.init_app(app)  # Initialize CSRF protection with the app
 
     from .models import User  # Ensure User model is correctly defined
 

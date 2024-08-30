@@ -430,15 +430,16 @@ def delete_ticket(ticket_id):
     Response
         A redirect response to the all_tickets page after deleting the ticket.
     """
-    if current_user.role != "admin":
-        flash("You do not have permission to delete tickets.", "warning")
-        return redirect(url_for("main.all_tickets"))
-
     ticket = Ticket.query.get_or_404(ticket_id)
+    
+    if current_user.role != 'admin':
+        flash('You do not have permission to delete this ticket.', 'danger')
+        return redirect(url_for('main.ticket_details', ticket_id=ticket_id))
+    
     db.session.delete(ticket)
     db.session.commit()
-    flash("Ticket has been deleted.", "success")
-    return redirect(url_for("main.all_tickets"))
+    flash('Ticket has been deleted successfully.', 'success')
+    return redirect(url_for('main.all_tickets'))
 
 
 @bp.route("/update_status/<int:ticket_id>", methods=["POST"])

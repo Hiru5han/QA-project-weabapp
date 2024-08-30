@@ -12,6 +12,8 @@
       <h2 class="auth-title mb-0">Login</h2>
     </div>
     <form method="POST">
+      <!-- Include CSRF token for security -->
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
       <div class="form-group">
         <label for="email">Email address</label>
         <input

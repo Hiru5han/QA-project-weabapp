@@ -24,6 +24,9 @@
             {% endif %} 
             {% endwith %}
             
+            <form method="POST">
+                <!-- Include CSRF token for security -->
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <div class="form-group">
                     <label for="role">Role</label>
                     <select class="form-control" id="role" name="role" required>
@@ -33,7 +36,7 @@
                     </select>
                 </div>
 
-            <form method="POST">
+
                 <div class="form-group">
                     <label for="name">Name</label>
                     <input type="text" class="form-control" id="name" name="name" value="{{ name or '' }}" required />
