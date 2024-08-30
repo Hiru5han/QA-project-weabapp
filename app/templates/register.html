@@ -56,6 +56,7 @@
                                 <span id="length" class="invalid">✗ 8 characters minimum</span>
                                 <span id="number" class="invalid">✗ One number</span>
                                 <span id="uppercase" class="invalid">✗ One uppercase letter</span>
+                                <span id="lowercase" class="invalid">✗ One lowercase letter</span>
                                 <span id="special" class="invalid">✗ One special character !@#$%^&*</span>
                         </div>
                     </div>
@@ -74,6 +75,7 @@
         const lengthCriteria = document.getElementById("length");
         const numberCriteria = document.getElementById("number");
         const uppercaseCriteria = document.getElementById("uppercase");
+        const lowercaseCriteria = document.getElementById("lowercase");
         const specialCriteria = document.getElementById("special");
         const togglePassword = document.getElementById("togglePassword");
 
@@ -111,6 +113,17 @@
                 uppercaseCriteria.classList.add("invalid");
                 uppercaseCriteria.classList.remove("valid");
                 uppercaseCriteria.innerHTML = "✗ One uppercase letter";
+            }
+
+            // Check for lowercase letters
+            if (/[a-z]/.test(password)) {
+                lowercaseCriteria.classList.add("valid");
+                lowercaseCriteria.classList.remove("invalid");
+                lowercaseCriteria.innerHTML = "✓ One lowercase letter";
+            } else {
+                lowercaseCriteria.classList.add("invalid");
+                lowercaseCriteria.classList.remove("valid");
+                lowercaseCriteria.innerHTML = "✗ One lowercase letter";
             }
 
             // Check for special characters
