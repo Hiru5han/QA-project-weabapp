@@ -94,7 +94,7 @@
                                 <strong>{{ comment.commenter.name }}:</strong> {{ comment.comment_text }}
                             </div>
                             <div class="text-muted">
-                                <em>{{ comment.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</em>
+                                <em>{{ moment(comment.created_at).format('YYYY-MM-DD HH:mm:ss') }}</em>
                             </div>
                         </li>
                         {% endfor %}
@@ -247,6 +247,4 @@
 {% endblock %}
 
 
-<!-- !fix time zone -->
 <!-- !make badge colours for priority etc consistent -->
-<!-- !ticket details give support same buttons as admin -->
