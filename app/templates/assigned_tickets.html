@@ -37,7 +37,6 @@
           >
             Assigned
           </a>
-
           {% if current_user.role == 'admin' %}
           <a
             href="{{ url_for('main.all_tickets') }}"
@@ -85,7 +84,7 @@
             <td class="text-center">No tickets available</td>
           </tr>
           {% else %} {% for ticket in assigned_tickets %}
-          <tr class="d-flex justify-content-between">
+          <tr>
             <td class="text-center">{{ ticket.title }}</td>
             <td class="text-center">
               <span class="badge badge-priority-{{ ticket.priority }}">

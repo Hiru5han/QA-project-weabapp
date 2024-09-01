@@ -1,5 +1,6 @@
 {% extends "base.html" %} {% block content %}
 <div class="container mt-5">
+  <!-- Page Header -->
   <div class="row mb-2">
     <div class="col-12 text-center">
       <h2 class="text-primary mb-0">Closed Tickets</h2>
@@ -7,6 +8,7 @@
     </div>
   </div>
 
+  <!-- Card Header with Toggle, Title, and Create Button -->
   <div class="card shadow-sm">
     <div
       class="card-header bg-primary text-white d-flex justify-content-between align-items-center position-relative"
@@ -25,7 +27,7 @@
           role="group"
           aria-label="Ticket Status Toggle"
         >
-          {% if current_user.role == 'admin' or current_user.role == 'support'%}
+          {% if current_user.role in ['admin', 'support'] %}
           <a
             href="{{ url_for('main.unassigned_tickets') }}"
             class="btn btn-toggle {% if view == 'unassigned' %}active{% endif %}"
@@ -38,7 +40,6 @@
           >
             Assigned
           </a>
-          {% endif %} {% if current_user.role == 'admin' %}
           <a
             href="{{ url_for('main.all_tickets') }}"
             class="btn btn-toggle {% if view == 'all' %}active{% endif %}"
@@ -89,10 +90,10 @@
             <td class="text-center">-</td>
             <td class="text-center">-</td>
             <td class="text-center">-</td>
-            <td class="text-center">No tickets available</td>
+            <td class="text-center">No closed tickets</td>
           </tr>
           {% else %} {% for ticket in closed_tickets %}
-          <tr class="d-flex justify-content-between">
+          <tr>
             <td class="text-center">{{ ticket.title }}</td>
             <td class="text-center">
               <span class="badge badge-priority-{{ ticket.priority }}">
