@@ -1,58 +1,58 @@
 {% extends "base.html" %} {% block content %}
 <div class="container mt-5">
-  <!-- Dashboard Header -->
   <div class="row mb-2">
     <div class="col-12 text-center">
-      <h2 class="text-primary mb-0">Dashboard</h2>
+      <h2 class="text-primary mb-0">Unassigned Tickets</h2>
       <p class="lead">Welcome, {{ current_user.name }}!</p>
     </div>
   </div>
 
-  <!-- Header with Toggle, Title, and Create Button -->
   <div class="card shadow-sm">
     <div
-      class="card-header bg-primary text-white d-flex justify-content-between align-items-center"
+      class="card-header bg-primary text-white d-flex justify-content-between align-items-center position-relative"
     >
-      <!-- Toggle Buttons on the Left -->
-      <div
-        class="btn-group toggle-group"
-        role="group"
-        aria-label="Ticket Status Toggle"
-      >
-        <a
-          href="{{ url_for('main.unassigned_tickets') }}"
-          class="btn btn-toggle {% if view == 'unassigned' %}active{% endif %}"
-        >
-          Unassigned
-        </a>
-        <a
-          href="{{ url_for('main.assigned_tickets') }}"
-          class="btn btn-toggle {% if view == 'assigned' %}active{% endif %}"
-        >
-          Assigned
-        </a>
-        {% if current_user.role == 'admin' %}
-        <a
-          href="{{ url_for('main.all_tickets') }}"
-          class="btn btn-toggle {% if view == 'all' %}active{% endif %}"
-        >
-          All Tickets
-        </a>
-        {% endif %}
+      <div class="d-flex align-items-center">
+        <span class="badge {{ badge_class }}">
+          {{ open_tickets_count }} active
+        </span>
       </div>
 
-      <!-- Centered Title -->
-      <h3 class="flex-grow-1 text-center mb-0">Unassigned Tickets</h3>
+      <div class="toggle-buttons">
+        <div
+          class="btn-group toggle-group"
+          role="group"
+          aria-label="Ticket Status Toggle"
+        >
+          <a
+            href="{{ url_for('main.unassigned_tickets') }}"
+            class="btn btn-toggle {% if view == 'unassigned' %}active{% endif %}"
+          >
+            Unassigned
+          </a>
+          <a
+            href="{{ url_for('main.assigned_tickets') }}"
+            class="btn btn-toggle {% if view == 'assigned' %}active{% endif %}"
+          >
+            Assigned
+          </a>
+          {% if current_user.role == 'admin' %}
+          <a
+            href="{{ url_for('main.all_tickets') }}"
+            class="btn btn-toggle {% if view == 'all' %}active{% endif %}"
+          >
+            All Tickets
+          </a>
+          {% endif %}
+        </div>
+      </div>
 
-      <!-- Create Ticket Button on the Right -->
-      <div>
+      <div class="ms-auto">
         <a class="btn btn-success" href="{{ url_for('main.create_ticket') }}">
           <i class="fas fa-plus"></i> Create Ticket
         </a>
       </div>
     </div>
 
-    <!-- Tickets Table -->
     <div class="card-body">
       <table class="table table-striped table-hover">
         <thead>
