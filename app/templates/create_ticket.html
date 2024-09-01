@@ -31,6 +31,16 @@
 
   {% if current_user.role in ['admin', 'support'] %}
   <div class="form-group">
+    <label for="user_id">Raise on Behalf of</label>
+    <select class="form-control" id="user_id" name="user_id">
+      <option value="{{ current_user.id }}">-- Myself --</option>
+      {% for user in all_users %}
+      <option value="{{ user.id }}">{{ user.name }}</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <div class="form-group">
     <label for="status">Current State</label>
     <select class="form-control" id="status" name="status" required>
       <option value="open">Open</option>

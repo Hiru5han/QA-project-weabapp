@@ -166,9 +166,12 @@ def all_tickets():
     str
         Rendered template for the all_tickets page with all tickets.
     """
-    tickets = Ticket.query.all()  # or your logic to get all tickets
+    if current_user.role == 'admin' or current_user.role == 'support':
+        tickets = Ticket.query.all()
+    else:
+        tickets = Ticket.query.filter_by(user_id=current_user.id).all()
 
-    return render_template('all_tickets.html', tickets=tickets, view='all')
+    return render_template('all_tickets.html', tickets=tickets, current_user=current_user)
 
 
 @bp.route("/create_ticket", methods=["GET", "POST"])
@@ -193,18 +196,23 @@ def create_ticket():
         else:
             status = "open"
 
+        user_id = request.form.get("user_id")  # Get user_id from the form
         assigned_to_id = request.form.get("assigned_to")  # Get assigned_to value from the form
 
         print(
             f"Creating ticket with Title: {title}, Description: {description}, Priority: {priority}, Status: {status}"
         )
 
+        # If no user is selected, default to the current user
+        if not user_id:
+            user_id = current_user.id
+
         new_ticket = Ticket(
             title=title,
             description=description,
             priority=priority,
             status=status,
-            user_id=current_user.id,
+            user_id=user_id,
         )
 
         # If the user is an admin and has selected a user to assign the ticket to
@@ -218,12 +226,15 @@ def create_ticket():
     else:
         print("Rendering create ticket page")
 
-    # If the user is an admin, query the list of support staff
+    # If the user is an admin or support staff, query the list of users and support staff
+    all_users = []
     support_staff = []
+    if current_user.role in ['admin', 'support']:
+        all_users = User.query.all()
     if current_user.role == 'admin':
         support_staff = User.query.filter_by(role='support').all()
 
-    return render_template("create_ticket.html", support_staff=support_staff)
+    return render_template("create_ticket.html", support_staff=support_staff, all_users=all_users)
 
 
 @bp.route("/ticket/<int:ticket_id>", methods=["GET", "POST"])
