@@ -361,7 +361,7 @@ def unassigned_tickets():
         flash("Ticket assigned successfully.", "success")
         return redirect(url_for("main.unassigned_tickets"))
 
-    support_staff = User.query.filter_by(role="support").all()
+    support_staff = User.query.filter(User.role.in_(['admin', 'support'])).all()
     return render_template(
         "unassigned_tickets.html",
         unassigned_tickets=unassigned_tickets,
