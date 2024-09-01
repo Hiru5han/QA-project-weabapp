@@ -75,60 +75,50 @@
     <div class="card-body">
       <table id="tickets-table" class="table table-striped table-hover">
         <thead>
-          <tr class="d-flex justify-content-between">
-            <th class="col text-center">Title</th>
-            <th class="col text-center">Priority</th>
-            <th class="col text-center">Status</th>
-            <th class="col text-center">Assigned To</th>
-            <th class="col text-center">Requester</th>
-            <th class="col text-center">Actions</th>
+          <tr>
+            <th class="text-center">Title</th>
+            <th class="text-center">Priority</th>
+            <th class="text-center">Status</th>
+            <th class="text-center">Assigned To</th>
+            <th class="text-center">Requester</th>
+            <th class="text-center">Actions</th>
           </tr>
         </thead>
         <tbody>
           {% if tickets|length == 0 %}
           <tr>
-            <td colspan="6">
-              <div class="text-center">
-                <h5>No tickets</h5>
-              </div>
-            </td>
+            <td class="text-center">-</td>
+            <td class="text-center">-</td>
+            <td class="text-center">-</td>
+            <td class="text-center">-</td>
+            <td class="text-center">-</td>
+            <td class="text-center">No tickets available</td>
           </tr>
-          {% else %} {% for ticket in tickets %}
-          <tr class="d-flex justify-content-between">
-            <td class="col text-center">{{ ticket.title }}</td>
-            <td class="col text-center">
+          {% else %}
+          {% for ticket in tickets %}
+          <tr>
+            <td class="text-center">{{ ticket.title }}</td>
+            <td class="text-center">
               <span class="badge badge-priority-{{ ticket.priority }}">
                 {{ ticket.priority }}
               </span>
             </td>
-            <td class="col text-center">
+            <td class="text-center">
               <span class="badge badge-status-{{ ticket.status|lower }}">
                 {{ ticket.status }}
               </span>
             </td>
-            <td class="col text-center">
+            <td class="text-center">
               {{ ticket.assignee.name if ticket.assignee else 'Unassigned' }}
             </td>
-            <td class="col text-center">{{ ticket.creator.name }}</td>
-            <td class="col text-center">
-              <a
-                href="{{ url_for('main.ticket_details', ticket_id=ticket.id) }}"
-                class="btn btn-outline-primary btn-sm"
-              >
+            <td class="text-center">{{ ticket.creator.name }}</td>
+            <td class="text-center">
+              <a href="{{ url_for('main.ticket_details', ticket_id=ticket.id) }}" class="btn btn-outline-primary btn-sm">
                 <i class="fas fa-eye"></i> View
               </a>
               {% if current_user.role == 'admin' %}
-              <form
-                method="POST"
-                action="{{ url_for('main.delete_ticket', ticket_id=ticket.id) }}"
-                style="display: inline"
-                onsubmit="return confirm('Are you sure you want to delete this ticket?');"
-              >
-                <input
-                  type="hidden"
-                  name="csrf_token"
-                  value="{{ csrf_token() }}"
-                />
+              <form method="POST" action="{{ url_for('main.delete_ticket', ticket_id=ticket.id) }}" style="display: inline" onsubmit="return confirm('Are you sure you want to delete this ticket?');">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
                 <button type="submit" class="btn btn-outline-danger btn-sm">
                   <i class="fas fa-trash"></i> Delete
                 </button>
@@ -136,10 +126,14 @@
               {% endif %}
             </td>
           </tr>
-          {% endfor %} {% endif %}
+          {% endfor %}
+          {% endif %}
         </tbody>
       </table>
     </div>
   </div>
+  
+  </div>
 </div>
+
 {% endblock %}

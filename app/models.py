@@ -1,38 +1,23 @@
 from . import db
 from flask_login import UserMixin
-from datetime import datetime
+from datetime import datetime, timezone
+import pytz
+
+def convert_to_uk_time(utc_time):
+    uk_timezone = pytz.timezone('Europe/London')
+    print(f"UTC time: {utc_time}")
+    uk_time = utc_time.astimezone(uk_timezone)
+    print(f"Converted UK time: {uk_time}")
+    return uk_time
 
 class User(UserMixin, db.Model):
     """
     Represents a user in the system.
-
-    Attributes
-    ----------
-    id : int
-        Primary key for the user.
-    name : str
-        The full name of the user. This is a required field.
-    email : str
-        The unique email address of the user. This is a required field.
-    password : str
-        The password for the user account. This is a required field.
-    role : str
-        The role of the user in the system. Can be 'admin', 'support', or 'regular'.
-
-    Relationships
-    -------------
-    created_tickets : list[Ticket]
-        List of tickets created by the user.
-    assigned_tickets : list[Ticket]
-        List of tickets assigned to the user.
-    user_comments : list[Comment]
-        List of comments made by the user.
     """
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(150), nullable=False)
     email = db.Column(db.String(150), unique=True, nullable=False)
     password = db.Column(db.String(150), nullable=False)
-    # 'admin', 'support', 'regular'
     role = db.Column(db.String(50), nullable=False)
 
     created_tickets = db.relationship(
@@ -55,47 +40,15 @@ class User(UserMixin, db.Model):
 class Ticket(db.Model):
     """
     Represents a ticket in the system.
-
-    Attributes
-    ----------
-    id : int
-        Primary key for the ticket.
-    title : str
-        The title of the ticket. This is a required field.
-    description : str
-        The detailed description of the ticket. This is a required field.
-    status : str
-        The current status of the ticket. Can be 'open', 'in-progress', or 'closed'.
-    priority : str
-        The priority level of the ticket. Can be 'low', 'medium', or 'high'.
-    created_at : datetime
-        The date and time when the ticket was created. Defaults to the current UTC time.
-    updated_at : datetime
-        The date and time when the ticket was last updated. Automatically updated on changes.
-    assigned_to : int
-        Foreign key referencing the user assigned to the ticket.
-    user_id : int
-        Foreign key referencing the user who created the ticket.
-
-    Relationships
-    -------------
-    creator : User
-        The user who created the ticket.
-    assignee : User
-        The user assigned to the ticket.
-    ticket_comments : list[Comment]
-        List of comments associated with the ticket.
     """
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(150), nullable=False)
     description = db.Column(db.Text, nullable=False)
-    # 'open', 'in-progress', 'closed'
     status = db.Column(db.String(50), nullable=False)
-    # 'low', 'medium', 'high'
     priority = db.Column(db.String(50), nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
     updated_at = db.Column(
-        db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow
+        db.DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc)
     )
     assigned_to = db.Column(db.Integer, db.ForeignKey("user.id"))
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
@@ -104,36 +57,38 @@ class Ticket(db.Model):
     assignee = db.relationship("User", foreign_keys=[assigned_to], back_populates="assigned_tickets", overlaps="created_tickets,comments")
     ticket_comments = db.relationship("Comment", back_populates="ticket")
 
+    def created_at_uk(self):
+        """
+        Returns the created_at time in UK local time as a formatted string.
+        """
+        uk_time = convert_to_uk_time(self.created_at)
+        return uk_time.strftime('%Y-%m-%d %H:%M:%S')
+
+    def updated_at_uk(self):
+        """
+        Returns the updated_at time in UK local time as a formatted string.
+        """
+        uk_time = convert_to_uk_time(self.updated_at)
+        return uk_time.strftime('%Y-%m-%d %H:%M:%S')
+
 
 class Comment(db.Model):
     """
     Represents a comment on a ticket.
-
-    Attributes
-    ----------
-    id : int
-        Primary key for the comment.
-    ticket_id : int
-        Foreign key referencing the associated ticket.
-    user_id : int
-        Foreign key referencing the user who made the comment.
-    comment_text : str
-        The content of the comment. This is a required field.
-    created_at : datetime
-        The date and time when the comment was created. Defaults to the current UTC time.
-
-    Relationships
-    -------------
-    ticket : Ticket
-        The ticket that the comment is associated with.
-    commenter : User
-        The user who made the comment.
     """
     id = db.Column(db.Integer, primary_key=True)
     ticket_id = db.Column(db.Integer, db.ForeignKey("ticket.id"))
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
     comment_text = db.Column(db.Text, nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
 
     ticket = db.relationship("Ticket", back_populates="ticket_comments")
     commenter = db.relationship("User", back_populates="user_comments", overlaps="comments")
+
+    def created_at_uk(self):
+        """
+        Returns the created_at time in UK local time as a formatted string.
+        """
+        uk_time = convert_to_uk_time(self.created_at)
+        print(f"second thing for time: {uk_time}")
+        return uk_time.strftime('%Y-%m-%d %H:%M:%S')
