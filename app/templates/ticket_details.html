@@ -17,25 +17,25 @@
                 <div class="mb-2">
                     <p class="mb-0">
                         <span class="title-spacing"><strong>Priority:</strong></span>
-                        <span class="badge text-white {% if current_user.role == 'admin' %}clickable-badge{% endif %} {% if ticket.priority == 'high' %}bg-danger{% elif ticket.priority == 'medium' %}bg-warning{% else %}bg-info{% endif %}" id="priority-badge" {% if current_user.role == 'admin' or current_user.role == 'manager' %}data-bs-toggle="tooltip" title="Click to update priority"{% endif %}>
-                            {{ ticket.priority }} {% if current_user.role == 'admin' or current_user.role == 'manager' %}<i class="fas fa-edit ms-2"></i>{% endif %}
+                        <span class="badge text-white {% if current_user.role == 'admin' %}clickable-badge{% endif %} {% if ticket.priority == 'high' %}bg-danger{% elif ticket.priority == 'medium' %}bg-warning{% else %}bg-info{% endif %}" id="priority-badge" {% if current_user.role == 'admin' or current_user.role == 'support' %}data-bs-toggle="tooltip" title="Click to update priority"{% endif %}>
+                            {{ ticket.priority }} {% if current_user.role == 'admin' or current_user.role == 'support' %}<i class="fas fa-edit ms-2"></i>{% endif %}
                         </span>
                                             </p>
                 </div>
                 <div class="mb-2">
                     <p class="mb-0">
                         <span class="title-spacing"><strong>Status: </strong></span>
-                        <span class="badge text-white {% if current_user.role == 'admin' or current_user.role == 'manager' %}clickable-badge{% endif %} {% if ticket.status == 'open' %}bg-success{% elif ticket.status == 'in-progress' %}bg-warning{% else %}bg-secondary{% endif %}" id="status-badge" {% if current_user.role == 'admin' or current_user.role == 'manager' %}data-bs-toggle="tooltip" title="Click to update status"{% endif %}>
-                            {{ ticket.status }} {% if current_user.role == 'admin' or current_user.role == 'manager' %}<i class="fas fa-edit ms-2"></i>{% endif %}
+                        <span class="badge text-white {% if current_user.role == 'admin' or current_user.role == 'support' %}clickable-badge{% endif %} {% if ticket.status == 'open' %}bg-success{% elif ticket.status == 'in-progress' %}bg-warning{% else %}bg-secondary{% endif %}" id="status-badge" {% if current_user.role == 'admin' or current_user.role == 'support' %}data-bs-toggle="tooltip" title="Click to update status"{% endif %}>
+                            {{ ticket.status }} {% if current_user.role == 'admin' or current_user.role == 'support' %}<i class="fas fa-edit ms-2"></i>{% endif %}
                         </span>
                     </p>
                 </div>
                 <div class="mb-2">
                     <p class="mb-0">
                         <span class="title-spacing"><strong>Assignee: </strong></span>
-                        <span class="badge text-white {% if current_user.role == 'admin' or current_user.role == 'manager' %}clickable-badge{% endif %} bg-info" id="assignee-badge" {% if current_user.role == 'admin' or current_user.role == 'manager' %}data-bs-toggle="tooltip" title="Click to update assignee"{% endif %}>
+                        <span class="badge text-white {% if current_user.role == 'admin' or current_user.role == 'support' %}clickable-badge{% endif %} bg-info" id="assignee-badge" {% if current_user.role == 'admin' or current_user.role == 'support' %}data-bs-toggle="tooltip" title="Click to update assignee"{% endif %}>
                             {{ ticket.assignee.name }} 
-                            {% if current_user.role == 'admin' or current_user.role == 'manager' %}
+                            {% if current_user.role == 'admin' or current_user.role == 'support' %}
                             <i class="fas fa-edit ms-2"></i>
                             {% endif %}
                         </span>
@@ -105,41 +105,40 @@
     </div>
 </div>
 
-{% if current_user.role == 'admin' or current_user.role == 'manager' %}
+{% if current_user.role == 'admin' or current_user.role == 'support' %}
 <!-- Update Modal for Status -->
 <div class="modal fade" id="updateStatusModal" tabindex="-1" aria-labelledby="updateStatusModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="updateStatusModalLabel">Update Status</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form method="POST">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="updateStatusModalLabel">Update Status</h5>
+        </div>
+        <div class="modal-body">
+          <form method="POST">
             <!-- Include CSRF token for security -->
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <div class="form-group">
-                <label for="status">Select New Status</label>
-                <select class="form-control" id="status" name="status">
-                    <option value="open" {% if ticket.status == 'open' %}selected{% endif %}>Open</option>
-                    <option value="in-progress" {% if ticket.status == 'in-progress' %}selected{% endif %}>In Progress</option>
-                    <option value="closed" {% if ticket.status == 'closed' %}selected{% endif %}>Closed</option>
-                </select>
+              <label for="status">Select New Status</label>
+              <select class="form-control" id="status" name="status">
+                <option value="open" {% if ticket.status == 'open' %}selected{% endif %}>Open</option>
+                <option value="in-progress" {% if ticket.status == 'in-progress' %}selected{% endif %}>In Progress</option>
+                <option value="closed" {% if ticket.status == 'closed' %}selected{% endif %}>Closed</option>
+              </select>
             </div>
-            <button type="submit" class="btn btn-primary mt-3">Update</button>
-        </form>
+            <button type="submit" class="btn btn-primary">Update</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </form>
+        </div>
       </div>
     </div>
   </div>
-</div>
-
+    
 <!-- Update Modal for Priority -->
 <div class="modal fade" id="updatePriorityModal" tabindex="-1" aria-labelledby="updatePriorityModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="updatePriorityModalLabel">Update Priority</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <form method="POST">
@@ -153,7 +152,8 @@
                     <option value="low" {% if ticket.priority == 'low' %}selected{% endif %}>Low</option>
                 </select>
             </div>
-            <button type="submit" class="btn btn-primary mt-3">Update</button>
+            <button type="submit" class="btn btn-primary">Update</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
         </form>
       </div>
     </div>
@@ -182,7 +182,8 @@
                     {% endfor %}
                 </select>
             </div>
-            <button type="submit" class="btn btn-primary mt-3">Update</button>
+            <button type="submit" class="btn btn-primary">Update</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
         </form>
       </div>
     </div>
@@ -207,7 +208,7 @@
     }
 </script>
 
-{% if current_user.role == 'admin' or current_user.role == 'manager' %}
+{% if current_user.role == 'admin' or current_user.role == 'support' %}
 <script>
     document.getElementById('status-badge').addEventListener('click', function() {
         var myModal = new bootstrap.Modal(document.getElementById('updateStatusModal'));
@@ -244,3 +245,8 @@
 </script>
 {% endif %}
 {% endblock %}
+
+
+<!-- !fix time zone -->
+<!-- !make badge colours for priority etc consistent -->
+<!-- !ticket details give support same buttons as admin -->

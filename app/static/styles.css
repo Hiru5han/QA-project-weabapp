@@ -891,3 +891,18 @@ span.invalid {
 .title-spacing {
   margin-right: 5px; /* Adjust this value as needed */
 }
+
+.modal-header .btn-close {
+  z-index: 1056; /* Ensure it's above other elements */
+  position: relative; /* Ensure it stays within the flow */
+  padding: 0.5rem;
+  width: 2rem;
+  height: 2rem;
+  background: none;
+  border: none;
+  opacity: 0.75;
+}
+
+.modal-header .btn-close:hover {
+  opacity: 1;
+}
