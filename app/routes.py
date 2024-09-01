@@ -7,8 +7,8 @@ from .models import User, Ticket, Comment, db
 bp = Blueprint("main", __name__)
 
 
-@bp.route('/')
-@bp.route('/index')
+@bp.route("/")
+@bp.route("/index")
 def index():
     """
     Renders the index page or redirects to a role-based page if the user is authenticated.
@@ -21,7 +21,7 @@ def index():
     print(f"User authenticated: {current_user.is_authenticated}")
     if current_user.is_authenticated:
         return redirect_based_on_role()
-    return render_template('index.html', title='Welcome')
+    return render_template("index.html", title="Welcome")
 
 
 @bp.route("/login", methods=["GET", "POST"])
@@ -43,13 +43,16 @@ def login():
         password = request.form.get("password")
         print(f"Login attempt with Email: {email}, Password: {password}")
         user = User.query.filter_by(email=email).first()
+
         if user:
             print(f"User found: {user.email}")
-            if check_password_hash(user.password, password):
+            if user.check_password(
+                password
+            ):  # Use the check_password method from the User model
                 print(f"Password match for user: {user.email}")
                 login_user(user)
                 print(f"User logged in: {current_user.is_authenticated}")
-                
+
                 # Redirect based on the user's role
                 return redirect_based_on_role()
             else:
@@ -59,8 +62,9 @@ def login():
         flash("Login failed. Check your email and password.", "warning")
     else:
         print("Rendering login page")
-    
+
     return render_template("login.html")
+
 
 def redirect_based_on_role():
     """
@@ -71,12 +75,13 @@ def redirect_based_on_role():
     Response
         A redirect response to the appropriate page for the user's role.
     """
-    if current_user.role == 'admin':
-        return redirect(url_for('main.all_tickets'))
-    elif current_user.role == 'support':
-        return redirect(url_for('main.assigned_tickets'))
+    if current_user.role == "admin":
+        return redirect(url_for("main.all_tickets"))
+    elif current_user.role == "support":
+        return redirect(url_for("main.assigned_tickets"))
     else:
-        return redirect(url_for('main.all_tickets'))
+        return redirect(url_for("main.all_tickets"))
+
 
 @bp.route("/register", methods=["GET", "POST"])
 def register():
@@ -140,23 +145,30 @@ def register():
             flash("Invalid role selected.", "warning")
             return render_template("register.html", name=name, email=email, role=role)
 
+        # Create the new user with a hashed password
         print(f"Registering new user with Name: {name}, Email: {email}, Role: {role}")
         new_user = User(
             name=name,
             email=email,
-            password=generate_password_hash(password, method="pbkdf2:sha256"),
             role=role,
         )
+        new_user.set_password(
+            password
+        )  # Using the set_password method to hash the password
         db.session.add(new_user)
         db.session.commit()
+
+        # Log the new user in
         login_user(new_user)
         return redirect_based_on_role()
+
     else:
         print("Rendering register page")
+
     return render_template("register.html")
 
 
-@bp.route('/all_tickets')
+@bp.route("/all_tickets")
 def all_tickets():
     """
     Renders a page displaying all tickets.
@@ -166,15 +178,17 @@ def all_tickets():
     str
         Rendered template for the all_tickets page with all tickets.
     """
-    if current_user.role == 'admin' or current_user.role == 'support':
+    if current_user.role == "admin" or current_user.role == "support":
         tickets = Ticket.query.all()
     else:
         tickets = Ticket.query.filter_by(user_id=current_user.id).all()
 
     # Set the view to 'all' for the active tab highlighting
-    view = 'all'
+    view = "all"
 
-    return render_template('all_tickets.html', tickets=tickets, current_user=current_user, view=view)
+    return render_template(
+        "all_tickets.html", tickets=tickets, current_user=current_user, view=view
+    )
 
 
 @bp.route("/create_ticket", methods=["GET", "POST"])
@@ -192,15 +206,17 @@ def create_ticket():
         title = request.form.get("title")
         description = request.form.get("description")
         priority = request.form.get("priority")
-        
+
         # Default status to 'open' if the user is not admin or support
-        if current_user.role in ['admin', 'support']:
+        if current_user.role in ["admin", "support"]:
             status = request.form.get("status")
         else:
             status = "open"
 
         user_id = request.form.get("user_id")  # Get user_id from the form
-        assigned_to_id = request.form.get("assigned_to")  # Get assigned_to value from the form
+        assigned_to_id = request.form.get(
+            "assigned_to"
+        )  # Get assigned_to value from the form
 
         print(
             f"Creating ticket with Title: {title}, Description: {description}, Priority: {priority}, Status: {status}"
@@ -219,12 +235,12 @@ def create_ticket():
         )
 
         # If the user is an admin and has selected a user to assign the ticket to
-        if current_user.role == 'admin' and assigned_to_id:
+        if current_user.role == "admin" and assigned_to_id:
             new_ticket.assigned_to = assigned_to_id
 
         db.session.add(new_ticket)
         db.session.commit()
-        
+
         # Get the referrer URL from the form and redirect to it
         referrer = request.form.get("referrer")
         return redirect(referrer or url_for("main.all_tickets"))
@@ -238,12 +254,17 @@ def create_ticket():
     # If the user is an admin or support staff, query the list of users and support staff
     all_users = []
     support_staff = []
-    if current_user.role in ['admin', 'support']:
+    if current_user.role in ["admin", "support"]:
         all_users = User.query.all()
-    if current_user.role == 'admin':
-        support_staff = User.query.filter_by(role='support').all()
+    if current_user.role == "admin":
+        support_staff = User.query.filter_by(role="support").all()
 
-    return render_template("create_ticket.html", support_staff=support_staff, all_users=all_users, referrer=referrer)
+    return render_template(
+        "create_ticket.html",
+        support_staff=support_staff,
+        all_users=all_users,
+        referrer=referrer,
+    )
 
 
 @bp.route("/ticket/<int:ticket_id>", methods=["GET", "POST"])
@@ -264,7 +285,7 @@ def ticket_details(ticket_id):
     """
     print(f"Loading ticket details for ticket ID: {ticket_id}")
     ticket = Ticket.query.get_or_404(ticket_id)
-    
+
     if request.method == "POST":
         if "comment_text" in request.form:
             comment_text = request.form.get("comment_text")
@@ -273,7 +294,7 @@ def ticket_details(ticket_id):
                 comment_text=comment_text, ticket_id=ticket.id, user_id=current_user.id
             )
             db.session.add(new_comment)
-        
+
         if "status" in request.form:
             status = request.form.get("status")
             if ticket.status != status:
@@ -286,7 +307,7 @@ def ticket_details(ticket_id):
                     user_id=current_user.id,
                 )
                 db.session.add(status_comment)
-        
+
         if "priority" in request.form and current_user.role == "admin":
             priority = request.form.get("priority")
             if ticket.priority != priority:
@@ -299,13 +320,15 @@ def ticket_details(ticket_id):
                     user_id=current_user.id,
                 )
                 db.session.add(priority_comment)
-        
+
         if "assignee" in request.form and current_user.role == "admin":
             new_assignee_id = request.form.get("assignee")
             if ticket.assigned_to != new_assignee_id:
                 ticket.assigned_to = new_assignee_id
                 # Add a comment about the assignee change
-                assignee_comment_text = f"Assignee changed to {User.query.get(new_assignee_id).name}."
+                assignee_comment_text = (
+                    f"Assignee changed to {User.query.get(new_assignee_id).name}."
+                )
                 assignee_comment = Comment(
                     comment_text=assignee_comment_text,
                     ticket_id=ticket.id,
@@ -315,10 +338,12 @@ def ticket_details(ticket_id):
 
         db.session.commit()
         return redirect(url_for("main.ticket_details", ticket_id=ticket_id))
-    
+
     comments = Comment.query.filter_by(ticket_id=ticket.id).all()
     users = User.query.all()  # Fetch all users for the assignee dropdown
-    return render_template("ticket_details.html", ticket=ticket, comments=comments, users=users)
+    return render_template(
+        "ticket_details.html", ticket=ticket, comments=comments, users=users
+    )
 
 
 @bp.route("/logout")
@@ -360,16 +385,16 @@ def unassigned_tickets():
             if not assigned_to_id:
                 flash("No assignee selected.", "error")
                 return redirect(url_for("main.unassigned_tickets"))
-                
+
             assignee = User.query.get(assigned_to_id)
-            
+
             if assignee is None:
                 flash("The selected user does not exist.", "error")
                 return redirect(url_for("main.unassigned_tickets"))
 
             ticket.assigned_to = assigned_to_id
             comment_text = f"Ticket assigned to {assignee.name}."
-        
+
         db.session.commit()
 
         new_comment = Comment(
@@ -381,12 +406,12 @@ def unassigned_tickets():
         flash("Ticket assigned successfully.", "success")
         return redirect(url_for("main.unassigned_tickets"))
 
-    support_staff = User.query.filter(User.role.in_(['admin', 'support'])).all()
+    support_staff = User.query.filter(User.role.in_(["admin", "support"])).all()
     return render_template(
         "unassigned_tickets.html",
         unassigned_tickets=unassigned_tickets,
         support_staff=support_staff,
-        view='unassigned'
+        view="unassigned",
     )
 
 
@@ -452,15 +477,15 @@ def delete_ticket(ticket_id):
         A redirect response to the all_tickets page after deleting the ticket.
     """
     ticket = Ticket.query.get_or_404(ticket_id)
-    
-    if current_user.role != 'admin':
-        flash('You do not have permission to delete this ticket.', 'danger')
-        return redirect(url_for('main.ticket_details', ticket_id=ticket_id))
-    
+
+    if current_user.role != "admin":
+        flash("You do not have permission to delete this ticket.", "danger")
+        return redirect(url_for("main.ticket_details", ticket_id=ticket_id))
+
     db.session.delete(ticket)
     db.session.commit()
-    flash('Ticket has been deleted successfully.', 'success')
-    return redirect(url_for('main.all_tickets'))
+    flash("Ticket has been deleted successfully.", "success")
+    return redirect(url_for("main.all_tickets"))
 
 
 @bp.route("/update_status/<int:ticket_id>", methods=["POST"])
@@ -509,23 +534,34 @@ def assigned_tickets():
 
     if current_user.role == "support":
         # Support staff only see tickets assigned to themselves
-        assigned_tickets = Ticket.query.filter_by(assigned_to=current_user.id).filter(Ticket.status != 'closed').all()
+        assigned_tickets = (
+            Ticket.query.filter_by(assigned_to=current_user.id)
+            .filter(Ticket.status != "closed")
+            .all()
+        )
     else:
         # Admins see all assigned tickets
-        assigned_tickets = Ticket.query.filter(Ticket.assigned_to.isnot(None)).filter(Ticket.status != 'closed').all()
+        assigned_tickets = (
+            Ticket.query.filter(Ticket.assigned_to.isnot(None))
+            .filter(Ticket.status != "closed")
+            .all()
+        )
 
     support_staff = User.query.filter_by(role="support").all()
     return render_template(
         "assigned_tickets.html",
         assigned_tickets=assigned_tickets,  # Ensure this matches the template variable
         support_staff=support_staff,
-        view='assigned'  # Pass 'view' as 'assigned' to the template
+        view="assigned",  # Pass 'view' as 'assigned' to the template
     )
+
 
 @bp.context_processor
 def inject_open_tickets_count():
-    open_tickets_count = Ticket.query.filter(Ticket.status.in_(['open', 'in progress'])).count()
-    
+    open_tickets_count = Ticket.query.filter(
+        Ticket.status.in_(["open", "in progress"])
+    ).count()
+
     # Determine the badge class based on the count
     if open_tickets_count > 10:
         badge_class = "badge-active-tickets-high"  # Red
@@ -536,10 +572,8 @@ def inject_open_tickets_count():
     else:
         badge_class = "badge-active-tickets-info"  # Blue or default color
 
-    return {
-        'open_tickets_count': open_tickets_count,
-        'badge_class': badge_class
-    }
+    return {"open_tickets_count": open_tickets_count, "badge_class": badge_class}
+
 
 @bp.route("/update_priority/<int:ticket_id>", methods=["POST"])
 @login_required
@@ -556,6 +590,7 @@ def update_priority(ticket_id):
         flash("Priority has been updated.", "success")
     return redirect(url_for("main.ticket_details", ticket_id=ticket.id))
 
+
 @bp.route("/update_assignee/<int:ticket_id>", methods=["POST"])
 @login_required
 def update_assignee(ticket_id):
@@ -570,6 +605,7 @@ def update_assignee(ticket_id):
         db.session.commit()
         flash("Assignee has been updated.", "success")
     return redirect(url_for("main.ticket_details", ticket_id=ticket.id))
+
 
 @bp.route("/update_ticket_status/<int:ticket_id>", methods=["POST"])
 @login_required
@@ -599,6 +635,7 @@ def update_ticket_status(ticket_id):
         flash("Ticket status has been updated.", "success")
     return redirect(url_for("main.all_tickets"))
 
+
 @bp.route("/closed_tickets", methods=["GET"])
 @login_required
 def closed_tickets():
@@ -615,16 +652,23 @@ def closed_tickets():
         closed_tickets = Ticket.query.filter_by(status="closed").all()
     elif current_user.role == "support":
         # Support staff see all closed tickets assigned to them
-        closed_tickets = Ticket.query.filter_by(status="closed", assigned_to=current_user.id).all()
+        closed_tickets = Ticket.query.filter_by(
+            status="closed", assigned_to=current_user.id
+        ).all()
     else:
         # Regular users see all closed tickets they created
-        closed_tickets = Ticket.query.filter_by(status="closed", user_id=current_user.id).all()
+        closed_tickets = Ticket.query.filter_by(
+            status="closed", user_id=current_user.id
+        ).all()
 
-    return render_template("closed_tickets.html", closed_tickets=closed_tickets, view='closed')
+    return render_template(
+        "closed_tickets.html", closed_tickets=closed_tickets, view="closed"
+    )
 
-@bp.route('/active_tickets')
+
+@bp.route("/active_tickets")
 @login_required
 def active_tickets():
     # Filtering tickets by the current user and by active status
-    tickets = Ticket.query.filter_by(user_id=current_user.id, status='open').all()
-    return render_template('all_tickets.html', tickets=tickets, view='active')
+    tickets = Ticket.query.filter_by(user_id=current_user.id, status="open").all()
+    return render_template("all_tickets.html", tickets=tickets, view="active")
