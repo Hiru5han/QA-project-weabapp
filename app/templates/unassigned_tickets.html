@@ -63,6 +63,7 @@
             {% if current_user.role == 'admin' %}
             <th class="col text-center">Assign To</th>
             {% endif %}
+            <th class="col text-center">Requester</th>
             <th class="col text-center">Actions</th>
           </tr>
         </thead>
@@ -105,6 +106,7 @@
               </form>
             </td>
             {% endif %}
+            <td class="col text-center">{{ ticket.creator.name }}</td>
             <td class="col text-center">
               {% if current_user.role == 'support' %}
               <form

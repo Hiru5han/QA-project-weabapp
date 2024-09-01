@@ -53,6 +53,7 @@
             <th class="col text-center">Priority</th>
             <th class="col text-center">Status</th>
             <th class="col text-center">Assigned To</th>
+            <th class="col text-center">Requester</th>
             <th class="col text-center">Actions</th>
           </tr>
         </thead>
@@ -73,6 +74,7 @@
             <td class="col text-center">
               {{ ticket.assignee.name if ticket.assignee else 'Unassigned' }}
             </td>
+            <td class="col text-center">{{ ticket.creator.name }}</td>
             <td class="col text-center">
               <a
                 href="{{ url_for('main.ticket_details', ticket_id=ticket.id) }}"
