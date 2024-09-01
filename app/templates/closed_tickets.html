@@ -1,43 +1,55 @@
-{% extends "base.html" %} 
-{% block content %}
+{% extends "base.html" %} {% block content %}
 <div class="container mt-5">
-  <!-- Dashboard Header -->
   <div class="row mb-2">
     <div class="col-12 text-center">
-      <h2 class="text-primary mb-0">Assigned Tickets</h2>
+      <h2 class="text-primary mb-0">Closed Tickets</h2>
       <p class="lead">Welcome, {{ current_user.name }}!</p>
     </div>
   </div>
 
-  <!-- Header with Toggle, Title, and Create Button -->
   <div class="card shadow-sm">
-    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center position-relative">
+    <div
+      class="card-header bg-primary text-white d-flex justify-content-between align-items-center position-relative"
+    >
       <div class="d-flex align-items-center">
         <span class="badge {{ badge_class }}">
-          {{ open_tickets_count }} active
+          {{ closed_tickets|length }} closed
         </span>
       </div>
 
       <div class="toggle-buttons">
-        <div class="btn-group toggle-group" role="group" aria-label="Ticket Status Toggle">
-          <a href="{{ url_for('main.unassigned_tickets') }}" class="btn btn-toggle {% if view == 'unassigned' %}active{% endif %}">
+        <div
+          class="btn-group toggle-group"
+          role="group"
+          aria-label="Ticket Status Toggle"
+        >
+          <a
+            href="{{ url_for('main.unassigned_tickets') }}"
+            class="btn btn-toggle {% if view == 'unassigned' %}active{% endif %}"
+          >
             Unassigned
           </a>
-          <a href="{{ url_for('main.assigned_tickets') }}" class="btn btn-toggle {% if view == 'assigned' %}active{% endif %}">
+
+          <a
+            href="{{ url_for('main.assigned_tickets') }}"
+            class="btn btn-toggle {% if view == 'assigned' %}active{% endif %}"
+          >
             Assigned
           </a>
-
           {% if current_user.role == 'admin' %}
-          <a href="{{ url_for('main.all_tickets') }}" class="btn btn-toggle {% if view == 'all' %}active{% endif %}">
+          <a
+            href="{{ url_for('main.all_tickets') }}"
+            class="btn btn-toggle {% if view == 'all' %}active{% endif %}"
+          >
             All Tickets
           </a>
           {% endif %}
           <a
-          href="{{ url_for('main.closed_tickets') }}"
-          class="btn btn-toggle {% if view == 'closed' %}active{% endif %}"
-        >
-          Closed
-        </a>
+            href="{{ url_for('main.closed_tickets') }}"
+            class="btn btn-toggle {% if view == 'closed' %}active{% endif %}"
+          >
+            Closed
+          </a>
         </div>
       </div>
 
@@ -61,16 +73,13 @@
           </tr>
         </thead>
         <tbody>
-          {% if assigned_tickets|length == 0 %}
+          {% if closed_tickets|length == 0 %}
           <tr>
-            <td colspan="6">
-              <div class="text-center">
-                <h5>No tickets<h5>
-              </div>
+            <td colspan="6" class="text-center">
+              <h5>No closed tickets</h5>
             </td>
           </tr>
-          {% else %} 
-          {% for ticket in assigned_tickets %}
+          {% else %} {% for ticket in closed_tickets %}
           <tr class="d-flex justify-content-between">
             <td class="col text-center">{{ ticket.title }}</td>
             <td class="col text-center">
@@ -84,17 +93,29 @@
               </span>
             </td>
             <td class="col text-center">
-              {{ ticket.assignee.name if ticket.assignee else 'Unassigned' }}
+              {{ ticket.assignee.name if ticket.assignee else "Unassigned" }}
             </td>
             <td class="col text-center">{{ ticket.creator.name }}</td>
             <td class="col text-center">
-              <a href="{{ url_for('main.ticket_details', ticket_id=ticket.id) }}" class="btn btn-outline-primary btn-sm">
+              <a
+                href="{{ url_for('main.ticket_details', ticket_id=ticket.id) }}"
+                class="btn btn-outline-primary btn-sm"
+              >
                 <i class="fas fa-eye"></i> View
               </a>
               {% if current_user.role == 'admin' %}
-              <form method="POST" action="{{ url_for('main.delete_ticket', ticket_id=ticket.id) }}" style="display: inline"
-                onsubmit="return confirm('Are you sure you want to delete this ticket?');">
-                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+              <form
+                method="POST"
+                action="{{ url_for('main.delete_ticket', ticket_id=ticket.id) }}"
+                style="display: inline"
+                onsubmit="return confirm('Are you sure you want to delete this ticket?');"
+              >
+                <!-- Include CSRF token for security -->
+                <input
+                  type="hidden"
+                  name="csrf_token"
+                  value="{{ csrf_token() }}"
+                />
                 <button type="submit" class="btn btn-outline-danger btn-sm">
                   <i class="fas fa-trash"></i> Delete
                 </button>
@@ -102,8 +123,7 @@
               {% endif %}
             </td>
           </tr>
-          {% endfor %} 
-          {% endif %}
+          {% endfor %} {% endif %}
         </tbody>
       </table>
     </div>

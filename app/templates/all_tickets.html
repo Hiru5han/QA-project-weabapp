@@ -45,6 +45,12 @@
           >
             All Tickets
           </a>
+          <a
+            href="{{ url_for('main.closed_tickets') }}"
+            class="btn btn-toggle {% if view == 'closed' %}active{% endif %}"
+          >
+            Closed
+          </a>
         </div>
       </div>
       {% endif %}

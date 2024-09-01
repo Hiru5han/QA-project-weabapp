@@ -42,9 +42,15 @@
           >
             All Tickets
           </a>
-          {% endif %}
-        </div>
+        {% endif %}
+          <a
+          href="{{ url_for('main.closed_tickets') }}"
+          class="btn btn-toggle {% if view == 'closed' %}active{% endif %}"
+          >
+          Closed
+        </a>
       </div>
+    </div>
 
       <div class="ms-auto">
         <a class="btn btn-success" href="{{ url_for('main.create_ticket') }}">

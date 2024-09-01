@@ -509,10 +509,10 @@ def assigned_tickets():
 
     if current_user.role == "support":
         # Support staff only see tickets assigned to themselves
-        assigned_tickets = Ticket.query.filter_by(assigned_to=current_user.id).all()
+        assigned_tickets = Ticket.query.filter_by(assigned_to=current_user.id).filter(Ticket.status != 'closed').all()
     else:
         # Admins see all assigned tickets
-        assigned_tickets = Ticket.query.filter(Ticket.assigned_to.isnot(None)).all()
+        assigned_tickets = Ticket.query.filter(Ticket.assigned_to.isnot(None)).filter(Ticket.status != 'closed').all()
 
     support_staff = User.query.filter_by(role="support").all()
     return render_template(
@@ -598,3 +598,26 @@ def update_ticket_status(ticket_id):
         db.session.commit()
         flash("Ticket status has been updated.", "success")
     return redirect(url_for("main.all_tickets"))
+
+@bp.route("/closed_tickets", methods=["GET"])
+@login_required
+def closed_tickets():
+    """
+    Displays closed tickets based on the user's role.
+
+    Returns
+    -------
+    str
+        Rendered template for the closed_tickets page.
+    """
+    if current_user.role == "admin":
+        # Admins can see all closed tickets
+        closed_tickets = Ticket.query.filter_by(status="closed").all()
+    elif current_user.role == "support":
+        # Support staff see all closed tickets assigned to them
+        closed_tickets = Ticket.query.filter_by(status="closed", assigned_to=current_user.id).all()
+    else:
+        # Regular users see all closed tickets they created
+        closed_tickets = Ticket.query.filter_by(status="closed", user_id=current_user.id).all()
+
+    return render_template("closed_tickets.html", closed_tickets=closed_tickets, view='closed')
