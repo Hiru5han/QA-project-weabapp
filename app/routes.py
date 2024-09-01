@@ -497,7 +497,7 @@ def assigned_tickets():
     support_staff = User.query.filter_by(role="support").all()
     return render_template(
         "assigned_tickets.html",
-        assigned_tickets=assigned_tickets,
+        assigned_tickets=assigned_tickets,  # Ensure this matches the template variable
         support_staff=support_staff,
         view='assigned'  # Pass 'view' as 'assigned' to the template
     )
