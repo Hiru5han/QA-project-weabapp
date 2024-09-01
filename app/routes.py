@@ -171,7 +171,10 @@ def all_tickets():
     else:
         tickets = Ticket.query.filter_by(user_id=current_user.id).all()
 
-    return render_template('all_tickets.html', tickets=tickets, current_user=current_user)
+    # Set the view to 'all' for the active tab highlighting
+    view = 'all'
+
+    return render_template('all_tickets.html', tickets=tickets, current_user=current_user, view=view)
 
 
 @bp.route("/create_ticket", methods=["GET", "POST"])
