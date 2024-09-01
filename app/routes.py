@@ -621,3 +621,10 @@ def closed_tickets():
         closed_tickets = Ticket.query.filter_by(status="closed", user_id=current_user.id).all()
 
     return render_template("closed_tickets.html", closed_tickets=closed_tickets, view='closed')
+
+@bp.route('/active_tickets')
+@login_required
+def active_tickets():
+    # Filtering tickets by the current user and by active status
+    tickets = Ticket.query.filter_by(user_id=current_user.id, status='open').all()
+    return render_template('all_tickets.html', tickets=tickets, view='active')

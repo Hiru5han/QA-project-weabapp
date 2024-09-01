@@ -4,7 +4,7 @@
     <div class="col-12 text-center">
       <h2 class="text-primary mb-0">
         {% if current_user.role == 'admin' or current_user.role == 'support' %}
-        All Tickets {% else %} My Tickets {% endif %}
+        All Tickets {% else %} My Active Tickets {% endif %}
       </h2>
       <p class="lead">Welcome, {{ current_user.name }}!</p>
     </div>
@@ -20,6 +20,7 @@
           {{ open_tickets_count }} active
         </span>
       </div>
+      {% endif %}
 
       <div class="toggle-buttons">
         <div
@@ -27,6 +28,7 @@
           role="group"
           aria-label="Ticket Status Toggle"
         >
+          {% if current_user.role in ['admin', 'support'] %}
           <a
             href="{{ url_for('main.unassigned_tickets') }}"
             class="btn btn-toggle {% if view == 'unassigned' %}active{% endif %}"
@@ -39,12 +41,21 @@
           >
             Assigned
           </a>
+          {% endif %} {% if current_user.role in ['admin', 'support'] %}
           <a
             href="{{ url_for('main.all_tickets') }}"
             class="btn btn-toggle {% if view == 'all' %}active{% endif %}"
           >
             All Tickets
           </a>
+          {% else %}
+          <a
+            href="{{ url_for('main.active_tickets') }}"
+            class="btn btn-toggle {% if view == 'active' %}active{% endif %}"
+          >
+            Active
+          </a>
+          {% endif %}
           <a
             href="{{ url_for('main.closed_tickets') }}"
             class="btn btn-toggle {% if view == 'closed' %}active{% endif %}"
@@ -53,7 +64,6 @@
           </a>
         </div>
       </div>
-      {% endif %}
 
       <div class="ms-auto">
         <a class="btn btn-success" href="{{ url_for('main.create_ticket') }}">

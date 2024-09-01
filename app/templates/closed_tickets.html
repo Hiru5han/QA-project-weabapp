@@ -11,11 +11,13 @@
     <div
       class="card-header bg-primary text-white d-flex justify-content-between align-items-center position-relative"
     >
+      {% if current_user.role == 'admin' or current_user.role == 'support' %}
       <div class="d-flex align-items-center">
         <span class="badge {{ badge_class }}">
-          {{ closed_tickets|length }} closed
+          {{ open_tickets_count }} active
         </span>
       </div>
+      {% endif %}
 
       <div class="toggle-buttons">
         <div
@@ -23,25 +25,32 @@
           role="group"
           aria-label="Ticket Status Toggle"
         >
+          {% if current_user.role == 'admin' or current_user.role == 'support'%}
           <a
             href="{{ url_for('main.unassigned_tickets') }}"
             class="btn btn-toggle {% if view == 'unassigned' %}active{% endif %}"
           >
             Unassigned
           </a>
-
           <a
             href="{{ url_for('main.assigned_tickets') }}"
             class="btn btn-toggle {% if view == 'assigned' %}active{% endif %}"
           >
             Assigned
           </a>
-          {% if current_user.role == 'admin' %}
+          {% endif %} {% if current_user.role == 'admin' %}
           <a
             href="{{ url_for('main.all_tickets') }}"
             class="btn btn-toggle {% if view == 'all' %}active{% endif %}"
           >
             All Tickets
+          </a>
+          {% endif %} {% if current_user.role == 'regular' %}
+          <a
+            href="{{ url_for('main.all_tickets') }}"
+            class="btn btn-toggle {% if view == 'all' %}active{% endif %}"
+          >
+            Active
           </a>
           {% endif %}
           <a
