@@ -121,7 +121,7 @@ def reset_database():
     initialize_database()
     create_migration()
     apply_migration()
-    populate_database()
+    # populate_database()
     print("Database reset complete.")
 
 
