@@ -37,12 +37,14 @@
           >
             Assigned
           </a>
+          {% if current_user.role == 'admin' %}
           <a
             href="{{ url_for('main.all_tickets') }}"
             class="btn btn-toggle {% if view == 'all' %}active{% endif %}"
           >
             All Tickets
           </a>
+          {% endif %}
         </div>
       </div>
 

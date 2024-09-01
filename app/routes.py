@@ -487,8 +487,12 @@ def assigned_tickets():
         flash("Only support staff and admins can view this page.", "warning")
         return redirect(url_for("main.all_tickets"))
 
-    assigned_tickets = Ticket.query.filter(Ticket.assigned_to.isnot(None)).all()
-    print(f"Assigned tickets: {assigned_tickets}")
+    if current_user.role == "support":
+        # Support staff only see tickets assigned to themselves
+        assigned_tickets = Ticket.query.filter_by(assigned_to=current_user.id).all()
+    else:
+        # Admins see all assigned tickets
+        assigned_tickets = Ticket.query.filter(Ticket.assigned_to.isnot(None)).all()
 
     support_staff = User.query.filter_by(role="support").all()
     return render_template(
@@ -516,3 +520,61 @@ def inject_open_tickets_count():
         'open_tickets_count': open_tickets_count,
         'badge_class': badge_class
     }
+
+@bp.route("/update_priority/<int:ticket_id>", methods=["POST"])
+@login_required
+def update_priority(ticket_id):
+    ticket = Ticket.query.get_or_404(ticket_id)
+    if current_user.role != "admin":
+        flash("You do not have permission to update the priority.", "warning")
+        return redirect(url_for("main.ticket_details", ticket_id=ticket.id))
+
+    priority = request.form.get("priority")
+    if priority:
+        ticket.priority = priority
+        db.session.commit()
+        flash("Priority has been updated.", "success")
+    return redirect(url_for("main.ticket_details", ticket_id=ticket.id))
+
+@bp.route("/update_assignee/<int:ticket_id>", methods=["POST"])
+@login_required
+def update_assignee(ticket_id):
+    ticket = Ticket.query.get_or_404(ticket_id)
+    if current_user.role != "admin":
+        flash("You do not have permission to update the assignee.", "warning")
+        return redirect(url_for("main.ticket_details", ticket_id=ticket.id))
+
+    assignee_id = request.form.get("assignee")
+    if assignee_id:
+        ticket.assigned_to = assignee_id
+        db.session.commit()
+        flash("Assignee has been updated.", "success")
+    return redirect(url_for("main.ticket_details", ticket_id=ticket.id))
+
+@bp.route("/update_ticket_status/<int:ticket_id>", methods=["POST"])
+@login_required
+def update_ticket_status(ticket_id):
+    """
+    Allows support staff or admins to update the status of a specific ticket from the ticket list view.
+
+    Parameters
+    ----------
+    ticket_id : int
+        The ID of the ticket to update.
+
+    Returns
+    -------
+    Response
+        A redirect response to the all_tickets page after updating the status.
+    """
+    ticket = Ticket.query.get_or_404(ticket_id)
+    if current_user.role not in ["admin", "support"]:
+        flash("You do not have permission to update the status.", "warning")
+        return redirect(url_for("main.all_tickets"))
+
+    status = request.form.get("status")
+    if status:
+        ticket.status = status
+        db.session.commit()
+        flash("Ticket status has been updated.", "success")
+    return redirect(url_for("main.all_tickets"))
