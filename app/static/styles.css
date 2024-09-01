@@ -906,3 +906,43 @@ span.invalid {
 .modal-header .btn-close:hover {
   opacity: 1;
 }
+
+/* Badge Styles */
+
+/* General Dashboard Badge Styles */
+.dashboard-badge {
+  transition: none;
+  transform: none;
+  pointer-events: none; /* Disable pointer events, making it non-clickable */
+  cursor: default; /* Set cursor to default to indicate non-interactivity */
+  display: block;
+  width: 100%;
+  text-align: center;
+  color: white;
+}
+
+/* Priority Badge Colors */
+.priority-high {
+  background-color: #dc3545; /* Equivalent to bg-danger */
+}
+
+.priority-medium {
+  background-color: #ffc107; /* Equivalent to bg-warning */
+}
+
+.priority-low {
+  background-color: #17a2b8; /* Equivalent to bg-info */
+}
+
+/* Status Badge Colors */
+.status-open {
+  background-color: #28a745; /* Equivalent to bg-success */
+}
+
+.status-in-progress {
+  background-color: #ffc107; /* Equivalent to bg-warning */
+}
+
+.status-closed {
+  background-color: #6c757d; /* Equivalent to bg-secondary */
+}

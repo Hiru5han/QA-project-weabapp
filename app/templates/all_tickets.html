@@ -99,17 +99,17 @@
           <tr>
             <td class="text-center">{{ ticket.title }}</td>
             <td class="text-center">
-              <span class="badge badge-priority-{{ ticket.priority }}">
-                {{ ticket.priority }}
+              <span class="badge dashboard-badge priority-{{ ticket.priority }}">
+                  {{ ticket.priority }}
               </span>
-            </td>
-            <td class="text-center">
-              <span class="badge badge-status-{{ ticket.status|lower }}">
-                {{ ticket.status }}
+          </td>
+          <td class="text-center">
+            <span class="badge dashboard-badge status-{{ ticket.status }}">
+              {{ ticket.status }}
               </span>
-            </td>
-            <td class="text-center">
-              {{ ticket.assignee.name if ticket.assignee else 'Unassigned' }}
+          </td>
+          <td class="text-center">
+            {{ ticket.assignee.name if ticket.assignee else 'Unassigned' }}
             </td>
             <td class="text-center">{{ ticket.creator.name }}</td>
             <td class="text-center">

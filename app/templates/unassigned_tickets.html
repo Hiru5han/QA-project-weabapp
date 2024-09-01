@@ -73,15 +73,15 @@
           <tr>
             <td class="text-center">{{ ticket.title }}</td>
             <td class="text-center">
-              <span class="badge badge-priority-{{ ticket.priority }}">
-                {{ ticket.priority }}
+              <span class="badge dashboard-badge priority-{{ ticket.priority }}">
+                  {{ ticket.priority }}
               </span>
-            </td>
-            <td class="text-center">
-              <span class="badge badge-status-{{ ticket.status|lower }}">
-                {{ ticket.status }}
+          </td>
+          <td class="text-center">
+            <span class="badge dashboard-badge status-{{ ticket.status }}">
+              {{ ticket.status }}
               </span>
-            </td>
+          </td>
             {% if current_user.role == 'admin' %}
             <td class="text-center">
               <form method="POST" action="{{ url_for('main.unassigned_tickets') }}">
