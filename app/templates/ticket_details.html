@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "base.html" %} 
 {% block content %}
 <div class="container mt-5">
     <!-- Back Button, Header, and Priority/Status Section -->
@@ -42,21 +42,21 @@
         </div>
     </div>
 
-<!-- Delete Button Section -->
-{% if current_user.role == 'admin' %}
-<div class="text-end mt-4">
-    <form method="POST" action="{{ url_for('main.delete_ticket', ticket_id=ticket.id) }}" onsubmit="return confirm('Are you sure you want to delete this ticket?');">
-        <!-- Wrapper to align the CSRF token input field to the right -->
-        <div class="d-flex justify-content-end">
-            <!-- Include CSRF token for security -->
-            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-            <button type="submit" class="btn btn-danger ms-2">
-                <i class="fas fa-trash-alt"></i> Delete Ticket
-            </button>
-        </div>
-    </form>
-</div>
-{% endif %}
+    <!-- Delete Button Section -->
+    {% if current_user.role == 'admin' %}
+    <div class="text-end mt-4">
+        <form method="POST" action="{{ url_for('main.delete_ticket', ticket_id=ticket.id) }}" onsubmit="return confirm('Are you sure you want to delete this ticket?');">
+            <!-- Wrapper to align the CSRF token input field to the right -->
+            <div class="d-flex justify-content-end">
+                <!-- Include CSRF token for security -->
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button type="submit" class="btn btn-danger ms-2">
+                    <i class="fas fa-trash-alt"></i> Delete Ticket
+                </button>
+            </div>
+        </form>
+    </div>
+    {% endif %}
 
     <!-- Description and Comments Section -->
     <div class="row mb-4">
@@ -76,6 +76,8 @@
                 <div class="card-body">
                     <h5 class="card-title">Comments</h5>
                     <form method="POST" class="mb-3">
+                        <!-- Include CSRF token for security -->
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                         <div class="form-group">
                             <label for="comment_text">Add a comment</label>
                             <textarea class="form-control" id="comment_text" name="comment_text" rows="3" required></textarea>
@@ -111,6 +113,8 @@
       </div>
       <div class="modal-body">
         <form method="POST">
+            <!-- Include CSRF token for security -->
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <div class="form-group">
                 <label for="status">Select New Status</label>
                 <select class="form-control" id="status" name="status">
@@ -136,6 +140,8 @@
       </div>
       <div class="modal-body">
         <form method="POST">
+            <!-- Include CSRF token for security -->
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <div class="form-group">
                 <label for="priority">Select New Priority</label>
                 <select class="form-control" id="priority" name="priority">
@@ -161,6 +167,8 @@
       </div>
       <div class="modal-body">
         <form method="POST">
+            <!-- Include CSRF token for security -->
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <div class="form-group">
                 <label for="assignee">Select New Assignee</label>
                 <select class="form-control" id="assignee" name="assignee">
@@ -207,21 +215,21 @@
     });
 
     document.getElementById('assignee-badge').addEventListener('click', function() {
-    var myModal = new bootstrap.Modal(document.getElementById('updateAssigneeModal'));
-    myModal.show();
+        var myModal = new bootstrap.Modal(document.getElementById('updateAssigneeModal'));
+        myModal.show();
 
-    const assigneeSelect = document.getElementById('assignee');
-    const selectedOption = assigneeSelect.querySelector('option[selected]');
-    
-    if (selectedOption) {
-        // Remove and reinsert the selected option at the top
-        assigneeSelect.removeChild(selectedOption);
-        assigneeSelect.insertBefore(selectedOption, assigneeSelect.firstChild);
+        const assigneeSelect = document.getElementById('assignee');
+        const selectedOption = assigneeSelect.querySelector('option[selected]');
+        
+        if (selectedOption) {
+            // Remove and reinsert the selected option at the top
+            assigneeSelect.removeChild(selectedOption);
+            assigneeSelect.insertBefore(selectedOption, assigneeSelect.firstChild);
 
-        // Ensure it is selected
-        selectedOption.selected = true;
-    }
-});
+            // Ensure it is selected
+            selectedOption.selected = true;
+        }
+    });
 
     // Initialize tooltips
     var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))

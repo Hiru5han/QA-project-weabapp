@@ -1,6 +1,9 @@
 {% extends "base.html" %} {% block content %}
 <h2>Create Ticket</h2>
 <form method="POST">
+  <!-- Include the CSRF token for security -->
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+
   <div class="form-group">
     <label for="title">Title</label>
     <input type="text" class="form-control" id="title" name="title" required />
