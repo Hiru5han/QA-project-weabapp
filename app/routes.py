@@ -150,7 +150,7 @@ def register():
         db.session.add(new_user)
         db.session.commit()
         login_user(new_user)
-        return redirect(url_for("main.all_tickets"))
+        return redirect_based_on_role()
     else:
         print("Rendering register page")
     return render_template("register.html")
