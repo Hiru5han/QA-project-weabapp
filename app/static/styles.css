@@ -42,6 +42,7 @@ h2 {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  position: relative;
 }
 
 .card-header .text-center {
@@ -337,6 +338,16 @@ h2 {
   transition: color 0.3s ease;
   font-size: 40px; /* Increase the icon size to match the logo's proportions */
   line-height: 40px; /* Vertically center the icon */
+}
+
+.toggle-buttons {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.ms-auto {
+  margin-left: auto;
 }
 
 body.light-mode #theme-toggle-icon {
@@ -854,4 +865,25 @@ span.invalid {
 .badge-assignee:hover {
   background-color: #138496; /* Slightly darker on hover */
   color: #ffffff; /* Maintain white text on hover */
+}
+
+/* Custom Badge Colors */
+.badge-active-tickets-low {
+  background-color: #28a745; /* Green */
+  color: white;
+}
+
+.badge-active-tickets-medium {
+  background-color: #ffc107; /* Yellow */
+  color: black;
+}
+
+.badge-active-tickets-high {
+  background-color: #dc3545; /* Red */
+  color: white;
+}
+
+.badge-active-tickets-info {
+  background-color: #17a2b8; /* Blue */
+  color: white;
 }

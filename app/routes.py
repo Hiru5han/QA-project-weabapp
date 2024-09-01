@@ -167,7 +167,18 @@ def all_tickets():
         Rendered template for the all_tickets page with all tickets.
     """
     tickets = Ticket.query.all()  # or your logic to get all tickets
-    return render_template('all_tickets.html', tickets=tickets, view='all')
+    open_tickets_count = Ticket.query.filter(Ticket.status.in_(['open', 'in progress'])).count()
+
+    if open_tickets_count > 10:
+        badge_class = "badge-active-tickets-high"  # Red
+    elif open_tickets_count > 5:
+        badge_class = "badge-active-tickets-medium"  # Yellow
+    elif open_tickets_count > 0:
+        badge_class = "badge-active-tickets-low"  # Green
+    else:
+        badge_class = "badge-active-tickets-info"  # Blue or default color
+
+    return render_template('all_tickets.html', tickets=tickets, view='all', open_tickets_count=open_tickets_count, badge_class=badge_class)
 
 
 @bp.route("/create_ticket", methods=["GET", "POST"])
