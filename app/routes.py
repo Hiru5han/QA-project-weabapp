@@ -186,7 +186,7 @@ def create_ticket():
     Returns
     -------
     str
-        Rendered template for the create_ticket page or a redirect to the all_tickets page.
+        Rendered template for the create_ticket page or a redirect to the previous page.
     """
     if request.method == "POST":
         title = request.form.get("title")
@@ -224,10 +224,16 @@ def create_ticket():
 
         db.session.add(new_ticket)
         db.session.commit()
-        return redirect(url_for("main.all_tickets"))
+        
+        # Get the referrer URL from the form and redirect to it
+        referrer = request.form.get("referrer")
+        return redirect(referrer or url_for("main.all_tickets"))
 
     else:
         print("Rendering create ticket page")
+
+    # Store the referrer URL
+    referrer = request.referrer
 
     # If the user is an admin or support staff, query the list of users and support staff
     all_users = []
@@ -237,7 +243,7 @@ def create_ticket():
     if current_user.role == 'admin':
         support_staff = User.query.filter_by(role='support').all()
 
-    return render_template("create_ticket.html", support_staff=support_staff, all_users=all_users)
+    return render_template("create_ticket.html", support_staff=support_staff, all_users=all_users, referrer=referrer)
 
 
 @bp.route("/ticket/<int:ticket_id>", methods=["GET", "POST"])

@@ -4,6 +4,9 @@
   <!-- Include the CSRF token for security -->
   <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
 
+  <!-- Hidden field to store the referrer URL -->
+  <input type="hidden" name="referrer" value="{{ referrer }}" />
+
   <div class="form-group">
     <label for="title">Title</label>
     <input type="text" class="form-control" id="title" name="title" required />
