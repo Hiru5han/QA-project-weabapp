@@ -2,7 +2,10 @@
 <div class="container mt-5">
   <div class="row mb-2">
     <div class="col-12 text-center">
-      <h2 class="text-primary mb-0">All Tickets</h2>
+      <h2 class="text-primary mb-0">
+        {% if current_user.role == 'admin' or current_user.role == 'support' %}
+        All Tickets {% else %} My Tickets {% endif %}
+      </h2>
       <p class="lead">Welcome, {{ current_user.name }}!</p>
     </div>
   </div>
