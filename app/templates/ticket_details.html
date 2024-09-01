@@ -190,13 +190,7 @@
 </div>
 {% endif %}
 
-{% if current_user.role == 'admin' or current_user.role == 'manager' %}
 <script>
-    // Store the previous page's URL if it's not already stored
-    if (!sessionStorage.getItem('previousPageUrl')) {
-        sessionStorage.setItem('previousPageUrl', document.referrer);
-    }
-
     // Handle back navigation
     function goBack() {
         const previousPageUrl = sessionStorage.getItem('previousPageUrl');
@@ -207,6 +201,14 @@
         }
     }
 
+    // Store the previous page's URL if it's not already stored
+    if (!sessionStorage.getItem('previousPageUrl')) {
+        sessionStorage.setItem('previousPageUrl', document.referrer);
+    }
+</script>
+
+{% if current_user.role == 'admin' or current_user.role == 'manager' %}
+<script>
     document.getElementById('status-badge').addEventListener('click', function() {
         var myModal = new bootstrap.Modal(document.getElementById('updateStatusModal'));
         myModal.show();
