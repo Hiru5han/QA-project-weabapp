@@ -68,7 +68,13 @@
           </tr>
         </thead>
         <tbody>
-          {% for ticket in unassigned_tickets %}
+          {% if unassigned_tickets|length == 0 %}
+          <tr>
+            <td colspan="6" class="text-center">
+              <h5>No tickets</h5>
+            </td>
+          </tr>
+          {% else %} {% for ticket in unassigned_tickets %}
           <tr class="d-flex justify-content-between">
             <td class="col text-center">{{ ticket.title }}</td>
             <td class="col text-center">
@@ -163,7 +169,7 @@
               {% endif %}
             </td>
           </tr>
-          {% endfor %}
+          {% endfor %} {% endif %}
         </tbody>
       </table>
     </div>
