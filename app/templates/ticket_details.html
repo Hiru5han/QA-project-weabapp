@@ -16,29 +16,32 @@
             <div class="status-priority-container">
                 <div class="mb-2">
                     <p class="mb-0">
-                        <span><strong>Priority: </strong></span>
+                        <span class="title-spacing"><strong>Priority:</strong></span>
                         <span class="badge text-white {% if current_user.role == 'admin' %}clickable-badge{% endif %} {% if ticket.priority == 'high' %}bg-danger{% elif ticket.priority == 'medium' %}bg-warning{% else %}bg-info{% endif %}" id="priority-badge" {% if current_user.role == 'admin' or current_user.role == 'manager' %}data-bs-toggle="tooltip" title="Click to update priority"{% endif %}>
                             {{ ticket.priority }} {% if current_user.role == 'admin' or current_user.role == 'manager' %}<i class="fas fa-edit ms-2"></i>{% endif %}
                         </span>
-                    </p>
+                                            </p>
                 </div>
                 <div class="mb-2">
                     <p class="mb-0">
-                        <span><strong>Status: </strong></span>
+                        <span class="title-spacing"><strong>Status: </strong></span>
                         <span class="badge text-white {% if current_user.role == 'admin' or current_user.role == 'manager' %}clickable-badge{% endif %} {% if ticket.status == 'open' %}bg-success{% elif ticket.status == 'in-progress' %}bg-warning{% else %}bg-secondary{% endif %}" id="status-badge" {% if current_user.role == 'admin' or current_user.role == 'manager' %}data-bs-toggle="tooltip" title="Click to update status"{% endif %}>
                             {{ ticket.status }} {% if current_user.role == 'admin' or current_user.role == 'manager' %}<i class="fas fa-edit ms-2"></i>{% endif %}
                         </span>
                     </p>
                 </div>
-                <div>
+                <div class="mb-2">
                     <p class="mb-0">
-                        <span><strong>Assignee: </strong></span>
-                        <span class="badge badge-assignee clickable-badge" id="assignee-badge" data-bs-toggle="tooltip" title="Click to update assignee">
-                            {{ ticket.assignee.name }} <i class="fas fa-edit ms-2"></i>
+                        <span class="title-spacing"><strong>Assignee: </strong></span>
+                        <span class="badge text-white {% if current_user.role == 'admin' or current_user.role == 'manager' %}clickable-badge{% endif %} bg-info" id="assignee-badge" {% if current_user.role == 'admin' or current_user.role == 'manager' %}data-bs-toggle="tooltip" title="Click to update assignee"{% endif %}>
+                            {{ ticket.assignee.name }} 
+                            {% if current_user.role == 'admin' or current_user.role == 'manager' %}
+                            <i class="fas fa-edit ms-2"></i>
+                            {% endif %}
                         </span>
                     </p>
                 </div>
-            </div>
+                                            </div>
         </div>
     </div>
 

@@ -887,3 +887,7 @@ span.invalid {
   background-color: #17a2b8; /* Blue */
   color: white;
 }
+
+.title-spacing {
+  margin-right: 5px; /* Adjust this value as needed */
+}
