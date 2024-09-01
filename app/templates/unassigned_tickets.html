@@ -100,17 +100,15 @@
                   value="{{ csrf_token() }}"
                 />
                 <input type="hidden" name="ticket_id" value="{{ ticket.id }}" />
-                <select
-                  name="assigned_to"
-                  class="form-select form-select-sm mb-2"
-                >
+                <select name="assigned_to" class="form-select form-select-sm mb-2">
                   <option value="{{ current_user.id }}">
-                    Assign to Me ({{ current_user.name }})
+                      Assign to Me ({{ current_user.name }})
                   </option>
-                  {% for staff in support_staff %} {% if staff.id !=
-                  current_user.id %}
-                  <option value="{{ staff.id }}">{{ staff.name }}</option>
-                  {% endif %} {% endfor %}
+                  {% for staff in support_staff %}
+                  <option value="{{ staff.id }}" {% if ticket.assignee_id == staff.id %}selected{% endif %}>
+                      {{ staff.name }}
+                  </option>
+                  {% endfor %}
                 </select>
                 <button type="submit" class="btn btn-outline-success btn-sm">
                   <i class="fas fa-user-plus"></i> Assign
