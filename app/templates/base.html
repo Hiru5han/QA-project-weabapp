@@ -13,6 +13,13 @@
       href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
       rel="stylesheet"
     />
+
+    <!-- DataTables CSS -->
+    <link
+      href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css"
+      rel="stylesheet"
+    />
+
     <link
       href="{{ url_for('static', filename='styles.css') }}"
       rel="stylesheet"
@@ -62,14 +69,15 @@
 
     <!-- Flash messages section
     <div class="container mt-3">
-      {% with messages = get_flashed_messages(with_categories=true) %} {% if
-      messages %}
+      {% with messages = get_flashed_messages(with_categories=true) %} 
+      {% if messages %}
       <div class="flash-messages">
         {% for category, message in messages %}
         <div class="alert alert-{{ category }}">{{ message }}</div>
         {% endfor %}
       </div>
-      {% endif %} {% endwith %}
+      {% endif %} 
+      {% endwith %}
     </div> -->
 
     <div class="container">{% block content %} {% endblock %}</div>
@@ -79,6 +87,24 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+
     <script src="{{ url_for('static', filename='theme-toggle.js') }}"></script>
+
+    <!-- Initialize DataTables on specific tables -->
+    <script>
+      $(document).ready(function () {
+        $("#tickets-table").DataTable({
+          paging: true, // Enable pagination
+          ordering: true, // Enable column ordering
+          info: true, // Show information about the table
+          searching: true, // Enable search functionality
+          lengthMenu: [5, 10, 25, 50, 100], // Options for the number of entries to display per page
+          pageLength: 5, // Set the default number of entries to display to 5
+        });
+      });
+    </script>
   </body>
 </html>
