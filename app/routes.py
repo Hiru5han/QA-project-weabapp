@@ -180,11 +180,11 @@ def all_tickets():
     """
     if current_user.role == "admin" or current_user.role == "support":
         tickets = Ticket.query.all()
+        view = "all"
+
     else:
         tickets = Ticket.query.filter_by(user_id=current_user.id).all()
-
-    # Set the view to 'all' for the active tab highlighting
-    view = "all"
+        view = "active"
 
     return render_template(
         "all_tickets.html", tickets=tickets, current_user=current_user, view=view
