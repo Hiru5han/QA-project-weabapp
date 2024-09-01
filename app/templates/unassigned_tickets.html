@@ -87,6 +87,12 @@
                 method="POST"
                 action="{{ url_for('main.unassigned_tickets') }}"
               >
+                <!-- Include CSRF token for security -->
+                <input
+                  type="hidden"
+                  name="csrf_token"
+                  value="{{ csrf_token() }}"
+                />
                 <input type="hidden" name="ticket_id" value="{{ ticket.id }}" />
                 <select
                   name="assigned_to"
@@ -114,6 +120,12 @@
                 action="{{ url_for('main.unassigned_tickets') }}"
                 style="display: inline"
               >
+                <!-- Include CSRF token for security -->
+                <input
+                  type="hidden"
+                  name="csrf_token"
+                  value="{{ csrf_token() }}"
+                />
                 <input type="hidden" name="ticket_id" value="{{ ticket.id }}" />
                 <input
                   type="hidden"
@@ -137,6 +149,12 @@
                 action="{{ url_for('main.delete_ticket', ticket_id=ticket.id) }}"
                 style="display: inline"
               >
+                <!-- Include CSRF token for security -->
+                <input
+                  type="hidden"
+                  name="csrf_token"
+                  value="{{ csrf_token() }}"
+                />
                 <button type="submit" class="btn btn-outline-danger btn-sm">
                   <i class="fas fa-trash"></i> Delete
                 </button>
