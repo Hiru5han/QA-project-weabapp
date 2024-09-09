@@ -1,68 +1,106 @@
 {% extends "base.html" %} {% block content %}
-<h2>Create Ticket</h2>
-<form method="POST">
-  <!-- Include the CSRF token for security -->
-  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-
-  <!-- Hidden field to store the referrer URL -->
-  <input type="hidden" name="referrer" value="{{ referrer }}" />
-
-  <div class="form-group">
-    <label for="title">Title</label>
-    <input type="text" class="form-control" id="title" name="title" required />
+<div class="container mt-5">
+  <!-- Back Button -->
+  <div class="row mb-4 align-items-center">
+    <div class="col-md-2 text-start d-flex align-items-center">
+      <a href="javascript:void(0)" onclick="goBack();">
+        <i class="fas fa-chevron-left back-button-icon"></i>
+      </a>
+    </div>
+    <div class="col-md-8 text-center">
+      <h2>Create Ticket</h2>
+    </div>
   </div>
+  <!-- Create Ticket Form -->
 
-  <div class="form-group">
-    <label for="description">Description</label>
-    <textarea
-      class="form-control"
-      id="description"
-      name="description"
-      rows="4"
-      required
-    ></textarea>
-  </div>
+  <form method="POST">
+    <!-- Include the CSRF token for security -->
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
 
-  <div class="form-group">
-    <label for="priority">Priority</label>
-    <select class="form-control" id="priority" name="priority" required>
-      <option value="low">Low</option>
-      <option value="medium">Medium</option>
-      <option value="high">High</option>
-    </select>
-  </div>
+    <!-- Hidden field to store the referrer URL -->
+    <input type="hidden" name="referrer" value="{{ referrer }}" />
 
-  {% if current_user.role in ['admin', 'support'] %}
-  <div class="form-group">
-    <label for="user_id">Raise on Behalf of</label>
-    <select class="form-control" id="user_id" name="user_id">
-      <option value="{{ current_user.id }}">-- Myself --</option>
-      {% for user in all_users %}
-      <option value="{{ user.id }}">{{ user.name }}</option>
-      {% endfor %}
-    </select>
-  </div>
+    <div class="form-group">
+      <label for="title">Title</label>
+      <input
+        type="text"
+        class="form-control"
+        id="title"
+        name="title"
+        required
+      />
+    </div>
 
-  <div class="form-group">
-    <label for="status">Current State</label>
-    <select class="form-control" id="status" name="status" required>
-      <option value="open">Open</option>
-      <option value="in-progress">In-Progress</option>
-      <option value="closed">Closed</option>
-    </select>
-  </div>
-  {% endif %} {% if current_user.role == 'admin' %}
-  <div class="form-group">
-    <label for="assigned_to">Assign to Support User</label>
-    <select class="form-control" id="assigned_to" name="assigned_to">
-      <option value="">-- Select Support User --</option>
-      {% for staff in support_staff %}
-      <option value="{{ staff.id }}">{{ staff.name }}</option>
-      {% endfor %}
-    </select>
-  </div>
-  {% endif %}
+    <div class="form-group">
+      <label for="description">Description</label>
+      <textarea
+        class="form-control"
+        id="description"
+        name="description"
+        rows="4"
+        required
+      ></textarea>
+    </div>
 
-  <button type="submit" class="btn btn-primary">Create</button>
-</form>
+    <div class="form-group">
+      <label for="priority">Priority</label>
+      <select class="form-control" id="priority" name="priority" required>
+        <option value="low">Low</option>
+        <option value="medium">Medium</option>
+        <option value="high">High</option>
+      </select>
+    </div>
+
+    {% if current_user.role in ['admin', 'support'] %}
+    <div class="form-group">
+      <label for="user_id">Raise on Behalf of</label>
+      <select class="form-control" id="user_id" name="user_id">
+        <option value="{{ current_user.id }}">-- Myself --</option>
+        {% for user in all_users %}
+        <option value="{{ user.id }}">{{ user.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="status">Current State</label>
+      <select class="form-control" id="status" name="status" required>
+        <option value="open">Open</option>
+        <option value="in-progress">In-Progress</option>
+        <option value="closed">Closed</option>
+      </select>
+    </div>
+    {% endif %} {% if current_user.role == 'admin' %}
+    <div class="form-group">
+      <label for="assigned_to">Assign to Support User</label>
+      <select class="form-control" id="assigned_to" name="assigned_to">
+        <option value="">-- Select Support User --</option>
+        {% for staff in support_staff %}
+        <option value="{{ staff.id }}">{{ staff.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    {% endif %}
+
+    <button type="submit" class="btn btn-primary">Create</button>
+  </form>
+</div>
+
+<script>
+  // Handle back navigation
+  function goBack() {
+    const previousPageUrl = sessionStorage.getItem("previousPageUrl");
+    if (previousPageUrl) {
+      window.location.href = previousPageUrl;
+    } else {
+      window.location.href = "{{ url_for('main.all_tickets') }}";
+    }
+  }
+
+  // Store the previous page's URL if it's not already stored
+  if (!sessionStorage.getItem("previousPageUrl")) {
+    sessionStorage.setItem("previousPageUrl", document.referrer);
+  }
+</script>
+
 {% endblock %}
