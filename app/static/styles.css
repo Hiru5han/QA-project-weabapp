@@ -873,8 +873,18 @@ span.invalid {
   color: white;
 }
 
+body.dark-mode .badge-active-tickets-low {
+  background-color: #1c7430; /* Fresh teal */
+  border-color: #1c7430;
+}
+
 .badge-active-tickets-medium {
   background-color: #ffc107; /* Yellow */
+  color: black;
+}
+
+body.dark-mode .badge-active-tickets-medium {
+  background-color: #a57d04; /* Yellow */
   color: black;
 }
 
