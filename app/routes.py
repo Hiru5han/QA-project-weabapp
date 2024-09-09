@@ -56,10 +56,10 @@ def login():
                 # Redirect based on the user's role
                 return redirect_based_on_role()
             else:
-                print(f"Password mismatch for user: {user.email}")
+                flash(f"Password mismatch for user: {user.email}")
         else:
-            print("No user found with that email")
-        flash("Login failed. Check your email and password.", "warning")
+            flash("No user found with that email", "warning")
+        # flash("Login failed. Check your email and password.", "warning")
     else:
         print("Rendering login page")
 
@@ -559,7 +559,7 @@ def assigned_tickets():
 @bp.context_processor
 def inject_open_tickets_count():
     open_tickets_count = Ticket.query.filter(
-        Ticket.status.in_(["open", "in progress"])
+        Ticket.status.in_(["open", "in-progress"])
     ).count()
 
     # Determine the badge class based on the count
