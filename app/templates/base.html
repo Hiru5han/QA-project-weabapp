@@ -83,7 +83,7 @@
     <!-- Initialize DataTables on specific tables -->
     <script>
       $(document).ready(function () {
-        $("#tickets-table").DataTable({
+        var table = $("#tickets-table").DataTable({
           paging: true, // Enable pagination
           ordering: true, // Enable column ordering
           info: true, // Show information about the table
@@ -91,6 +91,13 @@
           lengthMenu: [5, 10, 25, 50, 100], // Options for the number of entries to display per page
           pageLength: 5, // Set the default number of entries to display to 5
         });
+
+        $(".dataTables_filter input")
+          .attr("placeholder", "Search across all categories...")
+          .css({
+            color: "grey",
+            width: "300px",
+          });
       });
     </script>
 
