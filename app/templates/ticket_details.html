@@ -1,195 +1,186 @@
-{% extends "base.html" %} 
+{% extends "base.html" %}
 {% block content %}
-<div class="container mt-5">
+<div class="auth-page">
+  <div class="create-ticket-card">
     <!-- Back Button, Header, and Priority/Status Section -->
     <div class="row mb-4 align-items-center">
-        <div class="col-md-2 text-start d-flex align-items-center">
-            <a href="javascript:void(0)" onclick="goBack();">
-                <i class="fas fa-chevron-left back-button-icon"></i>
-            </a>
+      <div class="col-md-2 text-start d-flex align-items-center">
+        <a href="javascript:void(0)" onclick="goBack();">
+          <i class="fas fa-chevron-left back-button-icon"></i>
+        </a>
+      </div>
+      <div class="col-md-8 text-center d-flex flex-column align-items-center">
+        <h2 class="text-primary mb-0">Ticket Details</h2>
+        <p class="lead">{{ ticket.title }}</p>
+      </div>
+      <div class="col-md-2 text-end">
+        <div class="status-priority-container">
+          <!-- Priority Button -->
+          <div class="mb-2">
+            <p class="mb-0">
+              <span class="title-spacing"><strong>Priority:</strong></span>
+              <span class="badge text-white clickable-badge {% if ticket.priority == 'high' %}bg-danger{% elif ticket.priority == 'medium' %}bg-warning{% else %}bg-info{% endif %}" id="priority-badge">
+                {{ ticket.priority }}<i class="fas fa-edit ms-2"></i>
+              </span>
+            </p>
+          </div>
+          <!-- Status Button -->
+          <div class="mb-2">
+            <p class="mb-0">
+              <span class="title-spacing"><strong>Status: </strong></span>
+              <span class="badge text-white clickable-badge {% if ticket.status == 'open' %}bg-success{% elif ticket.status == 'in-progress' %}bg-warning{% else %}bg-secondary{% endif %}" id="status-badge">
+                {{ ticket.status }}<i class="fas fa-edit ms-2"></i>
+              </span>
+            </p>
+          </div>
+          <!-- Assignee Button -->
+          <div class="mb-2">
+            <p class="mb-0">
+              <span class="title-spacing"><strong>Assignee: </strong></span>
+              <span class="badge text-white clickable-badge bg-info" id="assignee-badge">
+                {{ ticket.assignee.name }}<i class="fas fa-edit ms-2"></i>
+              </span>
+            </p>
+          </div>
         </div>
-        <div class="col-md-8 text-center d-flex flex-column align-items-center">
-            <h2 class="text-primary mb-0">Ticket Details</h2>
-            <p class="lead">Sample description</p>
-        </div>
-        <div class="col-md-2 text-end">
-            <div class="status-priority-container">
-                <div class="mb-2">
-                    <p class="mb-0">
-                        <span class="title-spacing"><strong>Priority:</strong></span>
-                        <span class="badge text-white {% if current_user.role == 'admin' %}clickable-badge{% endif %} {% if ticket.priority == 'high' %}bg-danger{% elif ticket.priority == 'medium' %}bg-warning{% else %}bg-info{% endif %}" id="priority-badge" {% if current_user.role == 'admin' or current_user.role == 'support' %}data-bs-toggle="tooltip" title="Click to update priority"{% endif %}>
-                            {{ ticket.priority }} {% if current_user.role == 'admin' or current_user.role == 'support' %}<i class="fas fa-edit ms-2"></i>{% endif %}
-                        </span>
-                                            </p>
-                </div>
-                <div class="mb-2">
-                    <p class="mb-0">
-                        <span class="title-spacing"><strong>Status: </strong></span>
-                        <span class="badge text-white {% if current_user.role == 'admin' or current_user.role == 'support' %}clickable-badge{% endif %} {% if ticket.status == 'open' %}bg-success{% elif ticket.status == 'in-progress' %}bg-warning{% else %}bg-secondary{% endif %}" id="status-badge" {% if current_user.role == 'admin' or current_user.role == 'support' %}data-bs-toggle="tooltip" title="Click to update status"{% endif %}>
-                            {{ ticket.status }} {% if current_user.role == 'admin' or current_user.role == 'support' %}<i class="fas fa-edit ms-2"></i>{% endif %}
-                        </span>
-                    </p>
-                </div>
-                <div class="mb-2">
-                    <p class="mb-0">
-                        <span class="title-spacing"><strong>Assignee: </strong></span>
-                        <span class="badge text-white {% if current_user.role == 'admin' or current_user.role == 'support' %}clickable-badge{% endif %} bg-info" id="assignee-badge" {% if current_user.role == 'admin' or current_user.role == 'support' %}data-bs-toggle="tooltip" title="Click to update assignee"{% endif %}>
-                            {{ ticket.assignee.name }} 
-                            {% if current_user.role == 'admin' or current_user.role == 'support' %}
-                            <i class="fas fa-edit ms-2"></i>
-                            {% endif %}
-                        </span>
-                    </p>
-                </div>
-                                            </div>
-        </div>
+      </div>
     </div>
 
     <!-- Delete Button Section -->
     {% if current_user.role == 'admin' %}
     <div class="text-end mt-4">
-        <form method="POST" action="{{ url_for('main.delete_ticket', ticket_id=ticket.id) }}" onsubmit="return confirm('Are you sure you want to delete this ticket?');">
-            <!-- Wrapper to align the CSRF token input field to the right -->
-            <div class="d-flex justify-content-end">
-                <!-- Include CSRF token for security -->
-                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                <button type="submit" class="btn btn-danger ms-2">
-                    <i class="fas fa-trash-alt"></i> Delete Ticket
-                </button>
-            </div>
-        </form>
+      <form method="POST" action="{{ url_for('main.delete_ticket', ticket_id=ticket.id) }}" onsubmit="return confirm('Are you sure you want to delete this ticket?');">
+        <div class="d-flex justify-content-end">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <button type="submit" class="btn btn-danger ms-2">
+            <i class="fas fa-trash-alt"></i> Delete Ticket
+          </button>
+        </div>
+      </form>
     </div>
     {% endif %}
 
     <!-- Description and Comments Section -->
     <div class="row mb-4">
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Description</h5>
-                    <p>{{ ticket.description }}</p>
-                </div>
-            </div>
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Description</h5>
+            <p>{{ ticket.description }}</p>
+          </div>
         </div>
+      </div>
     </div>
 
     <div class="row mb-4">
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Comments</h5>
-                    <form method="POST" class="mb-3">
-                        <!-- Include CSRF token for security -->
-                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                        <div class="form-group">
-                            <label for="comment_text">Add a comment</label>
-                            <textarea class="form-control" id="comment_text" name="comment_text" rows="3" required></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-primary mt-2">Add Comment</button>
-                    </form>
-                    <ul class="list-unstyled mt-4">
-                        {% for comment in comments %}
-                        <li class="d-flex justify-content-between border-bottom py-2">
-                            <div>
-                                <strong>{{ comment.commenter.name }}:</strong> {{ comment.comment_text }}
-                            </div>
-                            <div class="text-muted">
-                                <em>{{ moment(comment.created_at).format('YYYY-MM-DD HH:mm:ss') }}</em>
-                            </div>
-                        </li>
-                        {% endfor %}
-                    </ul>
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Comments</h5>
+            <form method="POST" class="mb-3">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              <div class="form-group">
+                <label for="comment_text">Add a comment</label>
+                <textarea class="form-control" id="comment_text" name="comment_text" rows="3" required></textarea>
+              </div>
+              <button type="submit" class="btn btn-primary mt-2">Add Comment</button>
+            </form>
+            <ul class="list-unstyled mt-4">
+              {% for comment in comments %}
+              <li class="d-flex justify-content-between border-bottom py-2">
+                <div>
+                  <strong>{{ comment.commenter.name }}:</strong> {{ comment.comment_text }}
                 </div>
-            </div>
+                <div class="text-muted">
+                  <em>{{ moment(comment.created_at).format('YYYY-MM-DD HH:mm:ss') }}</em>
+                </div>
+              </li>
+              {% endfor %}
+            </ul>
+          </div>
         </div>
-    </div>
-</div>
-
-{% if current_user.role == 'admin' or current_user.role == 'support' %}
-<!-- Update Modal for Status -->
-<div class="modal fade" id="updateStatusModal" tabindex="-1" aria-labelledby="updateStatusModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="updateStatusModalLabel">Update Status</h5>
-        </div>
-        <div class="modal-body">
-          <form method="POST">
-            <!-- Include CSRF token for security -->
-            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-            <div class="form-group">
-              <label for="status">Select New Status</label>
-              <select class="form-control" id="status" name="status">
-                <option value="open" {% if ticket.status == 'open' %}selected{% endif %}>Open</option>
-                <option value="in-progress" {% if ticket.status == 'in-progress' %}selected{% endif %}>In Progress</option>
-                <option value="closed" {% if ticket.status == 'closed' %}selected{% endif %}>Closed</option>
-              </select>
-            </div>
-            <button type="submit" class="btn btn-primary">Update</button>
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
-    
-<!-- Update Modal for Priority -->
-<div class="modal fade" id="updatePriorityModal" tabindex="-1" aria-labelledby="updatePriorityModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="updatePriorityModalLabel">Update Priority</h5>
-      </div>
-      <div class="modal-body">
-        <form method="POST">
-            <!-- Include CSRF token for security -->
-            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-            <div class="form-group">
-                <label for="priority">Select New Priority</label>
-                <select class="form-control" id="priority" name="priority">
-                    <option value="high" {% if ticket.priority == 'high' %}selected{% endif %}>High</option>
-                    <option value="medium" {% if ticket.priority == 'medium' %}selected{% endif %}>Medium</option>
-                    <option value="low" {% if ticket.priority == 'low' %}selected{% endif %}>Low</option>
-                </select>
-            </div>
-            <button type="submit" class="btn btn-primary">Update</button>
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        </form>
       </div>
     </div>
   </div>
 </div>
 
-<!-- Update Modal for Assignee -->
-<div class="modal fade" id="updateAssigneeModal" tabindex="-1" aria-labelledby="updateAssigneeModalLabel" aria-hidden="true">
+<!-- Priority Modal -->
+<div class="modal fade" id="priorityModal" tabindex="-1" aria-labelledby="priorityModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="updateAssigneeModalLabel">Update Assignee</h5>
+        <h5 class="modal-title" id="priorityModalLabel">Update Priority</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <form method="POST">
-            <!-- Include CSRF token for security -->
-            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-            <div class="form-group">
-                <label for="assignee">Select New Assignee</label>
-                <select class="form-control" id="assignee" name="assignee">
-                    {% for user in users %}
-                    <option value="{{ user.id }}" {% if ticket.assignee_id == user.id %}selected{% endif %}>
-                        {{ user.name }}
-                    </option>
-                    {% endfor %}
-                </select>
-            </div>
-            <button type="submit" class="btn btn-primary">Update</button>
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <div class="form-group">
+            <label for="priority">Select New Priority</label>
+            <select class="form-control" id="priority" name="priority">
+              <option value="low" {% if ticket.priority == 'low' %}selected{% endif %}>Low</option>
+              <option value="medium" {% if ticket.priority == 'medium' %}selected{% endif %}>Medium</option>
+              <option value="high" {% if ticket.priority == 'high' %}selected{% endif %}>High</option>
+            </select>
+          </div>
+          <button type="submit" class="btn btn-primary">Update</button>
         </form>
       </div>
     </div>
   </div>
 </div>
-{% endif %}
+
+<!-- Status Modal -->
+<div class="modal fade" id="statusModal" tabindex="-1" aria-labelledby="statusModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="statusModalLabel">Update Status</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form method="POST">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <div class="form-group">
+            <label for="status">Select New Status</label>
+            <select class="form-control" id="status" name="status">
+              <option value="open" {% if ticket.status == 'open' %}selected{% endif %}>Open</option>
+              <option value="in-progress" {% if ticket.status == 'in-progress' %}selected{% endif %}>In Progress</option>
+              <option value="closed" {% if ticket.status == 'closed' %}selected{% endif %}>Closed</option>
+            </select>
+          </div>
+          <button type="submit" class="btn btn-primary">Update</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Assignee Modal -->
+<div class="modal fade" id="assigneeModal" tabindex="-1" aria-labelledby="assigneeModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="assigneeModalLabel">Update Assignee</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form method="POST">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <div class="form-group">
+            <label for="assignee">Select New Assignee</label>
+            <select class="form-control" id="assignee" name="assignee">
+              {% for user in users %}
+              <option value="{{ user.id }}" {% if ticket.assigned_to == user.id %}selected{% endif %}>{{ user.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <button type="submit" class="btn btn-primary">Update</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
 
 <script>
     // Handle back navigation
@@ -211,18 +202,19 @@
 {% if current_user.role == 'admin' or current_user.role == 'support' %}
 <script>
     document.getElementById('status-badge').addEventListener('click', function() {
-        var myModal = new bootstrap.Modal(document.getElementById('updateStatusModal'));
+        var myModal = new bootstrap.Modal(document.getElementById('statusModal')); // Use the correct modal ID
         myModal.show();
     });
 
     document.getElementById('priority-badge').addEventListener('click', function() {
-        var myModal = new bootstrap.Modal(document.getElementById('updatePriorityModal'));
+        var myModal = new bootstrap.Modal(document.getElementById('priorityModal')); // Use the correct modal ID
         myModal.show();
     });
 
     document.getElementById('assignee-badge').addEventListener('click', function() {
-        var myModal = new bootstrap.Modal(document.getElementById('updateAssigneeModal'));
+        var myModal = new bootstrap.Modal(document.getElementById('assigneeModal')); // Use the correct modal ID
         myModal.show();
+    });
 
         const assigneeSelect = document.getElementById('assignee');
         const selectedOption = assigneeSelect.querySelector('option[selected]');
@@ -234,8 +226,7 @@
 
             // Ensure it is selected
             selectedOption.selected = true;
-        }
-    });
+        };
 
     // Initialize tooltips
     var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
@@ -245,6 +236,3 @@
 </script>
 {% endif %}
 {% endblock %}
-
-
-<!-- !make badge colours for priority etc consistent -->

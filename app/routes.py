@@ -397,7 +397,10 @@ def ticket_details(ticket_id):
         return redirect(url_for("main.ticket_details", ticket_id=ticket_id))
 
     comments = Comment.query.filter_by(ticket_id=ticket.id).all()
-    users = User.query.all()  # Fetch all users for the assignee dropdown
+
+    # Fetch only users with the role 'admin' or 'support' for the assignee dropdown
+    users = User.query.filter(User.role.in_(["admin", "support"])).all()
+
     return render_template(
         "ticket_details.html", ticket=ticket, comments=comments, users=users
     )

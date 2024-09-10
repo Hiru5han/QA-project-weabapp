@@ -793,7 +793,7 @@ body.dark-mode .logout-badge:hover {
 /* Auth Card Styling */
 .create-ticket-card {
   width: 100%;
-  max-width: 700px;
+  max-width: 800px;
   padding: 2rem;
   background: #fff;
   border-radius: 8px;
@@ -984,4 +984,23 @@ body.dark-mode .badge-active-tickets-medium {
 
 .status-closed {
   background-color: #6c757d; /* Equivalent to bg-secondary */
+}
+
+/* Modal styling */
+body.dark-mode .modal-content {
+  background-color: #2e2e2e;
+  color: #ffffff;
+}
+
+body.dark-mode .modal-header {
+  border-bottom: 1px solid #444;
+}
+
+body.dark-mode .modal-body {
+  background-color: #2e2e2e;
+  color: #e0e0e0;
+}
+
+body.dark-mode .modal-footer {
+  border-top: 1px solid #444;
 }
