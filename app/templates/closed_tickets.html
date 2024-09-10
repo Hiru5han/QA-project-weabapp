@@ -65,7 +65,10 @@
       </div>
 
       <div class="ms-auto">
-        <a class="btn btn-success" href="{{ url_for('main.create_ticket') }}">
+        <a
+          class="btn btn-success"
+          href="{{ url_for('main.create_ticket', referrer=request.path) }}"
+        >
           <i class="fas fa-plus"></i> Create Ticket
         </a>
       </div>

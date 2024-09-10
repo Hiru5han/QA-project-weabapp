@@ -28,6 +28,7 @@
     <form method="POST">
       <!-- Include the CSRF token for security -->
       <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+      <input type="hidden" name="referrer" value="{{ referrer }}" />
 
       <div class="form-group">
         <label for="title">Title</label>

@@ -223,10 +223,6 @@ def create_ticket():
             "assigned_to"
         )  # Get assigned_to value from the form
 
-        print(
-            f"Creating ticket with Title: {title}, Description: {description}, Priority: {priority}, Status: {status}"
-        )
-
         # If no user is selected, default to the current user
         if not user_id:
             user_id = current_user.id
@@ -303,13 +299,14 @@ def create_ticket():
 
         # Get the referrer URL from the form and redirect to it
         referrer = request.form.get("referrer")
+        flash("Ticket created successfully!", "success")
         return redirect(referrer or url_for("main.all_tickets"))
 
     else:
         print("Rendering create ticket page")
 
-    # Store the referrer URL
-    referrer = request.referrer
+    # Store the referrer URL passed as a query parameter (GET request)
+    referrer = request.args.get("referrer", url_for("main.all_tickets"))
 
     # If the user is an admin or support staff, query the list of users and support staff
     all_users = []

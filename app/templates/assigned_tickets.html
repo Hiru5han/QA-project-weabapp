@@ -1,5 +1,26 @@
 {% extends "base.html" %} {% block content %}
 <div class="container mt-5">
+  <!-- Flash Message Section -->
+  {% with messages = get_flashed_messages(with_categories=true) %} {% if
+  messages %}
+  <div class="alert-container">
+    {% for category, message in messages %}
+    <div
+      class="alert alert-{{ category }} alert-dismissible fade show"
+      role="alert"
+    >
+      {{ message }}
+      <button
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="alert"
+        aria-label="Close"
+      ></button>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %} {% endwith %}
+
   <!-- Dashboard Header -->
   <div class="row mb-2">
     <div class="col-12 text-center">
@@ -55,7 +76,10 @@
       </div>
 
       <div class="ms-auto">
-        <a class="btn btn-success" href="{{ url_for('main.create_ticket') }}">
+        <a
+          class="btn btn-success"
+          href="{{ url_for('main.create_ticket', referrer=request.path) }}"
+        >
           <i class="fas fa-plus"></i> Create Ticket
         </a>
       </div>
@@ -120,6 +144,11 @@
                   type="hidden"
                   name="csrf_token"
                   value="{{ csrf_token() }}"
+                />
+                <input
+                  type="hidden"
+                  name="referrer"
+                  value="{{ request.referrer or url_for('main.assigned_tickets') }}"
                 />
                 <button type="submit" class="btn btn-outline-danger btn-sm">
                   <i class="fas fa-trash"></i> Delete
