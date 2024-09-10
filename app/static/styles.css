@@ -767,6 +767,12 @@ body.dark-mode .logout-badge:hover {
   background-color: #f8f9fa; /* Background colour */
 }
 
+/* Night mode styles */
+.dark-mode .auth-page {
+  background-color: #1e1e1e; /* Dark background */
+  color: white; /* Light text */
+}
+
 /* Auth Card Styling */
 .auth-card {
   width: 100%;
@@ -776,6 +782,12 @@ body.dark-mode .logout-badge:hover {
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   box-sizing: border-box; /* Ensure padding is included in width */
+}
+
+/* Night mode styles */
+.dark-mode .auth-card {
+  background-color: #2e2e2e; /* Dark background */
+  color: white; /* Light text */
 }
 
 /* Header Styling */
