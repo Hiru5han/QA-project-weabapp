@@ -1,106 +1,98 @@
 {% extends "base.html" %} {% block content %}
-<div class="container mt-5">
-  <!-- Back Button -->
-  <div class="row mb-4 align-items-center">
-    <div class="col-md-2 text-start d-flex align-items-center">
-      <a href="javascript:void(0)" onclick="goBack();">
+<div class="auth-page">
+  <div class="create-ticket-card">
+    <div class="auth-header d-flex align-items-center mb-4">
+      <a
+        href="javascript:void(0);"
+        onclick="window.history.back();"
+        class="back-button me-2"
+      >
         <i class="fas fa-chevron-left back-button-icon"></i>
       </a>
+      <h2 class="auth-title mb-0">Create Ticket</h2>
     </div>
-    <div class="col-md-8 text-center">
-      <h2>Create Ticket</h2>
+
+    <!-- Include a section to display flash messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %} {% if
+    messages %}
+    <div class="flashes">
+      {% set seen_messages = [] %} {% for category, message in messages %} {% if
+      message not in seen_messages %}
+      <div class="alert alert-{{ category }}">{{ message }}</div>
+      {% set seen_messages = seen_messages + [message] %} {% endif %} {% endfor
+      %}
     </div>
+    {% endif %} {% endwith %}
+
+    <!-- Create Ticket Form -->
+    <form method="POST">
+      <!-- Include the CSRF token for security -->
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+
+      <div class="form-group">
+        <label for="title">Title</label>
+        <input
+          type="text"
+          class="form-control"
+          id="title"
+          name="title"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="description">Description</label>
+        <textarea
+          class="form-control"
+          id="description"
+          name="description"
+          rows="4"
+          required
+        ></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="priority">Priority</label>
+        <select class="form-control" id="priority" name="priority" required>
+          <option value="low">Low</option>
+          <option value="medium">Medium</option>
+          <option value="high">High</option>
+        </select>
+      </div>
+
+      {% if current_user.role in ['admin', 'support'] %}
+      <div class="form-group">
+        <label for="user_id">Raise on Behalf of</label>
+        <select class="form-control" id="user_id" name="user_id">
+          <option value="{{ current_user.id }}">-- Myself --</option>
+          {% for user in all_users %}
+          <option value="{{ user.id }}">{{ user.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="status">Current State</label>
+        <select class="form-control" id="status" name="status" required>
+          <option value="open">Open</option>
+          <option value="in-progress">In-Progress</option>
+          <option value="closed">Closed</option>
+        </select>
+      </div>
+      {% endif %} {% if current_user.role == 'admin' %}
+      <div class="form-group">
+        <label for="assigned_to">Assign to Support User</label>
+        <select class="form-control" id="assigned_to" name="assigned_to">
+          <option value="">-- Select Support User --</option>
+          {% for staff in support_staff %}
+          <option value="{{ staff.id }}">{{ staff.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      {% endif %}
+
+      <button type="submit" class="btn btn-primary">Create</button>
+    </form>
   </div>
-  <!-- Create Ticket Form -->
-
-  <form method="POST">
-    <!-- Include the CSRF token for security -->
-    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-
-    <!-- Hidden field to store the referrer URL -->
-    <input type="hidden" name="referrer" value="{{ referrer }}" />
-
-    <div class="form-group">
-      <label for="title">Title</label>
-      <input
-        type="text"
-        class="form-control"
-        id="title"
-        name="title"
-        required
-      />
-    </div>
-
-    <div class="form-group">
-      <label for="description">Description</label>
-      <textarea
-        class="form-control"
-        id="description"
-        name="description"
-        rows="4"
-        required
-      ></textarea>
-    </div>
-
-    <div class="form-group">
-      <label for="priority">Priority</label>
-      <select class="form-control" id="priority" name="priority" required>
-        <option value="low">Low</option>
-        <option value="medium">Medium</option>
-        <option value="high">High</option>
-      </select>
-    </div>
-
-    {% if current_user.role in ['admin', 'support'] %}
-    <div class="form-group">
-      <label for="user_id">Raise on Behalf of</label>
-      <select class="form-control" id="user_id" name="user_id">
-        <option value="{{ current_user.id }}">-- Myself --</option>
-        {% for user in all_users %}
-        <option value="{{ user.id }}">{{ user.name }}</option>
-        {% endfor %}
-      </select>
-    </div>
-
-    <div class="form-group">
-      <label for="status">Current State</label>
-      <select class="form-control" id="status" name="status" required>
-        <option value="open">Open</option>
-        <option value="in-progress">In-Progress</option>
-        <option value="closed">Closed</option>
-      </select>
-    </div>
-    {% endif %} {% if current_user.role == 'admin' %}
-    <div class="form-group">
-      <label for="assigned_to">Assign to Support User</label>
-      <select class="form-control" id="assigned_to" name="assigned_to">
-        <option value="">-- Select Support User --</option>
-        {% for staff in support_staff %}
-        <option value="{{ staff.id }}">{{ staff.name }}</option>
-        {% endfor %}
-      </select>
-    </div>
-    {% endif %}
-
-    <button type="submit" class="btn btn-primary">Create</button>
-  </form>
 </div>
-
-<script>
-  // Handle back navigation
-  function goBack() {
-    const previousPageUrl = sessionStorage.getItem("previousPageUrl");
-    if (previousPageUrl) {
-      window.location.href = previousPageUrl;
-    } else {
-      window.location.href = "{{ url_for('main.all_tickets') }}";
-    }
-  }
-
-  // Store the previous page's URL if it's not already stored
-  if (!sessionStorage.getItem("previousPageUrl")) {
-    sessionStorage.setItem("previousPageUrl", document.referrer);
-  }
-</script>
-
 {% endblock %}

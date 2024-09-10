@@ -790,6 +790,23 @@ body.dark-mode .logout-badge:hover {
   color: white; /* Light text */
 }
 
+/* Auth Card Styling */
+.create-ticket-card {
+  width: 100%;
+  max-width: 700px;
+  padding: 2rem;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box; /* Ensure padding is included in width */
+}
+
+/* Night mode styles */
+.dark-mode .create-ticket-card {
+  background-color: #2e2e2e; /* Dark background */
+  color: white; /* Light text */
+}
+
 /* Header Styling */
 .auth-header {
   border-bottom: 1px solid #dee2e6;
