@@ -116,14 +116,14 @@
             }
 
             // Check for special characters
-            if (/[!@#$%^&*]/.test(password)) {
+            if (/[!@#$%^&*()_+\-=[\]{}|;:,.<>?/]/.test(password)) {
                 specialCriteria.classList.add("valid");
                 specialCriteria.classList.remove("invalid");
-                specialCriteria.innerHTML = "✓ One special character !@#$%^&*";
+                specialCriteria.innerHTML = "✓ One special character !@#$%^&*()_+-=[]{}|;:,.<>?/";
             } else {
                 specialCriteria.classList.add("invalid");
                 specialCriteria.classList.remove("valid");
-                specialCriteria.innerHTML = "✗ One special character !@#$%^&*";
+                specialCriteria.innerHTML = "✗ One special character !@#$%^&*()_+-=[]{}|;:,.<>?/";
             }
         });
 
