@@ -191,6 +191,10 @@ def all_tickets():
     )
 
 
+from flask import flash
+from datetime import datetime
+
+
 @bp.route("/create_ticket", methods=["GET", "POST"])
 @login_required
 def create_ticket():
@@ -206,6 +210,7 @@ def create_ticket():
         title = request.form.get("title")
         description = request.form.get("description")
         priority = request.form.get("priority")
+        status = None
 
         # Default status to 'open' if the user is not admin or support
         if current_user.role in ["admin", "support"]:
@@ -226,6 +231,60 @@ def create_ticket():
         if not user_id:
             user_id = current_user.id
 
+        # Validation: Title should not be empty, not only numbers, length should be between 5-100
+        if not title or title.isdigit() or len(title) < 5 or len(title) > 100:
+            flash(
+                "Title must contain non-numeric characters, be at least 5 characters long, and not exceed 100 characters.",
+                "error",
+            )
+            return redirect(request.referrer or url_for("main.create_ticket"))
+
+        # Validation: Description should not be empty, not only numbers, length should be between 10-1000
+        if (
+            not description
+            or description.isdigit()
+            or len(description) < 10
+            or len(description) > 1000
+        ):
+            flash(
+                "Description must contain non-numeric characters, be at least 10 characters long, and not exceed 1000 characters.",
+                "error",
+            )
+            return redirect(request.referrer or url_for("main.create_ticket"))
+
+        # Validation: Priority must be one of 'low', 'medium', or 'high'
+        valid_priorities = ["low", "medium", "high"]
+        if priority not in valid_priorities:
+            flash(
+                "Invalid priority value. Choose either 'low', 'medium', or 'high'.",
+                "error",
+            )
+            return redirect(request.referrer or url_for("main.create_ticket"))
+
+        # Validation: If 'assigned_to' exists, it must be a valid user
+        if current_user.role == "admin" and assigned_to_id:
+            assigned_user = User.query.get(assigned_to_id)
+            if not assigned_user:
+                flash("Invalid user selected for assignment.", "error")
+                return redirect(request.referrer or url_for("main.create_ticket"))
+
+        # Prevent Duplicate Tickets based on title and creation time (within 1 minute)
+        recent_ticket = (
+            Ticket.query.filter_by(user_id=current_user.id, title=title)
+            .order_by(Ticket.created_at.desc())
+            .first()
+        )
+        if (
+            recent_ticket
+            and (datetime.utcnow() - recent_ticket.created_at).total_seconds() < 60
+        ):  # 1 minute
+            flash(
+                "A similar ticket was created within the last minute. Please wait before creating a new one.",
+                "error",
+            )
+            return redirect(request.referrer or url_for("main.create_ticket"))
+
+        # Create new ticket
         new_ticket = Ticket(
             title=title,
             description=description,
@@ -238,6 +297,7 @@ def create_ticket():
         if current_user.role == "admin" and assigned_to_id:
             new_ticket.assigned_to = assigned_to_id
 
+        # Save the new ticket in the database
         db.session.add(new_ticket)
         db.session.commit()
 
