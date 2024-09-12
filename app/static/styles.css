@@ -113,32 +113,6 @@ h2 {
   width: 100px; /* This width should match the width you want for the badges */
 }
 
-/* Apply existing styles while using the consistent width */
-.badge-priority-low,
-.badge-priority-medium,
-.badge-priority-high,
-.badge-status-open,
-.badge-status-in-progress,
-.badge-status-closed {
-  text-align: center;
-  width: 100%; /* Full width of the container */
-}
-
-.badge-priority-low {
-  background-color: #28a745; /* Info Colour for low priority */
-  color: rgb(255, 255, 255);
-}
-
-.badge-priority-medium {
-  background-color: #fd7e14; /* Warning Colour for medium priority */
-  color: rgb(0, 0, 0);
-}
-
-.badge-priority-high {
-  background-color: #dc3545; /* Danger Colour for high priority */
-  color: white;
-}
-
 .list-unstyled {
   margin-top: 20px;
 }
@@ -609,22 +583,6 @@ body.dark-mode .jumbotron {
   color: #dcdcdc; /* Consistent light text */
 }
 
-/* Priority Badge Colours in Dark Mode */
-body.dark-mode .badge-priority-low {
-  background-color: #1e7e34; /* Darker green for low priority */
-  color: #ffffff; /* White text */
-}
-
-body.dark-mode .badge-priority-medium {
-  background-color: #b4691a; /* Darker orange for medium priority */
-  color: #ffffff; /* White text */
-}
-
-body.dark-mode .badge-priority-high {
-  background-color: #a71d2a; /* Darker red for high priority */
-  color: #ffffff; /* White text */
-}
-
 .status-priority-container {
   display: flex;
   flex-direction: column;
@@ -952,66 +910,6 @@ body.dark-mode .badge-active-tickets-medium {
   opacity: 1;
 }
 
-/* Badge Styles */
-
-/* General Dashboard Badge Styles */
-.dashboard-badge {
-  transition: none;
-  transform: none;
-  pointer-events: none; /* Disable pointer events, making it non-clickable */
-  cursor: default; /* Set cursor to default to indicate non-interactivity */
-  display: block;
-  width: 100%;
-  text-align: center;
-  color: white;
-}
-
-/* Priority Badge Colors */
-.priority-high {
-  background-color: #dc3545; /* Equivalent to bg-danger */
-}
-
-.priority-medium {
-  background-color: #ffc107; /* Equivalent to bg-warning */
-}
-
-.priority-low {
-  background-color: #17a2b8; /* Equivalent to bg-info */
-}
-
-/* Status Badge Colors */
-.status-open {
-  background-color: #28a745; /* Equivalent to bg-success */
-}
-
-.status-in-progress {
-  background-color: #ffc107; /* Equivalent to bg-warning */
-}
-
-.status-closed {
-  background-color: #6c757d; /* Equivalent to bg-secondary */
-}
-
-.assignee-badge {
-  background-color: #007bff;
-}
-
-body.dark-mode .assignee-badge {
-  background-color: #003366;
-}
-
-body.dark-mode .status-open {
-  background-color: #155724;
-}
-
-body.dark-mode .status-in-progress {
-  background-color: #8d811b;
-}
-
-body.dark-mode .status-closed {
-  background-color: #404040;
-}
-
 /* Modal styling */
 body.dark-mode .modal-content {
   background-color: #2e2e2e;
@@ -1037,4 +935,104 @@ body.dark-mode .modal-footer {
 
 .wide-delete-btn {
   width: 150px; /* Set the desired width */
+}
+
+/* General Badge Styles */
+.dashboard-badge,
+.badge-priority-low,
+.badge-priority-medium,
+.badge-priority-high,
+.badge-status-open,
+.badge-status-in-progress,
+.badge-status-closed {
+  transition: none;
+  transform: none;
+  pointer-events: none;
+  cursor: default;
+  display: block;
+  width: 100%;
+  text-align: center;
+  color: white;
+}
+
+/* Priority and Status Badge Colours */
+.priority-high,
+.badge-priority-high {
+  background-color: #e54a50; /* Equivalent to bg-danger */
+}
+
+.priority-medium,
+.badge-priority-medium {
+  background-color: #ea8553; /* Equivalent to bg-warning */
+}
+
+.priority-low,
+.badge-priority-low {
+  background-color: #5d9db9; /* Equivalent to bg-info */
+}
+
+.status-open,
+.badge-status-open {
+  background-color: #a9be77; /* Equivalent to bg-success */
+}
+
+.status-in-progress,
+.badge-status-in-progress {
+  background-color: #359d73; /* Equivalent to bg-warning */
+}
+
+.status-closed,
+.badge-status-closed {
+  background-color: #6c757d;
+}
+
+/* Assignee Badge */
+.assignee-badge {
+  background-color: #eec76b;
+}
+
+/* Dark Mode Badge Adjustments */
+body.dark-mode .assignee-badge {
+  background-color: #c0982b;
+}
+
+body.dark-mode .status-open,
+body.dark-mode .badge-status-open {
+  color: #c0982b; /* Text colour */
+  border: 1px solid #c0982b; /* Same colour for the outline */
+  background-color: transparent;
+}
+
+body.dark-mode .status-in-progress,
+body.dark-mode .badge-status-in-progress {
+  color: #28a745; /* Text colour */
+  border: 1px solid #28a745; /* Same colour for the outline */
+  background-color: transparent;
+}
+
+body.dark-mode .status-closed,
+body.dark-mode .badge-status-closed {
+  background-color: #404040;
+}
+
+/* Dark Mode Priority Colours */
+body.dark-mode .badge-priority-low,
+body.dark-mode .priority-low {
+  color: #4a9daa; /* Text colour */
+  border: 1px solid #4a9daa; /* Same colour for the outline */
+  background-color: transparent;
+}
+
+body.dark-mode .badge-priority-medium,
+body.dark-mode .priority-medium {
+  color: #ea8553; /* Text colour */
+  border: 1px solid #ea8553; /* Same colour for the outline */
+  background-color: transparent;
+}
+
+body.dark-mode .badge-priority-high,
+body.dark-mode .priority-high {
+  color: #c82333; /* Text colour */
+  border: 1px solid #c82333; /* Same colour for the outline */
+  background-color: transparent;
 }
