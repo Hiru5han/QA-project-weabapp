@@ -1014,3 +1014,7 @@ body.dark-mode .modal-footer {
 .dataTables_length select {
   color: rgb(255, 255, 255);
 }
+
+.wide-delete-btn {
+  width: 150px; /* Set the desired width */
+}
