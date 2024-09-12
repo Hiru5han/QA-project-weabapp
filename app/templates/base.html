@@ -29,43 +29,59 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
     />
 
+    <!-- DataTables Responsive CSS -->
+    <link
+      href="https://cdn.datatables.net/responsive/2.4.1/css/responsive.dataTables.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- DataTables Responsive JS -->
+    <script src="https://cdn.datatables.net/responsive/2.4.1/js/dataTables.responsive.min.js"></script>
+
     <title>Help Desk</title>
   </head>
   <body class="light-mode">
     <!-- Default to light mode -->
     <nav class="navbar navbar-expand-lg">
-      <div class="role-container">
-        {% if current_user.is_authenticated %}
-        <span class="badge badge-role-{{ current_user.role}}"
-          >{{ current_user.role.capitalize() }}</span
-        >
-        <span class="user-info">Signed in as: {{ current_user.name }}</span>
-        {% endif %}
-      </div>
-
-      <a class="navbar-brand" href="#">
-        <img
-          src="{{ url_for('static', filename='logo.png') }}"
-          alt="Help Desk Logo"
-          style="height: 40px"
-        />
-      </a>
-
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ml-auto">
+      <div class="container-fluid">
+        <!-- Left part: Role badge -->
+        <div class="d-flex align-items-center">
           {% if current_user.is_authenticated %}
-          <li class="nav-item">
-            <a class="nav-link logout-badge" href="{{ url_for('main.logout') }}"
-              >Logout</a
-            >
-          </li>
+          <span class="badge badge-role-{{ current_user.role}}"
+            >{{ current_user.role.capitalize() }}</span
+          >
           {% endif %}
-          <li class="nav-item">
-            <button id="theme-toggle-button" class="btn btn-link nav-link">
-              <i id="theme-toggle-icon" class="fas fa-sun"></i>
-            </button>
-          </li>
-        </ul>
+        </div>
+
+        <!-- Center: Logo -->
+        <a class="navbar-brand mx-auto" href="#">
+          <img
+            src="{{ url_for('static', filename='logo.png') }}"
+            alt="Help Desk Logo"
+            style="height: 40px"
+          />
+        </a>
+
+        <!-- Right part: Night mode toggle and logout -->
+        <div class="d-flex align-items-center ml-auto">
+          <ul class="navbar-nav ml-auto">
+            {% if current_user.is_authenticated %}
+            <li class="nav-item">
+              <a
+                class="nav-link logout-badge"
+                href="{{ url_for('main.logout') }}"
+              >
+                Logout
+              </a>
+            </li>
+            {% endif %}
+            <li class="nav-item">
+              <button id="theme-toggle-button" class="btn btn-link nav-link">
+                <i id="theme-toggle-icon" class="fas fa-sun"></i>
+              </button>
+            </li>
+          </ul>
+        </div>
       </div>
     </nav>
 
@@ -90,6 +106,11 @@
       {% endfor %} {% endif %} {% endwith %} {% block content %} {% endblock %}
     </div>
 
+    <!-- Fixed Signed in Overlay -->
+    {% if current_user.is_authenticated %}
+    <div class="signed-in-overlay">Signed in as: {{ current_user.name }}</div>
+    {% endif %}
+
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
@@ -104,15 +125,17 @@
     <!-- Initialize DataTables on specific tables -->
     <script>
       $(document).ready(function () {
-        var table = $("#tickets-table").DataTable({
-          paging: true, // Enable pagination
-          ordering: true, // Enable column ordering
-          info: true, // Show information about the table
-          searching: true, // Enable search functionality
-          lengthMenu: [5, 10, 25, 50, 100], // Options for the number of entries to display per page
-          pageLength: 5, // Set the default number of entries to display to 5
+        $("#tickets-table").DataTable({
+          responsive: true, // Enable responsive behavior
+          paging: true,
+          ordering: true,
+          info: true,
+          searching: true,
+          lengthMenu: [5, 10, 25, 50, 100],
+          pageLength: 5,
         });
 
+        // Customize search input styling
         $(".dataTables_filter input")
           .attr("placeholder", "Search across all categories...")
           .css({

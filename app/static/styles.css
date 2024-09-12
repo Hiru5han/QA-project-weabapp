@@ -1072,3 +1072,84 @@ body.dark-mode .assign-to-dropdown {
   background-color: #000000; /* Change this to the desired background colour */
   color: #ffffff; /* Ensure text is readable */
 }
+
+@media (max-width: 576px) {
+  /* Adjust the navbar for mobile */
+  .navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  /* Center the logo on mobile */
+  .navbar-brand {
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+  }
+
+  /* Align the night mode toggle and logout button to the right */
+  .navbar-nav {
+    flex-direction: row;
+    justify-content: flex-end;
+  }
+
+  .nav-item {
+    display: inline-block;
+  }
+
+  /* Make sure the night mode toggle is visible on the right */
+  #theme-toggle-button {
+    margin-right: 10px;
+  }
+}
+/* Mobile-only: Ensure the signed-in message is shown fixed at the bottom */
+@media (max-width: 576px) {
+  .signed-in-overlay {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    text-align: center;
+    padding: 10px;
+    font-size: 14px;
+    z-index: 9999; /* Ensure it's on top of other content */
+  }
+
+  .signed-in-overlay span {
+    font-size: 12px; /* Adjust font size for smaller screens */
+  }
+}
+/* Hide the signed-in message on larger screens (desktop and tablets) */
+@media (min-width: 577px) {
+  .signed-in-overlay {
+    display: none;
+  }
+}
+
+/* Ensure the table container handles horizontal scrolling on mobile */
+.table-responsive {
+  overflow-x: auto;
+}
+
+/* Reduce padding and font size on smaller screens */
+@media (max-width: 576px) {
+  .dataTables_filter input {
+    width: 100%; /* Make search box full width */
+    font-size: 12px;
+  }
+
+  table.dataTable {
+    font-size: 12px; /* Adjust table font size for mobile */
+  }
+
+  .dataTables_wrapper .dataTables_paginate .paginate_button {
+    padding: 0.3rem 0.5rem; /* Adjust pagination button size */
+    font-size: 12px; /* Adjust pagination font size */
+  }
+
+  .dataTables_wrapper .dataTables_info {
+    font-size: 12px; /* Adjust table info size */
+  }
+}
