@@ -557,14 +557,8 @@ body.dark-mode .btn-warning {
   border-color: #e1a400;
 }
 
-body.dark-mode .btn-outline-primary {
-  border-color: #ffef79; /* Vibrant blue */
-  color: #79a8ff;
-}
-
 body.dark-mode .btn-outline-primary:hover {
-  background-color: #ffef79 !important;
-  color: #000000 !important;
+  color: #ffffff !important;
 }
 
 body.dark-mode .badge-role-support {
