@@ -165,6 +165,7 @@ h2 {
 .navbar-brand {
   display: flex;
   align-items: center;
+  pointer-events: none; /* Disables hover interaction on the image */
 }
 
 .navbar .nav-link:hover {
@@ -175,6 +176,11 @@ h2 {
   color: #000000; /* Active link colour */
   background-color: #ffffff; /* Active link background colour */
   border-radius: 5px; /* Optional: rounded corners */
+}
+
+/* Make the cursor a pointer when hovering over the logout button */
+.logout-badge {
+  cursor: pointer;
 }
 
 .status-badge {
