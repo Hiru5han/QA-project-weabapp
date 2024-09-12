@@ -992,6 +992,26 @@ body.dark-mode .badge-active-tickets-medium {
   background-color: #6c757d; /* Equivalent to bg-secondary */
 }
 
+.assignee-badge {
+  background-color: #007bff;
+}
+
+body.dark-mode .assignee-badge {
+  background-color: #003366;
+}
+
+body.dark-mode .status-open {
+  background-color: #155724;
+}
+
+body.dark-mode .status-in-progress {
+  background-color: #8d811b;
+}
+
+body.dark-mode .status-closed {
+  background-color: #404040;
+}
+
 /* Modal styling */
 body.dark-mode .modal-content {
   background-color: #2e2e2e;

@@ -19,12 +19,11 @@
             <p class="mb-0">
               <span class="title-spacing"><strong>Priority:</strong></span>
               <span
-                class="badge text-white {% if current_user.role == 'admin' or current_user.role == 'support' %}clickable-badge{% endif %} {% if ticket.priority == 'high' %}bg-danger{% elif ticket.priority == 'medium' %}bg-warning{% else %}bg-info{% endif %}"
+                class="badge text-white {% if current_user.role == 'admin' or current_user.role == 'support' %}clickable-badge{% endif %} 
+                {% if ticket.priority == 'high' %}badge-priority-high{% elif ticket.priority == 'medium' %}badge-priority-medium{% else %}badge-priority-low{% endif %}"
                 id="priority-badge"
               >
-                {{ ticket.priority }}{% if current_user.role == 'admin' or
-                current_user.role == 'support' %}<i class="fas fa-edit ms-2"></i
-                >{% endif %}
+                {{ ticket.priority }}{% if current_user.role == 'admin' or current_user.role == 'support' %}<i class="fas fa-edit ms-2"></i>{% endif %}
               </span>
             </p>
           </div>
@@ -33,7 +32,8 @@
             <p class="mb-0">
               <span class="title-spacing"><strong>Status: </strong></span>
               <span
-                class="badge text-white {% if current_user.role == 'admin' or current_user.role == 'support' %}clickable-badge{% endif %} {% if ticket.status == 'open' %}bg-success{% elif ticket.status == 'in-progress' %}bg-warning{% else %}bg-secondary{% endif %}"
+                class="badge text-white {% if current_user.role == 'admin' or current_user.role == 'support' %}clickable-badge{% endif %} 
+                {% if ticket.status == 'open' %}status-open{% elif ticket.status == 'in-progress' %}status-in-progress{% else %}status-closed{% endif %}"
                 id="status-badge"
               >
                 {{ ticket.status }}{% if current_user.role == 'admin' or
@@ -47,7 +47,7 @@
             <p class="mb-0">
               <span class="title-spacing"><strong>Assignee: </strong></span>
               <span
-                class="badge text-white {% if current_user.role == 'admin' or current_user.role == 'support' %}clickable-badge{% endif %} bg-info"
+                class="badge text-white {% if current_user.role == 'admin' or current_user.role == 'support' %}clickable-badge{% endif %} assignee-badge"
                 id="assignee-badge"
               >
                 {% if ticket.assignee %} {{ ticket.assignee.name }}{% if
