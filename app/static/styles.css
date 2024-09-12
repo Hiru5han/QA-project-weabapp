@@ -43,6 +43,8 @@ h2 {
   justify-content: space-between;
   align-items: center;
   position: relative;
+  padding-top: 20px; /* Adjust the top padding as needed */
+  padding-bottom: 20px; /* Adjust the bottom padding as needed */
 }
 
 .card-header .text-center {
