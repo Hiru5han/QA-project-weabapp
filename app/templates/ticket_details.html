@@ -1,5 +1,4 @@
-{% extends "base.html" %}
-{% block content %}
+{% extends "base.html" %} {% block content %}
 <div class="auth-page">
   <div class="create-ticket-card">
     <!-- Back Button, Header, and Priority/Status Section -->
@@ -19,8 +18,13 @@
           <div class="mb-2">
             <p class="mb-0">
               <span class="title-spacing"><strong>Priority:</strong></span>
-              <span class="badge text-white clickable-badge {% if ticket.priority == 'high' %}bg-danger{% elif ticket.priority == 'medium' %}bg-warning{% else %}bg-info{% endif %}" id="priority-badge">
-                {{ ticket.priority }}<i class="fas fa-edit ms-2"></i>
+              <span
+                class="badge text-white {% if current_user.role == 'admin' or current_user.role == 'support' %}clickable-badge{% endif %} {% if ticket.priority == 'high' %}bg-danger{% elif ticket.priority == 'medium' %}bg-warning{% else %}bg-info{% endif %}"
+                id="priority-badge"
+              >
+                {{ ticket.priority }}{% if current_user.role == 'admin' or
+                current_user.role == 'support' %}<i class="fas fa-edit ms-2"></i
+                >{% endif %}
               </span>
             </p>
           </div>
@@ -28,8 +32,13 @@
           <div class="mb-2">
             <p class="mb-0">
               <span class="title-spacing"><strong>Status: </strong></span>
-              <span class="badge text-white clickable-badge {% if ticket.status == 'open' %}bg-success{% elif ticket.status == 'in-progress' %}bg-warning{% else %}bg-secondary{% endif %}" id="status-badge">
-                {{ ticket.status }}<i class="fas fa-edit ms-2"></i>
+              <span
+                class="badge text-white {% if current_user.role == 'admin' or current_user.role == 'support' %}clickable-badge{% endif %} {% if ticket.status == 'open' %}bg-success{% elif ticket.status == 'in-progress' %}bg-warning{% else %}bg-secondary{% endif %}"
+                id="status-badge"
+              >
+                {{ ticket.status }}{% if current_user.role == 'admin' or
+                current_user.role == 'support' %}<i class="fas fa-edit ms-2"></i
+                >{% endif %}
               </span>
             </p>
           </div>
@@ -37,8 +46,14 @@
           <div class="mb-2">
             <p class="mb-0">
               <span class="title-spacing"><strong>Assignee: </strong></span>
-              <span class="badge text-white clickable-badge bg-info" id="assignee-badge">
-                {{ ticket.assignee.name }}<i class="fas fa-edit ms-2"></i>
+              <span
+                class="badge text-white {% if current_user.role == 'admin' or current_user.role == 'support' %}clickable-badge{% endif %} bg-info"
+                id="assignee-badge"
+              >
+                {% if ticket.assignee %} {{ ticket.assignee.name }}{% if
+                current_user.role == 'admin' or current_user.role == 'support'
+                %}<i class="fas fa-edit ms-2"></i>{% endif %} {% else %} No
+                assignee yet {% endif %}
               </span>
             </p>
           </div>
@@ -49,9 +64,13 @@
     <!-- Delete Button Section -->
     {% if current_user.role == 'admin' %}
     <div class="text-end mt-4">
-      <form method="POST" action="{{ url_for('main.delete_ticket', ticket_id=ticket.id) }}" onsubmit="return confirm('Are you sure you want to delete this ticket?');">
+      <form
+        method="POST"
+        action="{{ url_for('main.delete_ticket', ticket_id=ticket.id) }}"
+        onsubmit="return confirm('Are you sure you want to delete this ticket?');"
+      >
         <div class="d-flex justify-content-end">
-          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
           <button type="submit" class="btn btn-danger ms-2">
             <i class="fas fa-trash-alt"></i> Delete Ticket
           </button>
@@ -78,21 +97,37 @@
           <div class="card-body">
             <h5 class="card-title">Comments</h5>
             <form method="POST" class="mb-3">
-              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              <input
+                type="hidden"
+                name="csrf_token"
+                value="{{ csrf_token() }}"
+              />
               <div class="form-group">
                 <label for="comment_text">Add a comment</label>
-                <textarea class="form-control" id="comment_text" name="comment_text" rows="3" required></textarea>
+                <textarea
+                  class="form-control"
+                  id="comment_text"
+                  name="comment_text"
+                  rows="3"
+                  required
+                ></textarea>
               </div>
-              <button type="submit" class="btn btn-primary mt-2">Add Comment</button>
+              <button type="submit" class="btn btn-primary mt-2">
+                Add Comment
+              </button>
             </form>
             <ul class="list-unstyled mt-4">
               {% for comment in comments %}
               <li class="d-flex justify-content-between border-bottom py-2">
                 <div>
-                  <strong>{{ comment.commenter.name }}:</strong> {{ comment.comment_text }}
+                  <strong>{{ comment.commenter.name }}:</strong> {{
+                  comment.comment_text }}
                 </div>
                 <div class="text-muted">
-                  <em>{{ moment(comment.created_at).format('YYYY-MM-DD HH:mm:ss') }}</em>
+                  <em
+                    >{{ moment(comment.created_at).format('YYYY-MM-DD HH:mm:ss')
+                    }}</em
+                  >
                 </div>
               </li>
               {% endfor %}
@@ -104,135 +139,39 @@
   </div>
 </div>
 
-<!-- Priority Modal -->
-<div class="modal fade" id="priorityModal" tabindex="-1" aria-labelledby="priorityModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="priorityModalLabel">Update Priority</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form method="POST">
-          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-          <div class="form-group">
-            <label for="priority">Select New Priority</label>
-            <select class="form-control" id="priority" name="priority">
-              <option value="low" {% if ticket.priority == 'low' %}selected{% endif %}>Low</option>
-              <option value="medium" {% if ticket.priority == 'medium' %}selected{% endif %}>Medium</option>
-              <option value="high" {% if ticket.priority == 'high' %}selected{% endif %}>High</option>
-            </select>
-          </div>
-          <button type="submit" class="btn btn-primary">Update</button>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Status Modal -->
-<div class="modal fade" id="statusModal" tabindex="-1" aria-labelledby="statusModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="statusModalLabel">Update Status</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form method="POST">
-          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-          <div class="form-group">
-            <label for="status">Select New Status</label>
-            <select class="form-control" id="status" name="status">
-              <option value="open" {% if ticket.status == 'open' %}selected{% endif %}>Open</option>
-              <option value="in-progress" {% if ticket.status == 'in-progress' %}selected{% endif %}>In Progress</option>
-              <option value="closed" {% if ticket.status == 'closed' %}selected{% endif %}>Closed</option>
-            </select>
-          </div>
-          <button type="submit" class="btn btn-primary">Update</button>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Assignee Modal -->
-<div class="modal fade" id="assigneeModal" tabindex="-1" aria-labelledby="assigneeModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="assigneeModalLabel">Update Assignee</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form method="POST">
-          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-          <div class="form-group">
-            <label for="assignee">Select New Assignee</label>
-            <select class="form-control" id="assignee" name="assignee">
-              {% for user in users %}
-              <option value="{{ user.id }}" {% if ticket.assigned_to == user.id %}selected{% endif %}>{{ user.name }}</option>
-              {% endfor %}
-            </select>
-          </div>
-          <button type="submit" class="btn btn-primary">Update</button>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
-
-<script>
-    // Handle back navigation
-    function goBack() {
-        const previousPageUrl = sessionStorage.getItem('previousPageUrl');
-        if (previousPageUrl) {
-            window.location.href = previousPageUrl;
-        } else {
-            window.location.href = "{{ url_for('main.all_tickets') }}";
-        }
-    }
-
-    // Store the previous page's URL if it's not already stored
-    if (!sessionStorage.getItem('previousPageUrl')) {
-        sessionStorage.setItem('previousPageUrl', document.referrer);
-    }
-</script>
-
 {% if current_user.role == 'admin' or current_user.role == 'support' %}
 <script>
-    document.getElementById('status-badge').addEventListener('click', function() {
-        var myModal = new bootstrap.Modal(document.getElementById('statusModal')); // Use the correct modal ID
-        myModal.show();
+  document
+    .getElementById("status-badge")
+    .addEventListener("click", function () {
+      var myModal = new bootstrap.Modal(document.getElementById("statusModal"));
+      myModal.show();
     });
 
-    document.getElementById('priority-badge').addEventListener('click', function() {
-        var myModal = new bootstrap.Modal(document.getElementById('priorityModal')); // Use the correct modal ID
-        myModal.show();
+  document
+    .getElementById("priority-badge")
+    .addEventListener("click", function () {
+      var myModal = new bootstrap.Modal(
+        document.getElementById("priorityModal")
+      );
+      myModal.show();
     });
 
-    document.getElementById('assignee-badge').addEventListener('click', function() {
-        var myModal = new bootstrap.Modal(document.getElementById('assigneeModal')); // Use the correct modal ID
-        myModal.show();
+  document
+    .getElementById("assignee-badge")
+    .addEventListener("click", function () {
+      var myModal = new bootstrap.Modal(
+        document.getElementById("assigneeModal")
+      );
+      myModal.show();
     });
 
-        const assigneeSelect = document.getElementById('assignee');
-        const selectedOption = assigneeSelect.querySelector('option[selected]');
-        
-        if (selectedOption) {
-            // Remove and reinsert the selected option at the top
-            assigneeSelect.removeChild(selectedOption);
-            assigneeSelect.insertBefore(selectedOption, assigneeSelect.firstChild);
-
-            // Ensure it is selected
-            selectedOption.selected = true;
-        };
-
-    // Initialize tooltips
-    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-      return new bootstrap.Tooltip(tooltipTriggerEl)
-    })
+  // Initialize tooltips for admin or support users
+  var tooltipTriggerList = [].slice.call(
+    document.querySelectorAll('[data-bs-toggle="tooltip"]')
+  );
+  var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+    return new bootstrap.Tooltip(tooltipTriggerEl);
+  });
 </script>
-{% endif %}
-{% endblock %}
+{% endif %} {% endblock %}
