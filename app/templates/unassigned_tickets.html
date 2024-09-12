@@ -87,7 +87,7 @@
               <form method="POST" action="{{ url_for('main.unassigned_tickets') }}">
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
                 <input type="hidden" name="ticket_id" value="{{ ticket.id }}" />
-                <select name="assigned_to" class="form-select form-select-sm mb-2">
+                <select name="assigned_to" class="form-select form-select-sm mb-2 assign-to-dropdown">
                   <option value="{{ current_user.id }}">
                     Assign to Me ({{ current_user.name }})
                   </option>
