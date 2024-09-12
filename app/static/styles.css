@@ -660,7 +660,7 @@ body.dark-mode .logout-badge {
 }
 
 body.dark-mode .logout-badge:hover {
-  background-color: #6b121b; /* Darker red on hover */
+  background-color: transparent; /* Darker red on hover */
 }
 
 .logout-badge i {
@@ -877,7 +877,9 @@ span.invalid {
 
 body.dark-mode .badge-active-tickets-low {
   background-color: #1c7430; /* Fresh teal */
-  border-color: #1c7430;
+  color: #1c7430; /* Text colour */
+  border: 1px solid #1c7430; /* Same colour for the outline */
+  background-color: transparent;
 }
 
 .badge-active-tickets-medium {
