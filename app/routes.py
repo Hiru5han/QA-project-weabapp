@@ -231,7 +231,7 @@ def create_ticket():
         if not title or title.isdigit() or len(title) < 5 or len(title) > 100:
             flash(
                 "Title must contain non-numeric characters, be at least 5 characters long, and not exceed 100 characters.",
-                "error",
+                "warning",
             )
             return redirect(request.referrer or url_for("main.create_ticket"))
 
@@ -244,7 +244,7 @@ def create_ticket():
         ):
             flash(
                 "Description must contain non-numeric characters, be at least 10 characters long, and not exceed 1000 characters.",
-                "error",
+                "warning",
             )
             return redirect(request.referrer or url_for("main.create_ticket"))
 
@@ -253,7 +253,7 @@ def create_ticket():
         if priority not in valid_priorities:
             flash(
                 "Invalid priority value. Choose either 'low', 'medium', or 'high'.",
-                "error",
+                "warning",
             )
             return redirect(request.referrer or url_for("main.create_ticket"))
 
@@ -261,7 +261,7 @@ def create_ticket():
         if current_user.role == "admin" and assigned_to_id:
             assigned_user = User.query.get(assigned_to_id)
             if not assigned_user:
-                flash("Invalid user selected for assignment.", "error")
+                flash("Invalid user selected for assignment.", "warning")
                 return redirect(request.referrer or url_for("main.create_ticket"))
 
         # Prevent Duplicate Tickets based on title and creation time (within 1 minute)
@@ -276,7 +276,7 @@ def create_ticket():
         ):  # 1 minute
             flash(
                 "A similar ticket was created within the last minute. Please wait before creating a new one.",
-                "error",
+                "warning",
             )
             return redirect(request.referrer or url_for("main.create_ticket"))
 
@@ -443,13 +443,13 @@ def unassigned_tickets():
             assigned_to_id = request.form.get("assigned_to")
             print(f"Assigned to ID: {assigned_to_id}")  # Debugging line
             if not assigned_to_id:
-                flash("No assignee selected.", "error")
+                flash("No assignee selected.", "warning")
                 return redirect(url_for("main.unassigned_tickets"))
 
             assignee = User.query.get(assigned_to_id)
 
             if assignee is None:
-                flash("The selected user does not exist.", "error")
+                flash("The selected user does not exist.", "warning")
                 return redirect(url_for("main.unassigned_tickets"))
 
             ticket.assigned_to = assigned_to_id

@@ -774,31 +774,28 @@ body.dark-mode .logout-badge:hover {
 }
 
 /* Auth Card Styling */
-.auth-card {
+.auth-card,
+.create-ticket-card {
   width: 100%;
-  max-width: 400px;
   padding: 2rem;
   background: #fff;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   box-sizing: border-box; /* Ensure padding is included in width */
+}
+
+.auth-card {
+  max-width: 400px;
+}
+
+.create-ticket-card {
+  max-width: 800px;
 }
 
 /* Night mode styles */
 .dark-mode .auth-card {
   background-color: #2e2e2e; /* Dark background */
   color: white; /* Light text */
-}
-
-/* Auth Card Styling */
-.create-ticket-card {
-  width: 100%;
-  max-width: 800px;
-  padding: 2rem;
-  background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  box-sizing: border-box; /* Ensure padding is included in width */
 }
 
 /* Night mode styles */

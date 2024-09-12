@@ -12,18 +12,6 @@
       <h2 class="auth-title mb-0">Create Ticket</h2>
     </div>
 
-    <!-- Include a section to display flash messages -->
-    {% with messages = get_flashed_messages(with_categories=true) %} {% if
-    messages %}
-    <div class="flashes">
-      {% set seen_messages = [] %} {% for category, message in messages %} {% if
-      message not in seen_messages %}
-      <div class="alert alert-{{ category }}">{{ message }}</div>
-      {% set seen_messages = seen_messages + [message] %} {% endif %} {% endfor
-      %}
-    </div>
-    {% endif %} {% endwith %}
-
     <!-- Create Ticket Form -->
     <form method="POST">
       <!-- Include the CSRF token for security -->
