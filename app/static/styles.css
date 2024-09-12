@@ -498,12 +498,12 @@ body.dark-mode .table-hover tbody tr:hover {
 }
 
 body.dark-mode .card {
-  background-color: #242424; /* Dark slate for cards */
+  background-color: #191919; /* Dark slate for cards */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Darker shadow for contrast */
 }
 
 body.dark-mode .card-header {
-  background-color: #2a3b5c !important; /* Apply the new colour with higher specificity */
+  background-color: #000000 !important; /* Apply the new colour with higher specificity */
   color: #dcdcdc !important; /* Ensure text colour is also applied */
 }
 
@@ -532,15 +532,21 @@ body.dark-mode .btn-outline-primary:hover {
 }
 
 body.dark-mode .badge-role-support {
-  background-color: #1e7e34; /* Consistent teal */
+  color: #874f80; /* Text colour */
+  border: 1px solid #874f80; /* Same colour for the outline */
+  background-color: transparent;
 }
 
 body.dark-mode .badge-role-admin {
-  background-color: #a71d2a; /* Soft pink-red */
+  color: #ac1917; /* Text colour */
+  border: 1px solid #ac1917; /* Same colour for the outline */
+  background-color: transparent;
 }
 
 body.dark-mode .badge-role-regular {
-  background-color: #0f778a; /* Light purple */
+  color: #156b8a; /* Text colour */
+  border: 1px solid #156b8a; /* Same colour for the outline */
+  background-color: transparent;
 }
 
 body.dark-mode .badge-status-open {
@@ -556,7 +562,7 @@ body.dark-mode .badge-status-closed {
 }
 
 body.dark-mode .navbar {
-  background-color: #003366; /* Darker navbar */
+  background-color: #000000; /* Darker navbar */
 }
 
 body.dark-mode .navbar .navbar-brand,
@@ -640,7 +646,8 @@ body.dark-mode .jumbotron {
 }
 
 body.dark-mode .logout-badge {
-  background-color: #a71d2a; /* Red background specific to logout */
+  border: 2px solid #a71d2a; /* Same colour for the outline */
+  background-color: transparent;
 }
 
 .logout-badge:hover {
@@ -700,15 +707,15 @@ body.dark-mode .logout-badge:hover {
 }
 
 .badge-role-admin {
-  background-color: #dc3545; /* Red for admin role */
+  background-color: #e54a50; /* Red for admin role */
 }
 
 .badge-role-support {
-  background-color: #28a745; /* Green for support role */
+  background-color: #b881b1; /* Green for support role */
 }
 
 .badge-role-regular {
-  background-color: #17a2b8; /* Teal for regular role */
+  background-color: #5d9db9; /* Teal for regular role */
 }
 
 /* General Container Styling */
@@ -988,12 +995,13 @@ body.dark-mode .modal-footer {
 
 /* Assignee Badge */
 .assignee-badge {
-  background-color: #eec76b;
+  background-color: #704776;
 }
 
 /* Dark Mode Badge Adjustments */
 body.dark-mode .assignee-badge {
-  background-color: #c0982b;
+  border: 1px solid #c867a5; /* Same colour for the outline */
+  background-color: transparent;
 }
 
 body.dark-mode .status-open,
@@ -1012,7 +1020,9 @@ body.dark-mode .badge-status-in-progress {
 
 body.dark-mode .status-closed,
 body.dark-mode .badge-status-closed {
-  background-color: #404040;
+  background-color: transparent;
+  color: rgb(255, 255, 255);
+  border: 1px solid #ffffff; /* Same colour for the outline */
 }
 
 /* Dark Mode Priority Colours */

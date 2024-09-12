@@ -20,7 +20,7 @@
               <span class="title-spacing"><strong>Priority:</strong></span>
               <span
                 class="badge text-white {% if current_user.role == 'admin' or current_user.role == 'support' %}clickable-badge{% endif %} 
-                {% if ticket.priority == 'high' %}badge-priority-high{% elif ticket.priority == 'medium' %}badge-priority-medium{% else %}badge-priority-low{% endif %}"
+                {% if ticket.priority == 'high' %}priority-high{% elif ticket.priority == 'medium' %}priority-medium{% else %}priority-low{% endif %}"
                 id="priority-badge"
               >
                 {{ ticket.priority }}{% if current_user.role == 'admin' or current_user.role == 'support' %}<i class="fas fa-edit ms-2"></i>{% endif %}
@@ -71,7 +71,7 @@
       >
         <div class="d-flex justify-content-end">
           <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-          <button type="submit" class="btn btn-danger ms-2">
+          <button type="submit" class="btn logout-badge ms-2">
             <i class="fas fa-trash-alt"></i> Delete Ticket
           </button>
         </div>
