@@ -1067,3 +1067,8 @@ body.dark-mode .priority-high {
 body.dark-mode .dataTables_length select {
   color: rgb(255, 255, 255); /* Replace 'blue' with any color you prefer */
 }
+
+body.dark-mode .assign-to-dropdown {
+  background-color: #000000; /* Change this to the desired background colour */
+  color: #ffffff; /* Ensure text is readable */
+}
