@@ -131,6 +131,7 @@ h2 {
 /* Navbar Customisation */
 .navbar {
   background-color: #283593; /* Navbar Colour */
+  position: relative;
 }
 
 .navbar .navbar-brand,
@@ -142,6 +143,9 @@ h2 {
   display: flex;
   align-items: center;
   pointer-events: none; /* Disables hover interaction on the image */
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .navbar .nav-link:hover {
@@ -673,11 +677,13 @@ body.dark-mode .logout-badge:hover {
 .navbar-nav {
   display: flex;
   align-items: center; /* Vertically aligns children (Logout button and toggle button) */
+  margin-left: auto;
 }
 
 .role-container {
   display: flex;
   align-items: center;
+  display: inline-block;
 }
 
 .user-info {
@@ -709,7 +715,8 @@ body.dark-mode .logout-badge:hover {
 }
 
 .badge-role-admin {
-  background-color: #e54a50; /* Red for admin role */
+  background-color: #dc3545; /* Red for admin role */
+  color: #ffffff;
 }
 
 .badge-role-support {
@@ -796,6 +803,7 @@ body.dark-mode .logout-badge:hover {
   margin-top: 0.5rem;
   border-radius: 4px;
   border: 1px solid #ced4da;
+  color: #000000;
 }
 
 body.dark-mode .form-control {
@@ -1049,4 +1057,13 @@ body.dark-mode .priority-high {
   color: #c82333; /* Text colour */
   border: 1px solid #c82333; /* Same colour for the outline */
   background-color: transparent;
+}
+
+/* Change the font color of the length menu selector */
+.dataTables_length select {
+  color: rgb(0, 0, 0); /* Replace 'blue' with any color you prefer */
+}
+
+body.dark-mode .dataTables_length select {
+  color: rgb(255, 255, 255); /* Replace 'blue' with any color you prefer */
 }
