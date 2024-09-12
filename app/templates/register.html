@@ -15,7 +15,7 @@
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <div class="form-group">
                     <label for="role">Role</label>
-                    <select class="form-control" id="role" name="role" required>
+                    <select class="dropdown-box" id="role" name="role" required>
                         <option value="admin" {% if role == 'admin' %}selected{% endif %}>Admin</option>
                         <option value="support" {% if role == 'support' %}selected{% endif %}>Support</option>
                         <option value="regular" {% if role == 'regular' %}selected{% endif %}>Regular</option>
