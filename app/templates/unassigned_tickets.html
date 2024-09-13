@@ -9,14 +9,16 @@
   </div>
 
   <div class="card shadow-sm">
+    <!-- Begin .card-header -->
     <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center position-relative">
       <div class="d-flex align-items-center">
         <span class="badge {{ badge_class }}">
           {{ open_tickets_count }} active
         </span>
       </div>
-
-      <div class="toggle-buttons">
+      
+      <!-- Toggle buttons for medium and larger screens -->
+      <div class="toggle-buttons d-none d-md-block">
         <div class="btn-group toggle-group" role="group" aria-label="Ticket Status Toggle">
           <a href="{{ url_for('main.unassigned_tickets') }}" class="btn btn-toggle {% if view == 'unassigned' %}active{% endif %}">
             Unassigned
@@ -34,14 +36,40 @@
           </a>
         </div>
       </div>
-
-      <div class="ms-auto">
+      
+      <!-- Dropdown menu for small screens -->
+      <div class="dropdown d-md-none ml-2">
+        <button class="btn btn-primary dropdown-toggle" type="button" id="ticketStatusDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Ticket Status
+        </button>
+        <div class="dropdown-menu" aria-labelledby="ticketStatusDropdown">
+          <a class="dropdown-item {% if view == 'unassigned' %}active{% endif %}" href="{{ url_for('main.unassigned_tickets') }}">
+            Unassigned
+          </a>
+          <a class="dropdown-item {% if view == 'assigned' %}active{% endif %}" href="{{ url_for('main.assigned_tickets') }}">
+            Assigned
+          </a>
+          {% if current_user.role == 'admin' %}
+          <a class="dropdown-item {% if view == 'all' %}active{% endif %}" href="{{ url_for('main.all_tickets') }}">
+            All Tickets
+          </a>
+          {% endif %}
+          <a class="dropdown-item {% if view == 'closed' %}active{% endif %}" href="{{ url_for('main.closed_tickets') }}">
+            Closed
+          </a>
+        </div>
+      </div>
+      
+      <!-- Create Ticket button for medium and larger screens -->
+      <div class="ml-auto d-none d-md-block">
         <a class="btn btn-success" href="{{ url_for('main.create_ticket', referrer=request.path) }}">
           <i class="fas fa-plus"></i> Create Ticket
         </a>
       </div>
-    </div>
+    </div> <!-- End of .card-header -->
+    <!-- Added closing </div> for .card-header -->
 
+    <!-- Begin .card-body -->
     <div class="card-body">
       <!-- Add .table-responsive to make the table scrollable on small screens -->
       <div class="table-responsive">
@@ -135,7 +163,16 @@
           </tbody>
         </table>
       </div> <!-- End .table-responsive -->
-    </div>
-  </div>
-</div>
+    </div> <!-- End of .card-body -->
+    <!-- Ensure .card-body is properly closed -->
+  </div> <!-- End of .card -->
+  <!-- Ensure .card is properly closed -->
+</div> <!-- End of .container -->
+<!-- Ensure .container is properly closed -->
+
+<!-- Floating Action Button for small screens -->
+<a href="{{ url_for('main.create_ticket', referrer=request.path) }}" class="fab d-md-none" aria-label="Create Ticket">
+  <i class="fas fa-plus"></i>
+</a>
+
 {% endblock %}

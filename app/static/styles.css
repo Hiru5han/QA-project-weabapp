@@ -1153,3 +1153,48 @@ body.dark-mode .assign-to-dropdown {
     font-size: 12px; /* Adjust table info size */
   }
 }
+
+/* FAB Styles */
+.fab {
+  position: fixed;
+  bottom: 70px; /* Adjust as needed */
+  right: 20px;
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 56px;
+  height: 56px;
+  background-color: #28a745; /* Matches btn-success */
+  color: #fff;
+  border-radius: 50%;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  text-decoration: none;
+  overflow: hidden; /* Add this line */
+}
+
+/* Ensure the icon is centered and sized appropriately */
+.fab i {
+  font-size: 24px;
+  line-height: 1;
+  display: flex; /* Add this line */
+  align-items: center; /* Add this line */
+  justify-content: center; /* Add this line */
+  width: 100%; /* Add this line */
+  height: 100%; /* Add this line */
+  margin: 0;
+  padding: 0;
+}
+
+/* Remove any default styles from the pseudo-elements */
+.fab i::before {
+  margin: 0;
+  padding: 0;
+}
+
+/* Hover effect */
+.fab:hover {
+  background-color: #218838;
+  text-decoration: none;
+  color: #fff;
+}
