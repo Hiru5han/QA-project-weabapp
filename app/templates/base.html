@@ -42,14 +42,14 @@
   </head>
   <body class="light-mode">
     <!-- Default to light mode -->
-    <nav class="navbar navbar-expand-lg">
+    <nav class="navbar navbar-expand-lg navbar-light">
       <div class="container-fluid">
         <!-- Left part: Role badge -->
         <div class="d-flex align-items-center">
           {% if current_user.is_authenticated %}
-          <span class="badge badge-role-{{ current_user.role}}"
-            >{{ current_user.role.capitalize() }}</span
-          >
+          <span class="badge badge-role-{{ current_user.role }}">
+            {{ current_user.role.capitalize() }}
+          </span>
           {% endif %}
         </div>
 
@@ -62,8 +62,21 @@
           />
         </a>
 
-        <!-- Right part: Night mode toggle and logout -->
-        <div class="d-flex align-items-center ml-auto">
+        <!-- Right part: Toggler -->
+        <button
+          class="navbar-toggler ml-auto"
+          type="button"
+          data-toggle="collapse"
+          data-target="#navbarMenu"
+          aria-controls="navbarMenu"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <i class="fas fa-bars"></i>
+        </button>
+
+        <!-- Collapsible menu -->
+        <div class="collapse navbar-collapse" id="navbarMenu">
           <ul class="navbar-nav ml-auto">
             {% if current_user.is_authenticated %}
             <li class="nav-item">

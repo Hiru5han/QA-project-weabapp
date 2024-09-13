@@ -1198,3 +1198,8 @@ body.dark-mode .assign-to-dropdown {
   text-decoration: none;
   color: #fff;
 }
+
+/* Change the color of the hamburger icon to white */
+.navbar-toggler .fas {
+  color: white;
+}
