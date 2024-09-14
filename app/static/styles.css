@@ -1044,12 +1044,14 @@ body.dark-mode .modal-footer {
 }
 
 /* Dark Mode Badge Adjustments */
+body.dark-mode .readonly-assignee-badge,
 body.dark-mode .assignee-badge {
   border: 1px solid #c867a5; /* Same colour for the outline */
   background-color: transparent;
 }
 
 body.dark-mode .status-open,
+body.dark-mode .readonly-status-open-badge,
 body.dark-mode .badge-status-open {
   color: #c0982b; /* Text colour */
   border: 1px solid #c0982b; /* Same colour for the outline */
@@ -1057,6 +1059,7 @@ body.dark-mode .badge-status-open {
 }
 
 body.dark-mode .status-in-progress,
+body.dark-mode .readonly-status-in-progress-badge,
 body.dark-mode .badge-status-in-progress {
   color: #28a745; /* Text colour */
   border: 1px solid #28a745; /* Same colour for the outline */
@@ -1064,6 +1067,7 @@ body.dark-mode .badge-status-in-progress {
 }
 
 body.dark-mode .status-closed,
+body.dark-mode .readonly-status-closed-badge,
 body.dark-mode .badge-status-closed {
   background-color: transparent;
   color: rgb(255, 255, 255);
@@ -1072,6 +1076,7 @@ body.dark-mode .badge-status-closed {
 
 /* Dark Mode Priority Colours */
 body.dark-mode .badge-priority-low,
+body.dark-mode .readonly-priority-low-badge,
 body.dark-mode .priority-low {
   color: #4a9daa; /* Text colour */
   border: 1px solid #4a9daa; /* Same colour for the outline */
@@ -1079,6 +1084,7 @@ body.dark-mode .priority-low {
 }
 
 body.dark-mode .badge-priority-medium,
+body.dark-mode .readonly-priority-medium-badge,
 body.dark-mode .priority-medium {
   color: #ea8553; /* Text colour */
   border: 1px solid #ea8553; /* Same colour for the outline */
@@ -1086,6 +1092,7 @@ body.dark-mode .priority-medium {
 }
 
 body.dark-mode .badge-priority-high,
+body.dark-mode .readonly-priority-high-badge,
 body.dark-mode .priority-high {
   color: #c82333; /* Text colour */
   border: 1px solid #c82333; /* Same colour for the outline */
