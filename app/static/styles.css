@@ -1074,6 +1074,32 @@ body.dark-mode .assign-to-dropdown {
 }
 
 @media (max-width: 576px) {
+  /* Make dropdown background white */
+  .dropdown-menu {
+    background-color: #ffffff;
+  }
+
+  /* Make the active link more distinct */
+  .dropdown-item.active {
+    background-color: #f8f9fa;
+    color: #495057;
+  }
+
+  /* Style the dropdown toggle button normally */
+  .dropdown-toggle {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+  }
+
+  /* Prevent the button from turning blue when clicked */
+  .dropdown-toggle:focus,
+  .dropdown-toggle:active {
+    background-color: #78d1de !important;
+    color: #495057 !important;
+    border-color: #f8f9fa !important;
+    box-shadow: none !important; /* Remove the blue shadow */
+  }
+
   /* Navbar adjustments */
   .navbar {
     display: flex;

@@ -75,7 +75,7 @@
           aria-haspopup="true"
           aria-expanded="false"
         >
-          Ticket Status
+          Closed Tickets
         </button>
         <div class="dropdown-menu" aria-labelledby="ticketStatusDropdown">
           {% if current_user.role in ['admin', 'support'] %}
@@ -83,13 +83,13 @@
             class="dropdown-item {% if view == 'unassigned' %}active{% endif %}"
             href="{{ url_for('main.unassigned_tickets') }}"
           >
-            Unassigned
+            Unassigned Tickets
           </a>
           <a
             class="dropdown-item {% if view == 'assigned' %}active{% endif %}"
             href="{{ url_for('main.assigned_tickets') }}"
           >
-            Assigned
+            Assigned Tickets
           </a>
           <a
             class="dropdown-item {% if view == 'all' %}active{% endif %}"

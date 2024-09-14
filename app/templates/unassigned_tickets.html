@@ -40,14 +40,14 @@
       <!-- Dropdown menu for small screens -->
       <div class="dropdown d-md-none ml-2">
         <button class="btn btn-primary dropdown-toggle" type="button" id="ticketStatusDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Ticket Status
+          Unassigned Tickets
         </button>
         <div class="dropdown-menu" aria-labelledby="ticketStatusDropdown">
           <a class="dropdown-item {% if view == 'unassigned' %}active{% endif %}" href="{{ url_for('main.unassigned_tickets') }}">
-            Unassigned
+            Unassigned Tickets
           </a>
           <a class="dropdown-item {% if view == 'assigned' %}active{% endif %}" href="{{ url_for('main.assigned_tickets') }}">
-            Assigned
+            Assigned Tickets
           </a>
           {% if current_user.role == 'admin' %}
           <a class="dropdown-item {% if view == 'all' %}active{% endif %}" href="{{ url_for('main.all_tickets') }}">
@@ -55,7 +55,7 @@
           </a>
           {% endif %}
           <a class="dropdown-item {% if view == 'closed' %}active{% endif %}" href="{{ url_for('main.closed_tickets') }}">
-            Closed
+            Closed Tickets
           </a>
         </div>
       </div>
