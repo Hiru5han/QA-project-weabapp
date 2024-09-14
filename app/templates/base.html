@@ -138,6 +138,11 @@
           searching: true,
           lengthMenu: [5, 10, 25, 50, 100],
           pageLength: 5,
+
+          // Fix the width of the Actions column (assuming it's the last column)
+          columnDefs: [
+            { targets: -1, width: "220px" }, // Set width of the last column (Actions)
+          ],
         });
 
         // Customize search input styling
