@@ -42,58 +42,39 @@
   </head>
   <body class="light-mode">
     <!-- Default to light mode -->
-    <nav class="navbar navbar-expand-lg navbar-light">
+    <nav class="navbar navbar-light">
       <div class="container-fluid">
-        <!-- Left part: Role badge -->
-        <div class="d-flex align-items-center">
-          {% if current_user.is_authenticated %}
-          <span class="badge badge-role-{{ current_user.role }}">
-            {{ current_user.role.capitalize() }}
-          </span>
-          {% endif %}
-        </div>
-
-        <!-- Center: Logo -->
-        <a class="navbar-brand mx-auto" href="#">
-          <img
-            src="{{ url_for('static', filename='logo.png') }}"
-            alt="Help Desk Logo"
-            style="height: 40px"
-          />
-        </a>
-
-        <!-- Right part: Toggler -->
-        <button
-          class="navbar-toggler ml-auto"
-          type="button"
-          data-toggle="collapse"
-          data-target="#navbarMenu"
-          aria-controls="navbarMenu"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <i class="fas fa-bars"></i>
-        </button>
-
-        <!-- Collapsible menu -->
-        <div class="collapse navbar-collapse" id="navbarMenu">
-          <ul class="navbar-nav ml-auto">
+        <!-- Use d-flex to arrange items -->
+        <div class="d-flex align-items-center justify-content-between w-100">
+          <!-- Left part: Role badge -->
+          <div class="d-flex align-items-center">
             {% if current_user.is_authenticated %}
-            <li class="nav-item">
-              <a
-                class="nav-link logout-badge"
-                href="{{ url_for('main.logout') }}"
-              >
-                Logout
-              </a>
-            </li>
+            <span class="badge badge-role-{{ current_user.role }}">
+              {{ current_user.role.capitalize() }}
+            </span>
             {% endif %}
-            <li class="nav-item">
-              <button id="theme-toggle-button" class="btn btn-link nav-link">
-                <i id="theme-toggle-icon" class="fas fa-sun"></i>
-              </button>
-            </li>
-          </ul>
+          </div>
+
+          <!-- Center: Logo -->
+          <a class="navbar-brand" href="#">
+            <img
+              src="{{ url_for('static', filename='logo.png') }}"
+              alt="Help Desk Logo"
+              style="height: 40px"
+            />
+          </a>
+
+          <!-- Right part: Logout and Theme Toggle -->
+          <div class="d-flex align-items-center">
+            <button id="theme-toggle-button" class="btn btn-link">
+              <i id="theme-toggle-icon" class="fas fa-sun"></i>
+            </button>
+            {% if current_user.is_authenticated %}
+            <a class="logout-badge mr-2" href="{{ url_for('main.logout') }}">
+              Logout
+            </a>
+            {% endif %}
+          </div>
         </div>
       </div>
     </nav>

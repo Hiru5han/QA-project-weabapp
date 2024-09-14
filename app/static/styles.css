@@ -313,7 +313,7 @@ h2 {
   justify-content: center;
   padding: 0;
   margin: 0;
-  margin-left: 10px; /* Adjust the value to your preference */
+  margin-right: 15px;
 }
 
 #theme-toggle-button .fas {
@@ -1074,21 +1074,18 @@ body.dark-mode .assign-to-dropdown {
 }
 
 @media (max-width: 576px) {
-  /* Adjust the navbar for mobile */
+  /* Navbar adjustments */
   .navbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
   }
 
-  /* Center the logo on mobile */
   .navbar-brand {
-    margin-left: auto;
-    margin-right: auto;
+    margin: 0 auto;
     text-align: center;
   }
 
-  /* Align the night mode toggle and logout button to the right */
   .navbar-nav {
     flex-direction: row;
     justify-content: flex-end;
@@ -1098,13 +1095,16 @@ body.dark-mode .assign-to-dropdown {
     display: inline-block;
   }
 
-  /* Make sure the night mode toggle is visible on the right */
   #theme-toggle-button {
     margin-right: 10px;
   }
-}
-/* Mobile-only: Ensure the signed-in message is shown fixed at the bottom */
-@media (max-width: 576px) {
+
+  #theme-toggle-button:hover,
+  .logout-badge:hover {
+    text-decoration: none;
+  }
+
+  /* Signed-in overlay for mobile */
   .signed-in-overlay {
     position: fixed;
     bottom: 0;
@@ -1114,50 +1114,46 @@ body.dark-mode .assign-to-dropdown {
     text-align: center;
     padding: 10px;
     font-size: 14px;
-    z-index: 9999; /* Ensure it's on top of other content */
+    z-index: 9999;
   }
 
   .signed-in-overlay span {
-    font-size: 12px; /* Adjust font size for smaller screens */
+    font-size: 12px;
+  }
+
+  /* DataTables adjustments for mobile */
+  .dataTables_filter input {
+    width: 100%;
+    font-size: 12px;
+  }
+
+  table.dataTable,
+  .dataTables_wrapper .dataTables_paginate .paginate_button,
+  .dataTables_wrapper .dataTables_info {
+    font-size: 12px;
+  }
+
+  .dataTables_wrapper .dataTables_paginate .paginate_button {
+    padding: 0.3rem 0.5rem;
   }
 }
-/* Hide the signed-in message on larger screens (desktop and tablets) */
+
+/* Hide signed-in overlay on larger screens */
 @media (min-width: 577px) {
   .signed-in-overlay {
     display: none;
   }
 }
 
-/* Ensure the table container handles horizontal scrolling on mobile */
+/* Table responsiveness */
 .table-responsive {
   overflow-x: auto;
-}
-
-/* Reduce padding and font size on smaller screens */
-@media (max-width: 576px) {
-  .dataTables_filter input {
-    width: 100%; /* Make search box full width */
-    font-size: 12px;
-  }
-
-  table.dataTable {
-    font-size: 12px; /* Adjust table font size for mobile */
-  }
-
-  .dataTables_wrapper .dataTables_paginate .paginate_button {
-    padding: 0.3rem 0.5rem; /* Adjust pagination button size */
-    font-size: 12px; /* Adjust pagination font size */
-  }
-
-  .dataTables_wrapper .dataTables_info {
-    font-size: 12px; /* Adjust table info size */
-  }
 }
 
 /* FAB Styles */
 .fab {
   position: fixed;
-  bottom: 70px; /* Adjust as needed */
+  bottom: 70px;
   right: 20px;
   z-index: 1000;
   display: flex;
@@ -1165,41 +1161,37 @@ body.dark-mode .assign-to-dropdown {
   align-items: center;
   width: 56px;
   height: 56px;
-  background-color: #28a745; /* Matches btn-success */
+  background-color: #28a745;
   color: #fff;
   border-radius: 50%;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
   text-decoration: none;
-  overflow: hidden; /* Add this line */
+  overflow: hidden;
 }
 
-/* Ensure the icon is centered and sized appropriately */
 .fab i {
   font-size: 24px;
-  line-height: 1;
-  display: flex; /* Add this line */
-  align-items: center; /* Add this line */
-  justify-content: center; /* Add this line */
-  width: 100%; /* Add this line */
-  height: 100%; /* Add this line */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
   margin: 0;
   padding: 0;
 }
 
-/* Remove any default styles from the pseudo-elements */
 .fab i::before {
   margin: 0;
   padding: 0;
 }
 
-/* Hover effect */
 .fab:hover {
   background-color: #218838;
-  text-decoration: none;
   color: #fff;
+  text-decoration: none;
 }
 
-/* Change the color of the hamburger icon to white */
+/* Change hamburger icon to white */
 .navbar-toggler .fas {
   color: white;
 }
