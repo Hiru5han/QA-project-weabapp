@@ -609,8 +609,14 @@ body.dark-mode .jumbotron {
   justify-content: flex-end;
 }
 
-.clickable-badge {
-  cursor: pointer;
+.clickable-badge,
+.readonly-assignee-badge,
+.readonly-status-open-badge,
+.readonly-status-in-progress-badge,
+.readonly-status-closed-badge,
+.readonly-priority-high-badge,
+.readonly-priority-medium-badge,
+.readonly-priority-low-badge {
   transition: transform 0.2s, box-shadow 0.2s;
   display: inline-flex;
   align-items: center;
@@ -622,10 +628,31 @@ body.dark-mode .jumbotron {
   margin-left: 5px; /* Small margin to create space between "Priority:" and the badge */
 }
 
+.clickable-badge {
+  cursor: pointer;
+}
+
+.readonly-assignee-badge,
+.readonly-status-open-badge,
+.readonly-status-in-progress-badge,
+.readonly-status-closed-badge,
+.readonly-priority-high-badge,
+.readonly-priority-medium-badge,
+.readonly-priority-low-badge {
+  cursor: default;
+}
+
+.readonly-assignee-badge {
+  background-color: #704776;
+}
+
+.readonly-status-open-badge {
+  background-color: #a9be77;
+}
+
 .clickable-badge:hover {
   transform: scale(1.05);
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-  background-color: rgba(255, 255, 255, 0.1);
 }
 
 .clickable-badge i {
@@ -976,31 +1003,37 @@ body.dark-mode .modal-footer {
 
 /* Priority and Status Badge Colours */
 .priority-high,
+.readonly-priority-high-badge,
 .badge-priority-high {
   background-color: #e54a50; /* Equivalent to bg-danger */
 }
 
 .priority-medium,
+.readonly-priority-medium-badge,
 .badge-priority-medium {
   background-color: #ea8553; /* Equivalent to bg-warning */
 }
 
 .priority-low,
+.readonly-priority-low-badge,
 .badge-priority-low {
   background-color: #5d9db9; /* Equivalent to bg-info */
 }
 
 .status-open,
+.readonly-status-open-badge,
 .badge-status-open {
   background-color: #a9be77; /* Equivalent to bg-success */
 }
 
 .status-in-progress,
+.readonly-status-in-progress-badge,
 .badge-status-in-progress {
   background-color: #359d73; /* Equivalent to bg-warning */
 }
 
 .status-closed,
+.readonly-status-closed-badge,
 .badge-status-closed {
   background-color: #6c757d;
 }

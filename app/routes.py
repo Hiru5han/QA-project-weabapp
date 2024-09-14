@@ -732,3 +732,18 @@ def active_tickets():
     # Filtering tickets by the current user and by active status
     tickets = Ticket.query.filter_by(user_id=current_user.id, status="open").all()
     return render_template("all_tickets.html", tickets=tickets, view="active")
+
+
+@bp.route("/ticket/<int:ticket_id>/readonly", methods=["GET"])
+@login_required
+def ticket_details_readonly(ticket_id):
+    """
+    Displays the read-only details of a specific ticket without any interactivity.
+    """
+    print(f"Loading read-only ticket details for ticket ID: {ticket_id}")
+    ticket = Ticket.query.get_or_404(ticket_id)
+    comments = Comment.query.filter_by(ticket_id=ticket.id).all()
+
+    return render_template(
+        "ticket_details_readonly.html", ticket=ticket, comments=comments
+    )

@@ -1,0 +1,102 @@
+{% extends "base.html" %} {% block content %}
+<div class="auth-page">
+  <div class="create-ticket-card">
+    <!-- Back Button, Header, and Priority/Status Section -->
+    <div class="row mb-4 align-items-center">
+      <div class="col-md-2 text-start d-flex align-items-center">
+        <a href="javascript:void(0);" onclick="goBack();">
+          <i class="fas fa-chevron-left back-button-icon"></i>
+        </a>
+      </div>
+      <div class="col-md-8 text-center d-flex flex-column align-items-center">
+        <h2 class="text-primary mb-0">Ticket Details</h2>
+        <p class="lead">{{ ticket.title }}</p>
+      </div>
+      <div class="col-md-2 text-end">
+        <div class="status-priority-container">
+          <!-- Priority Section (Non-interactive) -->
+          <p class="mb-0">
+            <strong>Priority:</strong>
+            <span
+              class="badge text-white {% if ticket.priority == 'high' %}readonly-priority-high-badge{% elif ticket.priority == 'medium' %}readonly-priority-medium-badge{% else %}readonly-priority-low-badge{% endif %}"
+            >
+              {{ ticket.priority }}
+            </span>
+          </p>
+          <!-- Status Section (Non-interactive) -->
+          <p class="mb-0">
+            <strong>Status: </strong>
+            <span
+              class="badge text-white {% if ticket.status == 'open' %}readonly-status-open-badge{% elif ticket.status == 'in-progress' %}readonly-status-in-progress-badge{% else %}readonly-status-closed-badge{% endif %}"
+            >
+              {{ ticket.status }}
+            </span>
+          </p>
+          <!-- Assignee Section (Non-interactive) -->
+          <p class="mb-0">
+            <strong>Assignee: </strong>
+            <span class="badge text-white readonly-assignee-badge">
+              {% if ticket.assignee %} {{ ticket.assignee.name }} {% else %} No
+              assignee yet {% endif %}
+            </span>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Description Section -->
+    <div class="row mb-4">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Description</h5>
+            <p>{{ ticket.description }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Full Activity Log: Comments Section -->
+    <div class="row mb-4">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Activity Log (Comments)</h5>
+            <ul class="list-unstyled mt-4">
+              {% for comment in comments %}
+              <li class="d-flex justify-content-between border-bottom py-2">
+                <div>
+                  <strong>{{ comment.commenter.name }}:</strong> {{
+                  comment.comment_text }}
+                </div>
+                <div class="text-muted">
+                  <em
+                    >{{ comment.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</em
+                  >
+                </div>
+              </li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function goBack() {
+    const previousPageUrl = sessionStorage.getItem("previousPageUrl");
+    if (previousPageUrl) {
+      window.location.href = previousPageUrl;
+    } else {
+      window.location.href = "{{ url_for('main.all_tickets') }}";
+    }
+  }
+
+  // Store the previous page's URL if it's not already stored
+  if (!sessionStorage.getItem("previousPageUrl")) {
+    sessionStorage.setItem("previousPageUrl", document.referrer);
+  }
+</script>
+{% endblock %}
