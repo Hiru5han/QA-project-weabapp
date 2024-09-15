@@ -46,6 +46,7 @@
       <div class="container-fluid position-relative">
         <!-- Left: Hamburger Menu for Mobile -->
         <div class="d-flex align-items-center" style="z-index: 10">
+          {% if current_user.is_authenticated %}
           <button
             class="navbar-toggler"
             type="button"
@@ -57,6 +58,7 @@
           >
             <span class="fas fa-bars"></span>
           </button>
+          {% endif %}
 
           <!-- Role Badge for Desktop -->
           {% if current_user.is_authenticated %}

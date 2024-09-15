@@ -314,13 +314,14 @@ h2 {
 #theme-toggle-button {
   font-size: 1.5rem;
   cursor: pointer;
-  height: 40px; /* Match the height of the logo */
+  height: 30px; /* Match the height of the logo */
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0;
+  padding-top: 15px;
   margin: 0;
   margin-right: 15px;
+  margin-bottom: 10px;
 }
 
 #theme-toggle-button .fas {
@@ -1429,9 +1430,9 @@ body.dark-mode .navbar {
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  bottom: -50px !important; /* Adjust to control how much logo goes below navbar */
+  bottom: -55px !important; /* Adjust to control how much logo goes below navbar */
 }
 
 .navbar-brand img {
-  height: 70px; /* Increase size of the logo */
+  height: 85px; /* Increase size of the logo */
 }
