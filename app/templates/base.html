@@ -41,22 +41,37 @@
     <title>Help Desk</title>
   </head>
   <body class="light-mode">
-    <!-- Default to light mode -->
+    <!-- Navbar -->
     <nav class="navbar navbar-light">
       <div class="container-fluid">
-        <!-- Use d-flex to arrange items -->
+        <!-- Navbar content -->
         <div class="d-flex align-items-center justify-content-between w-100">
-          <!-- Left part: Role badge -->
+          <!-- Left: Hamburger Menu for Mobile -->
           <div class="d-flex align-items-center">
+            <button
+              class="navbar-toggler"
+              type="button"
+              data-toggle="collapse"
+              data-target="#navbarMenu"
+              aria-controls="navbarMenu"
+              aria-expanded="false"
+              aria-label="Toggle navigation"
+            >
+              <span class="fas fa-bars"></span>
+            </button>
+
+            <!-- Role Badge for Desktop -->
             {% if current_user.is_authenticated %}
-            <span class="badge badge-role-{{ current_user.role }}">
+            <span
+              class="badge badge-role-{{ current_user.role }} d-none d-md-inline-block ml-2"
+            >
               {{ current_user.role.capitalize() }}
             </span>
             {% endif %}
           </div>
 
           <!-- Center: Logo -->
-          <a class="navbar-brand" href="#">
+          <a class="navbar-brand mx-auto" href="#">
             <img
               src="{{ url_for('static', filename='logo.png') }}"
               alt="Help Desk Logo"
@@ -64,21 +79,55 @@
             />
           </a>
 
-          <!-- Right part: Profile, Logout, and Theme Toggle -->
-          <div class="d-flex align-items-center">
+          <!-- Right: Theme Toggle and Profile/Logout Links for Desktop -->
+          <div class="d-flex align-items-center navbar-content">
+            <!-- Theme Toggle -->
             <button id="theme-toggle-button" class="btn btn-link">
               <i id="theme-toggle-icon" class="fas fa-sun"></i>
             </button>
+
             {% if current_user.is_authenticated %}
+            <!-- Profile Link -->
             <a
-              class="profile-badge mr-2"
+              class="profile-badge mr-2 d-none d-md-inline-block"
               href="{{ url_for('main.update_profile', next=request.path) }}"
             >
               Profile
             </a>
-            <a class="logout-badge mr-2" href="{{ url_for('main.logout') }}">
+            <!-- Logout Link -->
+            <a
+              class="logout-badge mr-2 d-none d-md-inline-block"
+              href="{{ url_for('main.logout') }}"
+            >
               Logout
             </a>
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- Dropdown Menu Content -->
+        <div class="collapse" id="navbarMenu">
+          <div class="bg-light p-4" style="width: 250px">
+            {% if current_user.is_authenticated %}
+            <!-- Role Badge -->
+            <span class="badge badge-role-{{ current_user.role }} mb-3">
+              {{ current_user.role.capitalize() }}
+            </span>
+            <!-- Profile Link -->
+            <div class="mb-2">
+              <a
+                href="{{ url_for('main.update_profile', next=request.path) }}"
+                class="btn btn-link"
+              >
+                Profile
+              </a>
+            </div>
+            <!-- Logout Link -->
+            <div>
+              <a href="{{ url_for('main.logout') }}" class="btn btn-link">
+                Logout
+              </a>
+            </div>
             {% endif %}
           </div>
         </div>
