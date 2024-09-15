@@ -74,6 +74,12 @@ h2 {
   background-color: #28a745;
   border-color: #28a745;
   margin-left: auto;
+  transition: transform 0.2s ease-in-out;
+}
+
+.btn-success:hover {
+  transform: scale(1.05);
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .btn-warning {
@@ -524,8 +530,8 @@ body.dark-mode .btn-secondary {
 }
 
 body.dark-mode .btn-success {
-  background-color: #1c7430; /* Fresh teal */
-  border-color: #1c7430;
+  background-color: #135523; /* Fresh teal */
+  border-color: #135523;
 }
 
 body.dark-mode .btn-warning {
@@ -673,7 +679,7 @@ body.dark-mode .jumbotron {
   justify-content: space-between;
   color: #fff; /* White text for visibility */
   background-color: #dc3545; /* Red background specific to logout */
-  text-decoration: none; /* Remove underline from link */
+  text-decoration: none !important; /* Remove underline from link */
   margin-left: auto;
   font-weight: bold;
 }
@@ -1161,15 +1167,6 @@ body.dark-mode .assign-to-dropdown {
     display: inline-block;
   }
 
-  #theme-toggle-button {
-    margin-right: 10px;
-  }
-
-  #theme-toggle-button:hover,
-  .logout-badge:hover {
-    text-decoration: none;
-  }
-
   /* Signed-in overlay for mobile */
   .signed-in-overlay {
     position: fixed;
@@ -1260,4 +1257,19 @@ body.dark-mode .assign-to-dropdown {
 /* Change hamburger icon to white */
 .navbar-toggler .fas {
   color: white;
+}
+
+/* Override Bootstrap's .btn-link styles */
+.btn-link {
+  text-decoration: none !important;
+}
+
+.btn-link:hover,
+.btn-link:focus {
+  text-decoration: none !important;
+  border: none !important;
+  outline: none !important;
+  cursor: pointer;
+  transform: scale(1.05);
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
 }
