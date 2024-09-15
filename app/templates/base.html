@@ -105,9 +105,9 @@
           </div>
         </div>
 
-        <!-- Dropdown Menu Content -->
-        <div class="collapse" id="navbarMenu">
-          <div class="bg-light p-4" style="width: 250px">
+        <!-- Dropdown Menu Content for Mobile -->
+        <div class="collapse navbar-collapse" id="navbarMenu">
+          <div class="dropdown-content p-4">
             {% if current_user.is_authenticated %}
             <!-- Role Badge -->
             <span class="badge badge-role-{{ current_user.role }} mb-3">

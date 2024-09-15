@@ -1145,6 +1145,44 @@ body.dark-mode .assign-to-dropdown {
 /* asda */
 
 @media (max-width: 576px) {
+  /* Light mode styles for dropdown */
+  .dropdown-content {
+    background-color: #ffffff;
+    width: 250px; /* Fix the width */
+    border: 1px solid #ffffff; /* Ensure a full border */
+    border-radius: 5px;
+    overflow: hidden; /* Prevent overflow */
+  }
+
+  /* Dark mode styles for dropdown */
+  body.dark-mode .dropdown-content {
+    background-color: #000000;
+    color: #ffffff;
+  }
+
+  /* Dark mode styles for dropdown */
+  body.dark-mode .dropdown-content a {
+    color: #ffffff;
+  }
+
+  /* Ensure collapse behavior is smooth and keeps the borders intact */
+  .collapse {
+    display: none;
+    transition: height 0.35s ease;
+  }
+
+  .collapse.show {
+    display: block;
+    width: 250px; /* Fix the width during expansion */
+    overflow: hidden;
+    border: 1px solid #ffffff; /* Apply border in both states */
+  }
+
+  /* Optional: Improve border appearance */
+  .collapse.show {
+    border-right: 1px solid #ffffff; /* Ensure the right border is visible */
+  }
+
   /* Make dropdown background white */
   .dropdown-menu {
     background-color: #ffffff;
