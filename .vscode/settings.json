@@ -1,3 +1,4 @@
 {
-  "cSpell.words": ["backref", "onupdate", "sqlalchemy"]
+  "cSpell.words": ["backref", "onupdate", "sqlalchemy"],
+  "python.analysis.extraPaths": ["./test"]
 }

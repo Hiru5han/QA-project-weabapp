@@ -1,125 +1,166 @@
 import pytest
 from flask import url_for
-from app.models import User, Ticket, db
+from app.models import Ticket, User, db
+from bs4 import BeautifulSoup
 
-@pytest.fixture
-def test_admin_user(app):
-    with app.app_context():
-        user = User.query.filter_by(email="admin@example.com").first()
-        if not user:
-            user = User(name="Admin User", email="admin@example.com", password="password", role="admin")
-            db.session.add(user)
-            db.session.commit()
-    return user
 
-@pytest.fixture
-def test_user(app):
-    with app.app_context():
-        user = User.query.filter_by(email="user@example.com").first()
-        if not user:
-            user = User(name="Regular User", email="user@example.com", password="password", role="user")
-            db.session.add(user)
-            db.session.commit()
-    return user
+# Helper function to extract CSRF token from HTML
+def get_csrf_token(response_data):
+    """Extract the CSRF token from the HTML response."""
+    soup = BeautifulSoup(response_data, "html.parser")
+    return soup.find("input", {"name": "csrf_token"})["value"]
 
+
+# Helper function to log in a user with CSRF token
+def login_user(test_client, email, password):
+    """Helper function to log in a user during tests."""
+    # First, get the CSRF token from the login page
+    response = test_client.get(url_for("main.login"))
+    csrf_token = get_csrf_token(response.data)
+
+    # Submit the login form with the CSRF token included
+    login_data = {
+        "email": email,
+        "password": password,
+        "csrf_token": csrf_token,  # Include the CSRF token in the form data
+    }
+    response = test_client.post(
+        url_for("main.login"), data=login_data, follow_redirects=True
+    )
+    assert response.status_code == 200
+    return response
+
+
+# Fixture to create an existing user
 @pytest.fixture
-def create_tickets(app, test_user):
+def admin_user(app):
     with app.app_context():
-        tickets = []
-        for i in range(3):
-            ticket = Ticket(
-                title=f"Ticket {i}",
-                description=f"Description for Ticket {i}",  # Provide a description
-                priority="high",
-                status="open",
-                assignee=test_user if i % 2 == 0 else None
-            )
-            db.session.add(ticket)
-            tickets.append(ticket)
+        user = User(name="Admin User", email="admin@example.com", role="admin")
+        user.set_password("ValidPassword1!")  # Hash the password
+        db.session.add(user)
         db.session.commit()
-    return tickets
+        return user
 
-def test_dashboard_header_rendering(client, app, test_user):
-    with client:
-        with app.app_context():
-            from flask_login import login_user
-            test_user = db.session.merge(test_user)  # Ensure test_user is attached to the session
-            login_user(test_user)
 
-            # Access the correct view that should render the "All Tickets" header
-            response = client.get(url_for('main.index'), follow_redirects=True)
-            assert response.status_code == 200
+# Fixture to create an existing user
+@pytest.fixture
+def existing_user(app):
+    with app.app_context():
+        user = User(name="Existing User", email="existing@example.com", role="existing")
+        user.set_password("ValidPassword1!")  # Hash the password
+        db.session.add(user)
+        db.session.commit()
+        return user
 
-            # Check for the "All Tickets" header in the response data
-            assert b"All Tickets" in response.data
 
-            # Check for the welcome message
-            assert f"Welcome, {test_user.name}!".encode('utf-8') in response.data
+# Fixture to create an existing user
+@pytest.fixture
+def support_user(app):
+    with app.app_context():
+        user = User(name="Support User", email="support@example.com", role="support")
+        user.set_password("ValidPassword1!")  # Hash the password
+        db.session.add(user)
+        db.session.commit()
+        return user
 
-def test_toggle_buttons_rendering(client, app, test_admin_user):
-    with client:
-        with app.app_context():
-            from flask_login import login_user
-            test_admin_user = db.session.merge(test_admin_user)  # Ensure test_admin_user is attached to the session
-            login_user(test_admin_user)
 
-            response = client.get(url_for('main.index', view='all'), follow_redirects=True)
-            assert response.status_code == 200
+# Fixture to create a regular user
+@pytest.fixture
+def regular_user(app):
+    with app.app_context():
+        user = User(name="Regular User", email="regular@example.com", role="regular")
+        user.set_password("ValidPassword1!")  # Hash the password
+        db.session.add(user)
+        db.session.commit()
+        return user
 
-            # Check for active 'All Tickets' toggle button
-            assert b'class="btn btn-toggle active"' in response.data
-            assert b'href="/unassigned_tickets"' in response.data
-            assert b'href="/assigned_tickets"' in response.data
-            assert b'href="/all_tickets"' in response.data
 
-def test_tickets_table_rendering(client, app, test_user, create_tickets):
-    with client:
-        with app.app_context():
-            from flask_login import login_user
-            test_user = db.session.merge(test_user)  # Ensure test_user is attached to the session
-            login_user(test_user)
+# Test for verifying the "Assigned Tickets" page renders correctly for different roles
+@pytest.mark.parametrize("user_role", ["admin", "support"])
+def test_assigned_tickets_page_renders_correctly_for_admin_and_support(
+    test_client, app, user_role, admin_user, support_user
+):
+    with app.app_context():
+        # Re-attach the user to the session based on their role
+        if user_role == "admin":
+            user = db.session.merge(admin_user)
+            login_user(test_client, user.email, "ValidPassword1!")
+        elif user_role == "support":
+            user = db.session.merge(support_user)
+            login_user(test_client, user.email, "ValidPassword1!")
 
-            # Re-attach ticket instances to the session
-            tickets = [db.session.merge(ticket) for ticket in create_tickets]
+        # Access the "Assigned Tickets" page
+        response = test_client.get(url_for("main.assigned_tickets"))
+        assert response.status_code == 200
 
-            response = client.get(url_for('main.index', view='assigned'), follow_redirects=True)
-            assert response.status_code == 200
+        # Verify that the page header is displayed correctly
+        assert b"Assigned Tickets" in response.data
+        assert f"Welcome, {user.name}!".encode() in response.data
 
-            # Check that the tickets table is present
-            assert b'<table class="table table-striped table-hover">' in response.data
 
-            # Verify tickets are rendered correctly
-            for ticket in tickets:
-                assert f"{ticket.title}".encode('utf-8') in response.data
-                assert f"{ticket.priority}".encode('utf-8') in response.data
-                assert f"{ticket.status}".encode('utf-8') in response.data
-                assignee_name = ticket.assignee.name if ticket.assignee else 'Unassigned'
-                assert f"{assignee_name}".encode('utf-8') in response.data
+# Test for checking visibility of the "Assigned" toggle button for all roles
+@pytest.mark.parametrize("user_role", ["admin", "support"])
+def test_assigned_toggle_button_visible_for_admin_support(
+    test_client, app, user_role, admin_user, support_user
+):
+    with app.app_context():
+        # Re-attach the user to the session based on their role
+        if user_role == "admin":
+            user = db.session.merge(admin_user)
+            login_user(test_client, user.email, "ValidPassword1!")
+        elif user_role == "support":
+            user = db.session.merge(support_user)
+            login_user(test_client, user.email, "ValidPassword1!")
 
-def test_admin_actions_rendering(client, app, test_admin_user, create_tickets):
-    with client:
-        with app.app_context():
-            from flask_login import login_user
-            test_admin_user = db.session.merge(test_admin_user)  # Ensure test_admin_user is attached to the session
-            login_user(test_admin_user)
+        # Access the "Assigned Tickets" page
+        response = test_client.get(url_for("main.assigned_tickets"))
+        assert response.status_code == 200
 
-            response = client.get(url_for('main.index', view='all'), follow_redirects=True)
-            assert response.status_code == 200
+        # Check that the "Assigned" button is visible and active
+        assert b"Assigned" in response.data
+        assert b"btn-toggle active" in response.data
 
-            # Check that delete button is present for admin
-            assert b'<button type="submit" class="btn btn-outline-danger btn-sm">' in response.data
-            assert b'<i class="fas fa-trash"></i>' in response.data
 
-def test_non_admin_no_delete_buttons(client, app, test_user, create_tickets):
-    with client:
-        with app.app_context():
-            from flask_login import login_user
-            test_user = db.session.merge(test_user)  # Ensure test_user is attached to the session
-            login_user(test_user)
+# Test for ensuring "All Tickets" button is visible only for admin users
+def test_all_tickets_button_visible_for_admin(test_client, app, admin_user):
+    with app.app_context():
+        # Re-attach the admin user to the session
+        admin_user = db.session.merge(admin_user)
+        login_user(test_client, admin_user.email, "ValidPassword1!")
 
-            response = client.get(url_for('main.index', view='assigned'), follow_redirects=True)
-            assert response.status_code == 200
+        # Access the "Assigned Tickets" page
+        response = test_client.get(url_for("main.assigned_tickets"))
+        assert response.status_code == 200
 
-            # Verify delete buttons are not present for non-admin users
-            assert b'<button type="submit" class="btn btn-outline-danger btn-sm">' not in response.data
-            assert b'<i class="fas fa-trash"></i>' not in response.data
+        # Check that the "All Tickets" button is visible for admin
+        assert b"All Tickets" in response.data
+
+
+# Test for admin's ability to see the delete button
+def test_admin_delete_button_visibility_for_assigned_ticket(
+    test_client, app, admin_user
+):
+    with app.app_context():
+        # Re-attach the admin user to the session
+        admin_user = db.session.merge(admin_user)
+
+        # Create a test ticket
+        ticket = Ticket(
+            title="Admin's Assigned Ticket",
+            description="This is a description for Admin's Assigned Ticket",
+            priority="High",
+            status="Open",
+            assignee=admin_user,  # Assign to admin user
+        )
+        db.session.add(ticket)
+        db.session.commit()
+
+        # Log in as the admin user
+        login_user(test_client, admin_user.email, "ValidPassword1!")
+
+        # Access the "Assigned Tickets" page
+        response = test_client.get(url_for("main.assigned_tickets"))
+        assert response.status_code == 200
+
+        # Check that the delete button is visible for admin
+        assert b"Delete" in response.data

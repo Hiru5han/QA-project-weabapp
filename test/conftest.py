@@ -4,6 +4,7 @@ from app.models import User
 from werkzeug.security import generate_password_hash
 from test.test_config import TestConfig  # Import your test configuration
 
+
 @pytest.fixture
 def app():
     """
@@ -22,8 +23,13 @@ def app():
         db.create_all()
 
         # Create a test user with a hashed password
-        hashed_password = generate_password_hash("password", method='pbkdf2:sha256')
-        user = User(name="Test User", email="test@example.com", password=hashed_password, role="Admin")
+        hashed_password = generate_password_hash("password", method="pbkdf2:sha256")
+        user = User(
+            name="Test User",
+            email="test@example.com",
+            password_hash=hashed_password,
+            role="Admin",
+        )
         db.session.add(user)
         db.session.commit()
 
@@ -32,8 +38,9 @@ def app():
         db.session.remove()
         db.drop_all()
 
+
 @pytest.fixture
-def client(app):
+def test_client(app):
     """
     Create a test client for the app.
 
@@ -47,44 +54,3 @@ def client(app):
         FlaskClient: A test client for the Flask application.
     """
     return app.test_client()
-
-@pytest.fixture
-def runner(app):
-    """
-    Create a test command-line runner for the app.
-
-    This fixture provides a runner that can be used to invoke
-    command-line commands in the Flask application during testing.
-
-    Args:
-        app (Flask): The Flask application instance.
-
-    Returns:
-        FlaskCliRunner: A CLI runner for the Flask application.
-    """
-    return app.test_cli_runner()
-
-@pytest.fixture
-def existing_user(app):
-    """
-    Create an existing user in the database for testing.
-
-    This fixture creates a user with a predefined name, email, and password,
-    and adds the user to the database.
-
-    Args:
-        app (Flask): The Flask application instance.
-
-    Returns:
-        User: The created user object.
-    """
-    with app.app_context():
-        user = User(
-            name="Existing User",
-            email="existing@example.com",
-            password=generate_password_hash("ValidPassword1!", method="pbkdf2:sha256"),
-            role="admin"
-        )
-        db.session.add(user)
-        db.session.commit()
-    return user
