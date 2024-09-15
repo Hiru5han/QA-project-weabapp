@@ -1,0 +1,188 @@
+{% extends "base.html" %} {% block content %}
+<div class="auth-page">
+  <div class="auth-card">
+    <div class="auth-header d-flex align-items-center mb-4">
+      <a href="{{ next_url }}" class="me-2">
+        <i class="fas fa-chevron-left back-button-icon"></i>
+      </a>
+      <h2 class="auth-title mb-0">Update Profile</h2>
+    </div>
+    <div class="auth-body">
+      <form method="POST" action="{{ url_for('main.update_profile') }}">
+        <!-- Include CSRF token for security -->
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+
+        <!-- Hidden field to pass the 'next' URL -->
+        <input type="hidden" name="next" value="{{ next_url }}" />
+
+        <!-- Name Field -->
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input
+            type="text"
+            class="form-control"
+            id="name"
+            name="name"
+            value="{{ current_user.name }}"
+            required
+          />
+        </div>
+
+        <!-- Email Field -->
+        <div class="form-group">
+          <label for="email">Email address</label>
+          <input
+            type="email"
+            class="form-control"
+            id="email"
+            name="email"
+            value="{{ current_user.email }}"
+            required
+          />
+        </div>
+
+        <!-- Password Fields -->
+        <div class="form-group">
+          <label for="password"
+            >New Password (leave blank to keep current password)</label
+          >
+          <input
+            type="password"
+            class="form-control"
+            id="password"
+            name="password"
+            placeholder="Enter new password"
+          />
+          <button
+            type="button"
+            id="togglePassword"
+            class="btn btn-outline-secondary mt-2"
+          >
+            Show
+          </button>
+
+          <!-- Password requirements -->
+          <div id="password-requirements" class="form-text text-muted mt-2">
+            <div class="criteria">
+              <div class="criteria-item">
+                <span id="length" class="invalid">✗ 8 characters minimum</span>
+                <span id="number" class="invalid">✗ One number</span>
+                <span id="uppercase" class="invalid"
+                  >✗ One uppercase letter</span
+                >
+                <span id="lowercase" class="invalid"
+                  >✗ One lowercase letter</span
+                >
+                <span id="special" class="invalid"
+                  >✗ One special character !@#$%^&*</span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Confirm Password Field -->
+        <div class="form-group">
+          <label for="password_confirm">Confirm New Password</label>
+          <input
+            type="password"
+            class="form-control"
+            id="password_confirm"
+            name="password_confirm"
+            placeholder="Confirm new password"
+          />
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn btn-primary mt-3">
+          Update Profile
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Inline JavaScript -->
+<script type="text/javascript">
+  document.addEventListener("DOMContentLoaded", function () {
+    const passwordInput = document.getElementById("password");
+    const passwordConfirmInput = document.getElementById("password_confirm");
+    const lengthCriteria = document.getElementById("length");
+    const numberCriteria = document.getElementById("number");
+    const uppercaseCriteria = document.getElementById("uppercase");
+    const lowercaseCriteria = document.getElementById("lowercase");
+    const specialCriteria = document.getElementById("special");
+    const togglePassword = document.getElementById("togglePassword");
+
+    passwordInput.addEventListener("input", function () {
+      const password = passwordInput.value;
+
+      // Check the length
+      if (password.length >= 8) {
+        lengthCriteria.classList.add("valid");
+        lengthCriteria.classList.remove("invalid");
+        lengthCriteria.innerHTML = "✓ 8 characters minimum";
+      } else {
+        lengthCriteria.classList.add("invalid");
+        lengthCriteria.classList.remove("valid");
+        lengthCriteria.innerHTML = "✗ 8 characters minimum";
+      }
+
+      // Check for numbers
+      if (/\d/.test(password)) {
+        numberCriteria.classList.add("valid");
+        numberCriteria.classList.remove("invalid");
+        numberCriteria.innerHTML = "✓ One number";
+      } else {
+        numberCriteria.classList.add("invalid");
+        numberCriteria.classList.remove("valid");
+        numberCriteria.innerHTML = "✗ One number";
+      }
+
+      // Check for uppercase letters
+      if (/[A-Z]/.test(password)) {
+        uppercaseCriteria.classList.add("valid");
+        uppercaseCriteria.classList.remove("invalid");
+        uppercaseCriteria.innerHTML = "✓ One uppercase letter";
+      } else {
+        uppercaseCriteria.classList.add("invalid");
+        uppercaseCriteria.classList.remove("valid");
+        uppercaseCriteria.innerHTML = "✗ One uppercase letter";
+      }
+
+      // Check for lowercase letters
+      if (/[a-z]/.test(password)) {
+        lowercaseCriteria.classList.add("valid");
+        lowercaseCriteria.classList.remove("invalid");
+        lowercaseCriteria.innerHTML = "✓ One lowercase letter";
+      } else {
+        lowercaseCriteria.classList.add("invalid");
+        lowercaseCriteria.classList.remove("valid");
+        lowercaseCriteria.innerHTML = "✗ One lowercase letter";
+      }
+
+      // Check for special characters
+      if (/[!@#$%^&*()_+\-=[\]{}|;:,.<>?/]/.test(password)) {
+        specialCriteria.classList.add("valid");
+        specialCriteria.classList.remove("invalid");
+        specialCriteria.innerHTML =
+          "✓ One special character !@#$%^&*()_+-=[]{}|;:,.<>?/";
+      } else {
+        specialCriteria.classList.add("invalid");
+        specialCriteria.classList.remove("valid");
+        specialCriteria.innerHTML =
+          "✗ One special character !@#$%^&*()_+-=[]{}|;:,.<>?/";
+      }
+    });
+
+    // Toggle password visibility
+    togglePassword.addEventListener("click", function () {
+      const type =
+        passwordInput.getAttribute("type") === "password" ? "text" : "password";
+      passwordInput.setAttribute("type", type);
+      passwordConfirmInput.setAttribute("type", type);
+      this.textContent = type === "password" ? "Show" : "Hide";
+    });
+  });
+</script>
+{% endblock %}

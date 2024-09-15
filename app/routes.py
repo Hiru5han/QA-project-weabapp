@@ -3,8 +3,18 @@ from flask import Blueprint, render_template, redirect, url_for, request, flash
 from flask_login import login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from .models import User, Ticket, Comment, db
+from urllib.parse import urlparse, urljoin
 
 bp = Blueprint("main", __name__)
+
+
+def is_safe_url(target):
+    """
+    Check if the target URL is safe by ensuring it's a local URL.
+    """
+    ref_url = urlparse(request.host_url)
+    test_url = urlparse(urljoin(request.host_url, target))
+    return test_url.scheme in ("http", "https") and ref_url.netloc == test_url.netloc
 
 
 @bp.route("/")
@@ -746,4 +756,105 @@ def ticket_details_readonly(ticket_id):
 
     return render_template(
         "ticket_details_readonly.html", ticket=ticket, comments=comments
+    )
+
+
+@bp.route("/update_profile", methods=["GET", "POST"])
+@login_required
+def update_profile():
+    """
+    Allows the user to update their profile information.
+    """
+    # Get the 'next' parameter from the query string or form data
+    next_url = (
+        request.args.get("next") or request.form.get("next") or url_for("main.index")
+    )
+
+    # Ensure the next_url is safe
+    if not is_safe_url(next_url):
+        next_url = url_for("main.index")
+
+    if request.method == "POST":
+        # Get form data
+        name = request.form.get("name")
+        email = request.form.get("email")
+        password = request.form.get("password")
+        password_confirm = request.form.get("password_confirm")
+
+        # Validate name
+        if not name.strip():
+            flash("Name cannot be empty.", "warning")
+            return render_template(
+                "update_profile.html", current_user=current_user, next_url=next_url
+            )
+        if any(char.isdigit() for char in name):
+            flash("Name cannot contain numbers.", "warning")
+            return render_template(
+                "update_profile.html", current_user=current_user, next_url=next_url
+            )
+
+        # Validate email format
+        email_regex = r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
+        if not re.match(email_regex, email):
+            flash("Invalid email address.", "warning")
+            return render_template(
+                "update_profile.html", current_user=current_user, next_url=next_url
+            )
+
+        # Check if email is already in use by another user
+        if User.query.filter(User.email == email, User.id != current_user.id).first():
+            flash("Email address already in use.", "warning")
+            return render_template(
+                "update_profile.html", current_user=current_user, next_url=next_url
+            )
+
+        # Update password if provided
+        if password:
+            if password != password_confirm:
+                flash("Passwords do not match.", "warning")
+                return render_template(
+                    "update_profile.html", current_user=current_user, next_url=next_url
+                )
+
+            # Password complexity checks
+            if len(password) < 8:
+                flash("Password must be at least 8 characters long.", "warning")
+                return render_template(
+                    "update_profile.html", current_user=current_user, next_url=next_url
+                )
+            if not any(char.isdigit() for char in password):
+                flash("Password must contain at least one number.", "warning")
+                return render_template(
+                    "update_profile.html", current_user=current_user, next_url=next_url
+                )
+            if not any(char.isupper() for char in password):
+                flash("Password must contain at least one uppercase letter.", "warning")
+                return render_template(
+                    "update_profile.html", current_user=current_user, next_url=next_url
+                )
+            if not any(char.islower() for char in password):
+                flash("Password must contain at least one lowercase letter.", "warning")
+                return render_template(
+                    "update_profile.html", current_user=current_user, next_url=next_url
+                )
+            if not any(char in "!@#$%^&*()_+-=[]{}|;:,.<>?/" for char in password):
+                flash(
+                    "Password must contain at least one special character.", "warning"
+                )
+                return render_template(
+                    "update_profile.html", current_user=current_user, next_url=next_url
+                )
+
+            # Set new password
+            current_user.set_password(password)
+
+        # Update name and email
+        current_user.name = name
+        current_user.email = email
+        db.session.commit()
+        flash("Your profile has been updated.", "success")
+        return redirect(next_url)
+
+    return render_template(
+        "update_profile.html", current_user=current_user, next_url=next_url
     )

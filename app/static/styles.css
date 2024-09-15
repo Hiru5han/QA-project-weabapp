@@ -165,7 +165,8 @@ h2 {
 }
 
 /* Make the cursor a pointer when hovering over the logout button */
-.logout-badge {
+.logout-badge,
+.profile-badge {
   cursor: pointer;
 }
 
@@ -667,7 +668,8 @@ body.dark-mode .jumbotron {
   opacity: 0.8;
 }
 
-.logout-badge {
+.logout-badge,
+.profile-badge {
   cursor: pointer;
   transition: transform 0.2s, box-shadow 0.2s;
   display: inline-flex;
@@ -684,23 +686,44 @@ body.dark-mode .jumbotron {
   font-weight: bold;
 }
 
-body.dark-mode .logout-badge {
-  border: 2px solid #a71d2a; /* Same colour for the outline */
+body.dark-mode .logout-badge,
+body.dark-mode .profile-badge {
   background-color: transparent;
 }
 
-.logout-badge:hover {
+body.dark-mode .logout-badge {
+  border: 2px solid #a71d2a; /* Same colour for the outline */
+}
+
+body.dark-mode .profile-badge {
+  border: 2px solid #a71d2a; /* Same colour for the outline */
+}
+
+.logout-badge:hover,
+.profile-badge:hover {
   transform: scale(1.05);
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
   background-color: #c82333; /* Darker red on hover */
   color: #fff; /* Keep the text white */
 }
 
-body.dark-mode .logout-badge:hover {
+.profile-badge:hover {
+  background-color: #c82333; /* Darker red on hover */
+  color: #fff; /* Keep the text white */
+}
+
+.logout-badge:hover {
+  background-color: #c82333; /* Darker red on hover */
+  color: #fff; /* Keep the text white */
+}
+
+body.dark-mode .logout-badge:hover,
+body.dark-mode .profile-badge:hover {
   background-color: transparent; /* Darker red on hover */
 }
 
-.logout-badge i {
+.logout-badge i,
+.profile-badge i {
   margin-left: 5px;
   margin-right: 10px; /* Adjust the value to your preference */
   font-size: 1.2em;
