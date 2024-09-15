@@ -1417,3 +1417,21 @@ body.dark-mode .assign-to-dropdown {
   transform: scale(1.05);
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
 }
+
+/* White line under navbar in night mode */
+body.dark-mode .navbar {
+  border-bottom: 2px solid white;
+  z-index: 1000; /* Ensure it's above other content */
+}
+
+/* Adjust icon size and positioning */
+.navbar-brand {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: -50px !important; /* Adjust to control how much logo goes below navbar */
+}
+
+.navbar-brand img {
+  height: 70px; /* Increase size of the logo */
+}
