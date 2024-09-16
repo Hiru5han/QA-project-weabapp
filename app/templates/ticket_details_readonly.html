@@ -112,13 +112,24 @@
             <ul class="list-unstyled mt-4">
               {% for comment in comments %}
               <li class="d-flex justify-content-between border-bottom py-2">
-                <div>
-                  <strong>{{ comment.commenter.name }}:</strong> {{
-                  comment.comment_text }}
+                <div class="d-flex align-items-center">
+                  <!-- Commenter's Profile Image -->
+                  <img
+                    src="{{ url_for('static', filename='uploads/profile_images/' + (comment.commenter.profile_image or 'default.jpg')) }}"
+                    alt="{{ comment.commenter.name }}'s Profile Image"
+                    class="comment-profile-img rounded-circle me-2"
+                    width="40"
+                    height="40"
+                  />
+                  <div>
+                    <strong>{{ comment.commenter.name }}:</strong> {{
+                    comment.comment_text }}
+                  </div>
                 </div>
                 <div class="text-muted">
                   <em
-                    >{{ comment.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</em
+                    >{{ moment(comment.created_at).format('YYYY-MM-DD HH:mm:ss')
+                    }}</em
                   >
                 </div>
               </li>
