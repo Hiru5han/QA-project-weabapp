@@ -155,10 +155,16 @@
               <td class="text-center">{{ ticket.creator.name }}</td>
               <td class="text-center">
                 <a
-                  href="{{ url_for('main.ticket_details', ticket_id=ticket.id) }}"
+                  href="{{ url_for('main.ticket_details_readonly', ticket_id=ticket.id) }}"
                   class="btn btn-outline-primary btn-sm"
                 >
                   <i class="fas fa-eye"></i> View
+                </a>
+                <a
+                  href="{{ url_for('main.ticket_details', ticket_id=ticket.id) }}"
+                  class="btn btn-outline-primary btn-sm"
+                >
+                  <i class="fas fa-edit"></i> Update
                 </a>
                 {% if current_user.role == 'admin' %}
                 <form
