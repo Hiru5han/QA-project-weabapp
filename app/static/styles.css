@@ -356,7 +356,7 @@ body.dark-mode #theme-toggle-icon {
 .nav-tabs .nav-link {
   background: linear-gradient(to bottom, #7bc043, #5aac35);
   color: white;
-  border: 2px solid black;
+  border: 3px solid black;
   border-radius: 20px 20px 0 0;
   margin-right: -10px;
   padding: 10px 20px;
@@ -380,7 +380,7 @@ body.dark-mode #theme-toggle-icon {
 }
 
 .tab-content {
-  border: 2px solid black;
+  border: 3px solid black;
   padding: 1rem;
   background-color: #1e1e1e;
   border-radius: 0 20px 20px 20px;
@@ -693,11 +693,11 @@ body.dark-mode .profile-badge {
 }
 
 body.dark-mode .logout-badge {
-  border: 2px solid #a71d2a; /* Same colour for the outline */
+  border: 3px solid #a71d2a; /* Same colour for the outline */
 }
 
 body.dark-mode .profile-badge {
-  border: 2px solid #a71d2a; /* Same colour for the outline */
+  border: 3px solid #a71d2a; /* Same colour for the outline */
 }
 
 .logout-badge:hover,
@@ -1148,9 +1148,12 @@ body.dark-mode .assign-to-dropdown {
   .dropdown-content {
     background-color: #ffffff;
     width: 250px; /* Fix the width */
-    border: 1px solid #ffffff; /* Ensure a full border */
     border-radius: 5px;
     overflow: hidden; /* Prevent overflow */
+  }
+
+  .custom-dropdown {
+    width: 100%; /* For smaller screens, adjust it to a percentage if needed */
   }
 
   /* Dark mode styles for dropdown */
@@ -1256,15 +1259,16 @@ body.dark-mode .assign-to-dropdown {
     top: 56px; /* Adjust if your navbar height is different */
     left: 0;
     z-index: 1000;
-    width: 250px; /* Adjust the width as needed */
+    width: 170px; /* Adjust the width as needed */
     max-width: 80%; /* Ensure it doesn't exceed screen width */
     background-color: #ffffff;
-    border: 1px solid #ddd;
+    border: 3px solid #283593;
     border-radius: 0 0 5px 5px;
   }
 
   body.dark-mode #navbarMenu {
     background-color: #353535;
+    border: 3px solid #28a745;
   }
 
   #navbarMenu .btn-link {
@@ -1419,13 +1423,13 @@ body.dark-mode .assign-to-dropdown {
 
 /* White line under navbar in night mode */
 body.dark-mode .navbar {
-  border-bottom: 2px solid #28a745;
+  border-bottom: 3px solid #28a745;
   z-index: 1000; /* Ensure it's above other content */
 }
 
 /* White line under navbar in night mode */
 .navbar {
-  border-bottom: 2px solid #ff0000;
+  border-bottom: 3px solid #283593;
   z-index: 1000; /* Ensure it's above other content */
 }
 
@@ -1445,7 +1449,7 @@ body.dark-mode .navbar {
   width: 85px; /* Make sure width and height are equal */
   height: 100px; /* Same as width for a perfect circle */
   border-radius: 50%; /* Ensures the image is a circle */
-  border: 3px solid #ff0000; /* Blue border around the circle */
+  border: 3px solid #283593; /* Blue border around the circle */
   object-fit: cover; /* Ensures the image fits the container without distortion */
 }
 

@@ -117,12 +117,18 @@
 
       <!-- Dropdown Menu Content for Mobile -->
       <div class="collapse navbar-collapse" id="navbarMenu">
-        <div class="dropdown-content p-4">
+        <div class="dropdown-content p-4 custom-dropdown">
           {% if current_user.is_authenticated %}
           <!-- Role Badge -->
           <span class="badge badge-role-{{ current_user.role }} mb-3">
             {{ current_user.role.capitalize() }}
           </span>
+          <!-- Signed in as Message -->
+          <div class="mb-3">
+            <span class="text-muted"
+              >Signed in as: {{ current_user.name }}</span
+            >
+          </div>
           <!-- Profile Link -->
           <div class="mb-2">
             <a
@@ -163,11 +169,6 @@
       </div>
       {% endfor %} {% endif %} {% endwith %} {% block content %} {% endblock %}
     </div>
-
-    <!-- Fixed Signed in Overlay -->
-    {% if current_user.is_authenticated %}
-    <div class="signed-in-overlay">Signed in as: {{ current_user.name }}</div>
-    {% endif %}
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
