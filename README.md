@@ -1,7 +1,3 @@
-Here’s an updated version of your **README** file, incorporating additional information such as **night mode**, **mobile support**, and further detail on the system features and setup:
-
----
-
 # **Help Desk Ticketing System**
 
 A comprehensive help desk ticketing system built with Flask, offering role-based access for managing IT support tickets. The system is fully responsive, includes night mode support, and enables admins, support staff, and regular users to efficiently handle support requests.
