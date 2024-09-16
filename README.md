@@ -91,7 +91,7 @@ helpdesk-ticketing-system/
 │
 ├── README.md               # Documentation for the project
 ├── app/                    # Main application package
-│   ├── __init__.py         # Initializes the Flask application
+│   ├── __init__.py         # Initialises the Flask application
 │   ├── models.py           # Database models (User, Ticket, Comment)
 │   ├── routes.py           # Application routes and logic
 │   ├── static/             # Static assets (CSS, JavaScript, images)
