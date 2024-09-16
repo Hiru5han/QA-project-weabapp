@@ -1497,3 +1497,19 @@ body.dark-mode .logo-circle {
   color: grey;
   display: inline-block;
 }
+
+.comment-profile-img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 15px; /* Increase margin-right to 15px for more spacing */
+}
+
+.submitter-profile-img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 15px; /* Increase margin-right to 15px for more spacing */
+}
