@@ -1143,8 +1143,6 @@ body.dark-mode .assign-to-dropdown {
   color: #ffffff; /* Ensure text is readable */
 }
 
-/* asda */
-
 @media (max-width: 576px) {
   /* Light mode styles for dropdown */
   .dropdown-content {
