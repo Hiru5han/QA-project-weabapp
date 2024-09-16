@@ -31,7 +31,7 @@ A comprehensive help desk ticketing system built with Flask, offering role-based
 1. **Clone the Repository**
 
    ```bash
-   git clone https://github.com/yourusername/helpdesk-ticketing-system.git
+   git clone https://github.com/Hiru5han/QA-project-weabapp.git
    cd helpdesk-ticketing-system
    ```
 
