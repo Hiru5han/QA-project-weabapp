@@ -166,7 +166,7 @@ def register():
             flash("Invalid role selected.", "warning")
             return render_template("register.html", name=name, email=email, role=role)
 
-        # Create the new user
+        # Create the new user (commit first to generate the ID)
         new_user = User(
             name=name,
             email=email,
@@ -174,12 +174,15 @@ def register():
         )
         new_user.set_password(password)
 
+        db.session.add(new_user)
+        db.session.commit()  # Commit to generate the new_user.id
+
         # Handle profile image upload
         if profile_image and allowed_file(profile_image.filename):
             try:
-                # Generate a unique filename based on the user's ID and the file extension
+                # Generate a unique filename based on the new user's ID and the file extension
                 file_ext = profile_image.filename.rsplit(".", 1)[1].lower()
-                filename = f"user_{current_user.id}.{file_ext}"
+                filename = f"user_{new_user.id}.{file_ext}"  # Use new_user.id
 
                 file_path = os.path.join(UPLOAD_FOLDER, filename)
 
@@ -195,16 +198,12 @@ def register():
                 img = ImageOps.fit(img, (200, 200), Image.Resampling.LANCZOS)
                 img.save(file_path)
 
-                # Update user's profile image field in the database
-                current_user.profile_image = filename
+                # Update the new user's profile image field in the database
+                new_user.profile_image = filename
                 db.session.commit()
 
             except Exception as e:
                 flash(f"An error occurred while uploading the image: {e}", "danger")
-
-        # Add the new user to the database
-        db.session.add(new_user)
-        db.session.commit()
 
         # Log the new user in
         login_user(new_user)
