@@ -12,6 +12,22 @@
       <h2 class="auth-title mb-0">Login</h2>
     </div>
 
+    <!-- Text block with sample users and passwords -->
+    <div class="info-text mb-3">
+      <p>Below are sample credentials:</p>
+      <ul>
+        <li>(ADMIN) Admin User: <strong>admin@example.com</strong></li>
+        <li>
+          (SUPPORT) Miguel Hernández:
+          <strong>miguel.hernandez@support.com</strong>
+        </li>
+        <li>
+          (REGULAR)Sophia Rossi: <strong>sophia.rossi@example.com</strong>
+        </li>
+        <li>Password for all users: <strong>gyjvo9-kewvoh-Vurmuj</strong></li>
+      </ul>
+    </div>
+
     <form method="POST">
       <!-- Include CSRF token for security -->
       <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
