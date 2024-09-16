@@ -33,7 +33,26 @@ class User(UserMixin, db.Model):
 
     # Set password
     def set_password(self, password):
+        """Sets the user's password after validating its complexity."""
+        if not self.validate_password(password):
+            raise ValueError("Password does not meet complexity requirements.")
+
         self.password_hash = generate_password_hash(password, method="pbkdf2:sha256")
+
+    @staticmethod
+    def validate_password(password):
+        """Validates the password complexity."""
+        if len(password) < 8:
+            return False
+        if not any(char.isdigit() for char in password):
+            return False
+        if not any(char.isupper() for char in password):
+            return False
+        if not any(char.islower() for char in password):
+            return False
+        if not any(char in "!@#$%^&*()_+-=[]{}|;:,.<>?/" for char in password):
+            return False
+        return True
 
     # Verify password
     def check_password(self, password):
