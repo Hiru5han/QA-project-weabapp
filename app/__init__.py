@@ -4,6 +4,7 @@ from flask_login import LoginManager
 from flask_migrate import Migrate
 from flask_wtf import CSRFProtect  # Import CSRFProtect
 from flask_moment import Moment  # Import Flask-Moment
+import logging
 
 
 db = SQLAlchemy()
@@ -11,6 +12,17 @@ login_manager = LoginManager()
 migrate = Migrate()
 csrf = CSRFProtect()  # Initialize CSRFProtect
 moment = Moment()  # Initialize Flask-Moment
+
+
+# # Set up basic logging
+# logging.basicConfig(
+#     filename="app.log",  # Log to a file named app.log
+#     level=logging.DEBUG,  # Log all levels of messages (DEBUG and higher)
+#     format="%(asctime)s %(levelname)s: %(message)s",  # Define log format
+# )
+
+# # Log that the app is starting
+# logging.info("Starting the Flask app.")
 
 
 def create_app(config=None):

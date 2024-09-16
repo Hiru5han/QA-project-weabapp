@@ -72,11 +72,19 @@
 
         <!-- Center: Logo, absolutely positioned -->
         <a class="navbar-brand position-absolute" href="#">
+          {% if current_user.is_authenticated %}
+          <img
+            src="{{ url_for('static', filename='uploads/profile_images/' + (current_user.profile_image or 'default.jpg')) }}?{{ current_user.profile_image or '' }}"
+            alt="Profile Image"
+            class="logo-circle"
+          />
+          {% else %}
           <img
             src="{{ url_for('static', filename='logo.png') }}"
             alt="Help Desk Logo"
             class="logo-circle"
           />
+          {% endif %}
         </a>
 
         <!-- Right: Theme Toggle and Profile/Logout Links -->

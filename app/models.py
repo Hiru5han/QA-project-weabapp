@@ -14,6 +14,9 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(150), unique=True, nullable=False)
     password_hash = db.Column(db.String(150), nullable=False)
     role = db.Column(db.String(50), nullable=False)
+    profile_image = db.Column(
+        db.String(150), nullable=True
+    )  # Added profile_image as a column
 
     created_tickets = db.relationship(
         "Ticket",

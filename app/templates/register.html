@@ -10,9 +10,11 @@
         </div>            
         <div class="auth-body">
             
-            <form method="POST">
+            <form method="POST" action="{{ url_for('main.register') }}" enctype="multipart/form-data">
                 <!-- Include CSRF token for security -->
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                
+                <!-- Role Selection -->
                 <div class="form-group">
                     <label for="role">Role</label>
                     <select class="dropdown-box" id="role" name="role" required>
@@ -22,17 +24,19 @@
                     </select>
                 </div>
 
-
+                <!-- Name Field -->
                 <div class="form-group">
                     <label for="name">Name</label>
                     <input type="text" class="form-control" id="name" name="name" value="{{ name or '' }}" required />
                 </div>
                 
+                <!-- Email Field -->
                 <div class="form-group">
                     <label for="email">Email address</label>
                     <input type="email" class="form-control" id="email" name="email" value="{{ email or '' }}" required />
                 </div>
                 
+                <!-- Password Field -->
                 <div class="form-group">
                     <label for="password">Password</label>
                     <input type="password" class="form-control" id="password" name="password" required />
@@ -47,10 +51,19 @@
                                 <span id="uppercase" class="invalid">✗ One uppercase letter</span>
                                 <span id="lowercase" class="invalid">✗ One lowercase letter</span>
                                 <span id="special" class="invalid">✗ One special character !@#$%^&*</span>
+                            </div>
                         </div>
                     </div>
                 </div>
-                
+
+                <!-- Profile Image Upload -->
+                <div class="form-group file-upload">
+                    <label for="profile_image">Upload Profile Image (optional)</label>
+                    <button class="file-upload-btn" type="button">Choose File</button>
+                    <input type="file" class="form-control" id="profile_image" name="profile_image" accept="image/*" onchange="displayFileName()">
+                    <span id="file-name" class="file-name">No file selected</span>
+                </div>
+
                 <button type="submit" class="btn btn-primary mt-3">Register</button>
             </form>
         </div>
@@ -59,6 +72,12 @@
 
 <!-- Inline JavaScript -->
 <script type="text/javascript">
+    function displayFileName() {
+        const input = document.getElementById("profile_image");
+        const fileName = input.files.length > 0 ? input.files[0].name : "No file selected";
+        document.getElementById("file-name").textContent = fileName;
+    }
+
     document.addEventListener("DOMContentLoaded", function() {
         const passwordInput = document.getElementById("password");
         const lengthCriteria = document.getElementById("length");
@@ -119,11 +138,13 @@
             if (/[!@#$%^&*()_+\-=[\]{}|;:,.<>?/]/.test(password)) {
                 specialCriteria.classList.add("valid");
                 specialCriteria.classList.remove("invalid");
-                specialCriteria.innerHTML = "✓ One special character !@#$%^&*()_+-=[]{}|;:,.<>?/";
+                specialCriteria.innerHTML =
+                  "✓ One special character !@#$%^&*()_+-=[]{}|;:,.<>?/";
             } else {
                 specialCriteria.classList.add("invalid");
                 specialCriteria.classList.remove("valid");
-                specialCriteria.innerHTML = "✗ One special character !@#$%^&*()_+-=[]{}|;:,.<>?/";
+                specialCriteria.innerHTML =
+                  "✗ One special character !@#$%^&*()_+-=[]{}|;:,.<>?/";
             }
         });
 

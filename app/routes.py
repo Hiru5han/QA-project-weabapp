@@ -4,8 +4,18 @@ from flask_login import login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from .models import User, Ticket, Comment, db
 from urllib.parse import urlparse, urljoin
+from werkzeug.utils import secure_filename
+from PIL import Image, ImageOps, ImageDraw
+import os
 
 bp = Blueprint("main", __name__)
+
+ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "gif"}
+UPLOAD_FOLDER = "app/static/uploads/profile_images"
+
+
+def allowed_file(filename):
+    return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
 def is_safe_url(target):
@@ -109,6 +119,7 @@ def register():
         email = request.form.get("email")
         password = request.form.get("password")
         role = request.form.get("role")
+        profile_image = request.files.get("profile_image")
 
         # Check if the name contains numbers
         if any(char.isdigit() for char in name):
@@ -120,7 +131,7 @@ def register():
             flash("Name cannot be empty.", "warning")
             return render_template("register.html", name=name, email=email, role=role)
 
-        # Check if the email format is valid
+        # Validate email format
         email_regex = r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
         if not re.match(email_regex, email):
             flash("Invalid email address.", "warning")
@@ -132,7 +143,7 @@ def register():
             flash("Email address already in use.", "warning")
             return render_template("register.html", name=name, email=email, role=role)
 
-        # Check if the password meets complexity requirements
+        # Check password complexity
         if len(password) < 8:
             flash("Password must be at least 8 characters long.", "warning")
             return render_template("register.html", name=name, email=email, role=role)
@@ -155,25 +166,50 @@ def register():
             flash("Invalid role selected.", "warning")
             return render_template("register.html", name=name, email=email, role=role)
 
-        # Create the new user with a hashed password
-        print(f"Registering new user with Name: {name}, Email: {email}, Role: {role}")
+        # Create the new user
         new_user = User(
             name=name,
             email=email,
             role=role,
         )
-        new_user.set_password(
-            password
-        )  # Using the set_password method to hash the password
+        new_user.set_password(password)
+
+        # Handle profile image upload
+        if profile_image and allowed_file(profile_image.filename):
+            try:
+                # Generate a unique filename based on the user's ID and the file extension
+                file_ext = profile_image.filename.rsplit(".", 1)[1].lower()
+                filename = f"user_{current_user.id}.{file_ext}"
+
+                file_path = os.path.join(UPLOAD_FOLDER, filename)
+
+                # Ensure the upload folder exists
+                if not os.path.exists(UPLOAD_FOLDER):
+                    os.makedirs(UPLOAD_FOLDER)
+
+                # Save the file
+                profile_image.save(file_path)
+
+                # Optionally resize or crop the image
+                img = Image.open(file_path)
+                img = ImageOps.fit(img, (200, 200), Image.Resampling.LANCZOS)
+                img.save(file_path)
+
+                # Update user's profile image field in the database
+                current_user.profile_image = filename
+                db.session.commit()
+
+            except Exception as e:
+                flash(f"An error occurred while uploading the image: {e}", "danger")
+
+        # Add the new user to the database
         db.session.add(new_user)
         db.session.commit()
 
         # Log the new user in
         login_user(new_user)
-        return redirect_based_on_role()
 
-    else:
-        print("Rendering register page")
+        return redirect_based_on_role()
 
     return render_template("register.html")
 
@@ -763,7 +799,7 @@ def ticket_details_readonly(ticket_id):
 @login_required
 def update_profile():
     """
-    Allows the user to update their profile information.
+    Allows the user to update their profile information, including profile image.
     """
     # Get the 'next' parameter from the query string or form data
     next_url = (
@@ -780,6 +816,7 @@ def update_profile():
         email = request.form.get("email")
         password = request.form.get("password")
         password_confirm = request.form.get("password_confirm")
+        file = request.files.get("profile_image")
 
         # Validate name
         if not name.strip():
@@ -787,6 +824,7 @@ def update_profile():
             return render_template(
                 "update_profile.html", current_user=current_user, next_url=next_url
             )
+
         if any(char.isdigit() for char in name):
             flash("Name cannot contain numbers.", "warning")
             return render_template(
@@ -848,10 +886,46 @@ def update_profile():
             # Set new password
             current_user.set_password(password)
 
+        # Handle profile image upload
+        if file and allowed_file(file.filename):
+            try:
+                # Generate a unique filename based on the user's ID
+                file_ext = file.filename.rsplit(".", 1)[1].lower()
+                filename = f"user_{current_user.id}.{file_ext}"
+
+                file_path = os.path.join(UPLOAD_FOLDER, filename)
+
+                # Ensure the upload folder exists
+                if not os.path.exists(UPLOAD_FOLDER):
+                    os.makedirs(UPLOAD_FOLDER)
+
+                # Save the file
+                file.save(file_path)
+
+                # Optionally resize or crop the image
+                img = Image.open(file_path)
+                img = ImageOps.fit(img, (200, 200), Image.Resampling.LANCZOS)
+                img.save(file_path)
+
+                # Update the user's profile image in the database
+                current_user.profile_image = filename
+                db.session.commit()  # Save the new filename in the database
+
+                flash("Profile image updated successfully!", "success")
+            except Exception as e:
+                flash(f"An error occurred while uploading the image: {e}", "danger")
+        else:
+            if file:
+                flash(
+                    "Invalid file format. Only PNG, JPG, JPEG, and GIF are allowed.",
+                    "warning",
+                )
+
         # Update name and email
         current_user.name = name
         current_user.email = email
         db.session.commit()
+
         flash("Your profile has been updated.", "success")
         return redirect(next_url)
 

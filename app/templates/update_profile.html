@@ -8,7 +8,11 @@
       <h2 class="auth-title mb-0">Update Profile</h2>
     </div>
     <div class="auth-body">
-      <form method="POST" action="{{ url_for('main.update_profile') }}">
+      <form
+        method="POST"
+        action="{{ url_for('main.update_profile') }}"
+        enctype="multipart/form-data"
+      >
         <!-- Include CSRF token for security -->
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
 
@@ -39,6 +43,30 @@
             value="{{ current_user.email }}"
             required
           />
+        </div>
+
+        <!-- Profile Image Upload -->
+        <div class="file-upload form-group">
+          <button class="file-upload-btn" type="button">Choose File</button>
+          <input
+            type="file"
+            id="profile_image"
+            name="profile_image"
+            accept="image/*"
+            onchange="displayFileName()"
+          />
+          <span id="file-name" class="file-name">No file selected</span>
+
+          <!-- Display current profile image -->
+          {% if current_user.profile_image %}
+          <div class="mt-3">
+            <img
+              src="{{ url_for('static', filename='uploads/profile_images/' + (current_user.profile_image or 'default.jpg')) }}"
+              alt="Profile Image"
+              class="profile-circle"
+            />
+          </div>
+          {% endif %}
         </div>
 
         <!-- Password Fields -->
@@ -104,6 +132,13 @@
 
 <!-- Inline JavaScript -->
 <script type="text/javascript">
+  function displayFileName() {
+    const input = document.getElementById("profile_image");
+    const fileName =
+      input.files.length > 0 ? input.files[0].name : "No file selected";
+    document.getElementById("file-name").textContent = fileName;
+  }
+
   document.addEventListener("DOMContentLoaded", function () {
     const passwordInput = document.getElementById("password");
     const passwordConfirmInput = document.getElementById("password_confirm");
