@@ -97,6 +97,16 @@ h2 {
   color: #ffffff;
 }
 
+.btn-outline-update {
+  border-color: #c354ff; /* Primary Colour */
+  color: #c354ff;
+}
+
+.btn-outline-update:hover {
+  background-color: #c354ff;
+  color: #ffffff;
+}
+
 .badge {
   font-size: 1.2em;
 }
@@ -541,8 +551,13 @@ body.dark-mode .btn-warning {
   border-color: #e1a400;
 }
 
-body.dark-mode .btn-outline-primary:hover {
+body.dark-mode .btn-outline-primary:hover,
+body.dark-mode .btn-outline-update:hover {
   color: #ffffff !important;
+}
+
+body.dark-mode .btn-outline-update {
+  color: #c354ff !important;
 }
 
 body.dark-mode .badge-role-support {
@@ -778,10 +793,12 @@ body.dark-mode .profile-badge:hover {
 
 .badge-role-support {
   background-color: #b881b1; /* Green for support role */
+  color: #ffffff;
 }
 
 .badge-role-regular {
   background-color: #5d9db9; /* Teal for regular role */
+  color: #ffffff;
 }
 
 /* General Container Styling */
