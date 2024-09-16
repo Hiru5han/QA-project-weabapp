@@ -8,6 +8,12 @@
       <h2 class="auth-title mb-0">Update Profile</h2>
     </div>
     <div class="auth-body">
+      <!-- General instruction at the top -->
+      <p class="text-muted">
+        You can make one or more changes to your profile. All fields are
+        optional, and your current details will remain if left unchanged.
+      </p>
+
       <form
         method="POST"
         action="{{ url_for('main.update_profile') }}"
@@ -27,9 +33,12 @@
             class="form-control"
             id="name"
             name="name"
+            placeholder="Leave unchanged to keep current name"
             value="{{ current_user.name }}"
-            required
           />
+          <small class="form-text text-muted"
+            >Leave unchanged if you don’t want to update your name.</small
+          >
         </div>
 
         <!-- Email Field -->
@@ -40,14 +49,17 @@
             class="form-control"
             id="email"
             name="email"
+            placeholder="Leave unchanged to keep current email"
             value="{{ current_user.email }}"
-            required
           />
+          <small class="form-text text-muted"
+            >Leave unchanged if you don’t want to update your email
+            address.</small
+          >
         </div>
 
         <!-- Profile Image Upload Section -->
         <div class="file-upload form-group text-center">
-          <!-- Profile Images and Button Group -->
           <div class="d-flex flex-column align-items-center">
             <!-- Custom button to trigger file input -->
             <button
@@ -103,6 +115,9 @@
                 </div>
               </div>
             </div>
+            <small class="form-text text-muted"
+              >Leave unchanged to keep the current profile image.</small
+            >
           </div>
         </div>
 
@@ -125,6 +140,9 @@
           >
             Show
           </button>
+          <small class="form-text text-muted"
+            >Leave this field blank to keep your current password.</small
+          >
 
           <!-- Password requirements -->
           <div id="password-requirements" class="form-text text-muted mt-2">
