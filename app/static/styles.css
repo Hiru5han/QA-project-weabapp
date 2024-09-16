@@ -1421,7 +1421,13 @@ body.dark-mode .assign-to-dropdown {
 
 /* White line under navbar in night mode */
 body.dark-mode .navbar {
-  border-bottom: 2px solid white;
+  border-bottom: 2px solid #28a745;
+  z-index: 1000; /* Ensure it's above other content */
+}
+
+/* White line under navbar in night mode */
+.navbar {
+  border-bottom: 2px solid #ff0000;
   z-index: 1000; /* Ensure it's above other content */
 }
 
@@ -1435,4 +1441,16 @@ body.dark-mode .navbar {
 
 .navbar-brand img {
   height: 85px; /* Increase size of the logo */
+}
+
+.logo-circle {
+  width: 85px; /* Make sure width and height are equal */
+  height: 100px; /* Same as width for a perfect circle */
+  border-radius: 50%; /* Ensures the image is a circle */
+  border: 3px solid #ff0000; /* Blue border around the circle */
+  object-fit: cover; /* Ensures the image fits the container without distortion */
+}
+
+body.dark-mode .logo-circle {
+  border: 3px solid #28a745; /* Blue border around the circle */
 }
