@@ -1,45 +1,92 @@
 {% extends "base.html" %} {% block content %}
 <div class="auth-page">
   <div class="create-ticket-card">
-    <!-- Back Button, Header, and Priority/Status Section -->
-    <div class="row mb-4 align-items-center">
+    <!-- Back Button, Header, and Profile Image -->
+    <div class="row mb-4 align-items-center justify-content-between">
       <div class="col-md-2 text-start d-flex align-items-center">
         <a href="javascript:void(0);" onclick="goBack();">
           <i class="fas fa-chevron-left back-button-icon"></i>
         </a>
       </div>
-      <div class="col-md-8 text-center d-flex flex-column align-items-center">
+      <div class="col-md-8 text-center">
         <h2 class="text-primary mb-0">Ticket Details</h2>
         <p class="lead">{{ ticket.title }}</p>
       </div>
-      <div class="col-md-2 text-end">
-        <div class="status-priority-container">
-          <!-- Priority Section (Non-interactive) -->
-          <p class="mb-0">
-            <strong>Priority:</strong>
-            <span
-              class="badge text-white {% if ticket.priority == 'high' %}readonly-priority-high-badge{% elif ticket.priority == 'medium' %}readonly-priority-medium-badge{% else %}readonly-priority-low-badge{% endif %}"
-            >
-              {{ ticket.priority }}
-            </span>
-          </p>
-          <!-- Status Section (Non-interactive) -->
-          <p class="mb-0">
-            <strong>Status: </strong>
-            <span
-              class="badge text-white {% if ticket.status == 'open' %}readonly-status-open-badge{% elif ticket.status == 'in-progress' %}readonly-status-in-progress-badge{% else %}readonly-status-closed-badge{% endif %}"
-            >
-              {{ ticket.status }}
-            </span>
-          </p>
-          <!-- Assignee Section (Non-interactive) -->
-          <p class="mb-0">
-            <strong>Assignee: </strong>
-            <span class="badge text-white readonly-assignee-badge">
-              {% if ticket.assignee %} {{ ticket.assignee.name }} {% else %} No
-              assignee yet {% endif %}
-            </span>
-          </p>
+      <div
+        class="col-md-2 text-end d-flex align-items-center justify-content-end"
+      >
+        <img
+          src="{{ url_for('static', filename='uploads/profile_images/' + (ticket.creator.profile_image or 'default.jpg')) }}"
+          alt="{{ ticket.creator.name }}'s Profile Image"
+          class="submitter-profile-img rounded-circle"
+          width="50"
+          height="50"
+        />
+      </div>
+    </div>
+
+    <!-- Priority, Status, and Assignee Section inside Submitted By -->
+    <div class="row mb-4">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-body">
+            <div class="d-flex align-items-center justify-content-between">
+              <!-- Submitted By Section -->
+              <div class="d-flex flex-column">
+                <div>
+                  <strong>Submitted by:</strong> {{ ticket.creator.name }}
+                </div>
+                <div class="text-muted">
+                  <strong>Submitted on:</strong> {{
+                  ticket.created_at.strftime('%Y-%m-%d %H:%M:%S') }}
+                </div>
+              </div>
+
+              <!-- Priority, Status, and Assignee inside the Submitted By Box -->
+              <div
+                class="status-priority-container d-flex flex-column align-items-end"
+              >
+                <!-- Priority (Read-only) -->
+                <div class="mb-2">
+                  <p class="mb-0">
+                    <span class="title-spacing"
+                      ><strong>Priority:</strong></span
+                    >
+                    <span
+                      class="badge text-white {% if ticket.priority == 'high' %}readonly-priority-high-badge{% elif ticket.priority == 'medium' %}readonly-priority-medium-badge{% else %}readonly-priority-low-badge{% endif %}"
+                    >
+                      {{ ticket.priority }}
+                    </span>
+                  </p>
+                </div>
+
+                <!-- Status (Read-only) -->
+                <div class="mb-2">
+                  <p class="mb-0">
+                    <span class="title-spacing"><strong>Status:</strong></span>
+                    <span
+                      class="badge text-white {% if ticket.status == 'open' %}readonly-status-open-badge{% elif ticket.status == 'in-progress' %}readonly-status-in-progress-badge{% else %}readonly-status-closed-badge{% endif %}"
+                    >
+                      {{ ticket.status }}
+                    </span>
+                  </p>
+                </div>
+
+                <!-- Assignee (Read-only) -->
+                <div class="mb-2">
+                  <p class="mb-0">
+                    <span class="title-spacing"
+                      ><strong>Assignee:</strong></span
+                    >
+                    <span class="badge text-white readonly-assignee-badge">
+                      {% if ticket.assignee %} {{ ticket.assignee.name }} {%
+                      else %} No assignee yet {% endif %}
+                    </span>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
