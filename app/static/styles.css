@@ -1550,3 +1550,9 @@ body.dark-mode .logo-circle {
 .new-profile input {
   margin-top: 20px; /* Add space above the new profile image upload */
 }
+
+.submitter-profile-img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover; /* Ensures the image maintains aspect ratio */
+}
