@@ -15,8 +15,49 @@
       </div>
       <div class="col-md-2 text-end">
         <div class="status-priority-container">
-          <!-- Priority, Status, and Assignee Section (No changes needed here) -->
-        </div>
+          <!-- Priority Button -->
+          <div class="mb-2">
+            <p class="mb-0">
+              <span class="title-spacing"><strong>Priority:</strong></span>
+              <span
+                class="badge text-white {% if current_user.role == 'admin' or current_user.role == 'support' %}clickable-badge{% endif %} 
+                {% if ticket.priority == 'high' %}priority-high{% elif ticket.priority == 'medium' %}priority-medium{% else %}priority-low{% endif %}"
+                id="priority-badge"
+              >
+                {{ ticket.priority }}{% if current_user.role == 'admin' or current_user.role == 'support' %}<i class="fas fa-edit ms-2"></i>{% endif %}
+              </span>
+            </p>
+          </div>
+          <!-- Status Button -->
+          <div class="mb-2">
+            <p class="mb-0">
+              <span class="title-spacing"><strong>Status: </strong></span>
+              <span
+                class="badge text-white {% if current_user.role == 'admin' or current_user.role == 'support' %}clickable-badge{% endif %} 
+                {% if ticket.status == 'open' %}status-open{% elif ticket.status == 'in-progress' %}status-in-progress{% else %}status-closed{% endif %}"
+                id="status-badge"
+              >
+                {{ ticket.status }}{% if current_user.role == 'admin' or
+                current_user.role == 'support' %}<i class="fas fa-edit ms-2"></i
+                >{% endif %}
+              </span>
+            </p>
+          </div>
+          <!-- Assignee Button -->
+          <div class="mb-2">
+            <p class="mb-0">
+              <span class="title-spacing"><strong>Assignee: </strong></span>
+              <span
+                class="badge text-white {% if current_user.role == 'admin' or current_user.role == 'support' %}clickable-badge{% endif %} assignee-badge"
+                id="assignee-badge"
+              >
+                {% if ticket.assignee %} {{ ticket.assignee.name }}{% if
+                current_user.role == 'admin' or current_user.role == 'support'
+                %}<i class="fas fa-edit ms-2"></i>{% endif %} {% else %} No
+                assignee yet {% endif %}
+              </span>
+            </p>
+          </div>        </div>
       </div>
     </div>
 
