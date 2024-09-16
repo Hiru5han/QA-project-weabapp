@@ -45,28 +45,65 @@
           />
         </div>
 
-        <!-- Profile Image Upload -->
-        <div class="file-upload form-group">
-          <button class="file-upload-btn" type="button">Choose File</button>
-          <input
-            type="file"
-            id="profile_image"
-            name="profile_image"
-            accept="image/*"
-            onchange="displayFileName()"
-          />
-          <span id="file-name" class="file-name">No file selected</span>
-
-          <!-- Display current profile image -->
-          {% if current_user.profile_image %}
-          <div class="mt-3">
-            <img
-              src="{{ url_for('static', filename='uploads/profile_images/' + (current_user.profile_image or 'default.jpg')) }}"
-              alt="Profile Image"
-              class="profile-circle"
+        <!-- Profile Image Upload Section -->
+        <div class="file-upload form-group text-center">
+          <!-- Profile Images and Button Group -->
+          <div class="d-flex flex-column align-items-center">
+            <!-- Custom button to trigger file input -->
+            <button
+              type="button"
+              class="btn btn-secondary"
+              id="chooseImageButton"
+              onclick="document.getElementById('profile_image').click()"
+            >
+              Choose New Image
+            </button>
+            <!-- Hidden file input -->
+            <input
+              type="file"
+              id="profile_image"
+              name="profile_image"
+              accept="image/*"
+              style="display: none"
+              onchange="previewImage(event)"
             />
+            <span id="file-name" class="file-name d-block mt-2"
+              >No file selected</span
+            >
+
+            <!-- Profile Images - Current and New Side by Side -->
+            <div class="d-flex justify-content-center align-items-start mt-3">
+              <!-- Current Profile Image -->
+              <div class="current-profile mx-2 text-center">
+                <label for="current_profile_image" class="d-block"
+                  >Current Profile Image</label
+                >
+                <div class="mt-2">
+                  <img
+                    src="{{ url_for('static', filename='uploads/profile_images/' + (current_user.profile_image or 'default.jpg')) }}"
+                    alt="Current Profile Image"
+                    class="profile-circle"
+                  />
+                </div>
+              </div>
+
+              <!-- New Profile Image Preview -->
+              <div class="new-profile mx-2 text-center">
+                <label for="new_profile_image" class="d-block"
+                  >New Profile Image</label
+                >
+                <div class="mt-2" id="image-preview">
+                  <img
+                    id="new-profile-img"
+                    src=""
+                    alt="New Profile Image"
+                    class="profile-circle"
+                    style="display: none"
+                  />
+                </div>
+              </div>
+            </div>
           </div>
-          {% endif %}
         </div>
 
         <!-- Password Fields -->
@@ -132,11 +169,23 @@
 
 <!-- Inline JavaScript -->
 <script type="text/javascript">
-  function displayFileName() {
-    const input = document.getElementById("profile_image");
-    const fileName =
-      input.files.length > 0 ? input.files[0].name : "No file selected";
-    document.getElementById("file-name").textContent = fileName;
+  // Function to preview the new image
+  function previewImage(event) {
+    const input = event.target;
+    const file = input.files[0];
+    const preview = document.getElementById("new-profile-img");
+    const fileName = document.getElementById("file-name");
+
+    if (file) {
+      fileName.textContent = file.name;
+
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        preview.src = e.target.result;
+        preview.style.display = "block"; // Show the new profile image
+      };
+      reader.readAsDataURL(file);
+    }
   }
 
   document.addEventListener("DOMContentLoaded", function () {

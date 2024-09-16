@@ -1460,7 +1460,9 @@ body.dark-mode .logo-circle {
 /* Hide the default file input */
 .file-upload {
   position: relative;
-  display: inline-block;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
 }
 
 .file-upload input[type="file"] {
@@ -1512,4 +1514,20 @@ body.dark-mode .logo-circle {
   border-radius: 50%;
   object-fit: cover;
   margin-right: 15px; /* Increase margin-right to 15px for more spacing */
+}
+
+.profile-circle {
+  width: 100px; /* Adjust this to the size of your box */
+  height: 100px; /* Keep the height the same as width for a square or circle */
+  object-fit: cover; /* Ensures the image is cropped to fit within the box */
+  border-radius: 50%; /* Makes the image a circle */
+}
+
+.current-profile,
+.new-profile {
+  margin-right: 20px; /* Add space between current and new profile images */
+}
+
+.new-profile input {
+  margin-top: 20px; /* Add space above the new profile image upload */
 }

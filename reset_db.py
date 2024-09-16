@@ -51,46 +51,90 @@ def refined_populate_database():
             password = "gyjvo9-kewvoh-Vurmuj"
 
             # Creating users with hashed passwords (1 admin, 3 support, 4 regular users)
-            admin = User(name="Admin User", email="admin@example.com", role="admin")
-            admin.set_password(password)
+            admin1 = User(
+                name="Homer Simpson",
+                email="homer@example.com",
+                role="admin",
+                profile_image="starting_user_profile_images/homer-profile.png",
+            )
+            admin1.set_password(password)
+
+            admin2 = User(
+                name="Marge Simpson",
+                email="marge@example.com",
+                role="admin",
+                profile_image="starting_user_profile_images/marge-profile.png",
+            )
+            admin2.set_password(password)
 
             support1 = User(
-                name="Miguel Hernández",
-                email="miguel.hernandez@support.com",
+                name="Bart Simpson",
+                email="bart@support.com",
                 role="support",
+                profile_image="starting_user_profile_images/marge-profile.png",
             )
             support1.set_password(password)
 
             support2 = User(
-                name="Zara Patel", email="zara.patel@support.com", role="support"
+                name="Lisa Simpson",
+                email="lisa@support.com",
+                role="support",
+                profile_image="starting_user_profile_images/lisa-profile.png",
             )
             support2.set_password(password)
 
             support3 = User(
-                name="Liam O'Connor", email="liam.oconnor@support.com", role="support"
+                name="Maggie Simpson",
+                email="maggie@support.com",
+                role="support",
+                profile_image="starting_user_profile_images/maggie-profile.png",
             )
             support3.set_password(password)
 
-            user1 = User(name="Chen Wei", email="chen.wei@example.com", role="user")
+            user1 = User(
+                name="Ralph Wiggum",
+                email="ralph@example.com",
+                role="regular",
+                profile_image="starting_user_profile_images/ralph-profile.png",
+            )
             user1.set_password(password)
 
             user2 = User(
-                name="Fatima Al-Farsi", email="fatima.alfarsi@example.com", role="user"
+                name="Julius M. Hibbert, M.D.",
+                email="doctor@example.com",
+                role="regular",
+                profile_image="starting_user_profile_images/doctor-profile.png",
             )
             user2.set_password(password)
 
             user3 = User(
-                name="David Kimani", email="david.kimani@example.com", role="user"
+                name="Krusty",
+                email="krusty@example.com",
+                role="regular",
+                profile_image="starting_user_profile_images/krusty-profile.png",
             )
             user3.set_password(password)
 
             user4 = User(
-                name="Sophia Rossi", email="sophia.rossi@example.com", role="user"
+                name="Mr. Burns",
+                email="burns.rossi@example.com",
+                role="regular",
+                profile_image="starting_user_profile_images/burns-profile.png",
             )
             user4.set_password(password)
 
             db.session.add_all(
-                [admin, support1, support2, support3, user1, user2, user3, user4]
+                [
+                    admin1,
+                    admin2,
+                    support1,
+                    support2,
+                    support3,
+                    user1,
+                    user2,
+                    user3,
+                    user4,
+                ]
             )
 
             # Commit the user data first
