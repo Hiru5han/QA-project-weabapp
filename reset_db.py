@@ -4,6 +4,8 @@ from sqlite3 import IntegrityError
 import logging
 from app import create_app, db
 from app.models import User, Ticket, Comment
+from datetime import datetime, timedelta
+import random
 
 # Create the Flask application instance using the application factory
 app = create_app()
@@ -16,10 +18,10 @@ def drop_database():
         db.drop_all()
 
 
-def initialize_database():
-    """Initializes the database."""
+def initialise_database():
+    """Initialises the database."""
     with app.app_context():
-        print("Initializing the database...")
+        print("Initialising the database...")
         db.create_all()
 
 
@@ -35,8 +37,8 @@ def apply_migration():
     os.system("flask db upgrade")
 
 
-def populate_database():
-    """Populates the database with initial data."""
+def refined_populate_database():
+    """Populates the database with initial data, including mock creation dates."""
     with app.app_context():
         logging.info("Populating the database with initial data...")
 
@@ -46,70 +48,200 @@ def populate_database():
                 logging.info("Initial data already exists. Skipping population.")
                 return
 
-            # Creating users with hashed passwords
+            password = "gyjvo9-kewvoh-Vurmuj"
+
+            # Creating users with hashed passwords (1 admin, 3 support, 4 regular users)
             admin = User(name="Admin User", email="admin@example.com", role="admin")
-            admin.set_password("adminpassword")
+            admin.set_password(password)
 
-            user1 = User(name="John Doe", email="john@example.com", role="user")
-            user1.set_password("password")
-
-            user2 = User(name="Jane Smith", email="jane@example.com", role="user")
-            user2.set_password("password")
-
-            db.session.add_all([admin, user1, user2])
-
-            # Creating tickets
-            ticket1 = Ticket(
-                title="Sample Ticket 1",
-                description="This is the first sample ticket.",
-                priority="high",
-                status="open",
-                creator=admin,
+            support1 = User(
+                name="Miguel Hernández",
+                email="miguel.hernandez@support.com",
+                role="support",
             )
-            ticket2 = Ticket(
-                title="Sample Ticket 2",
-                description="This is the second sample ticket.",
-                priority="medium",
-                status="in-progress",
-                creator=user1,
-            )
-            ticket3 = Ticket(
-                title="Sample Ticket 3",
-                description="This is the third sample ticket.",
-                priority="low",
-                status="closed",
-                creator=user2,
-            )
+            support1.set_password(password)
 
-            db.session.add_all([ticket1, ticket2, ticket3])
+            support2 = User(
+                name="Zara Patel", email="zara.patel@support.com", role="support"
+            )
+            support2.set_password(password)
 
-            # Creating comments
-            comment1 = Comment(
-                comment_text="This is a sample comment on ticket 1.",
-                ticket=ticket1,
-                commenter=admin,
+            support3 = User(
+                name="Liam O'Connor", email="liam.oconnor@support.com", role="support"
             )
-            comment2 = Comment(
-                comment_text="This is another comment on ticket 1.",
-                ticket=ticket1,
-                commenter=user1,
+            support3.set_password(password)
+
+            user1 = User(name="Chen Wei", email="chen.wei@example.com", role="user")
+            user1.set_password(password)
+
+            user2 = User(
+                name="Fatima Al-Farsi", email="fatima.alfarsi@example.com", role="user"
             )
-            comment3 = Comment(
-                comment_text="This is a comment on ticket 2.",
-                ticket=ticket2,
-                commenter=user2,
+            user2.set_password(password)
+
+            user3 = User(
+                name="David Kimani", email="david.kimani@example.com", role="user"
+            )
+            user3.set_password(password)
+
+            user4 = User(
+                name="Sophia Rossi", email="sophia.rossi@example.com", role="user"
+            )
+            user4.set_password(password)
+
+            db.session.add_all(
+                [admin, support1, support2, support3, user1, user2, user3, user4]
             )
 
-            db.session.add_all([comment1, comment2, comment3])
-
-            # Commit the changes
+            # Commit the user data first
             db.session.commit()
-            logging.info("Initial data successfully added.")
+
+            # Function to mock creation dates
+            def mock_date(days_ago):
+                return datetime.utcnow() - timedelta(days=days_ago)
+
+            # Creating tickets with mocked creation dates
+            tickets = [
+                Ticket(
+                    title="Cannot log in",
+                    description="I am unable to log into my account after resetting the password.",
+                    priority="high",
+                    status="open",
+                    creator=user1,
+                    assignee=support1,
+                    created_at=mock_date(random.randint(1, 30)),  # Mocked creation date
+                ),
+                Ticket(
+                    title="Website is slow",
+                    description="The website takes too long to load during peak hours.",
+                    priority="medium",
+                    status="in-progress",
+                    creator=user2,
+                    assignee=support2,
+                    created_at=mock_date(random.randint(1, 30)),
+                ),
+                Ticket(
+                    title="Feature request: Dark mode",
+                    description="It would be great to have a dark mode option for the website.",
+                    priority="low",
+                    status="open",
+                    creator=user3,
+                    assignee=None,
+                    created_at=mock_date(random.randint(1, 30)),
+                ),
+                Ticket(
+                    title="Bug: Page not loading",
+                    description="The settings page is not loading after the latest update.",
+                    priority="high",
+                    status="open",
+                    creator=user4,
+                    assignee=support2,
+                    created_at=mock_date(random.randint(1, 30)),
+                ),
+                Ticket(
+                    title="Error 404 on documentation link",
+                    description="The link to the user documentation leads to a 404 error page.",
+                    priority="low",
+                    status="closed",
+                    creator=support1,
+                    assignee=None,
+                    created_at=mock_date(random.randint(1, 30)),
+                ),
+                Ticket(
+                    title="Profile update not saving",
+                    description="I can't save the updated details on my profile page.",
+                    priority="medium",
+                    status="in-progress",
+                    creator=user1,
+                    assignee=support3,
+                    created_at=mock_date(random.randint(1, 30)),
+                ),
+                Ticket(
+                    title="Request for invoice copy",
+                    description="I need a copy of my invoice for the past 6 months.",
+                    priority="low",
+                    status="open",
+                    creator=user2,
+                    assignee=None,
+                    created_at=mock_date(random.randint(1, 30)),
+                ),
+                Ticket(
+                    title="Security concern: Account hacked",
+                    description="My account was accessed without my permission.",
+                    priority="high",
+                    status="open",
+                    creator=user4,
+                    assignee=support1,
+                    created_at=mock_date(random.randint(1, 30)),
+                ),
+                Ticket(
+                    title="Suggestion: Add multi-factor authentication",
+                    description="It would be great to add multi-factor authentication for extra security.",
+                    priority="medium",
+                    status="open",
+                    creator=user3,
+                    assignee=support3,
+                    created_at=mock_date(random.randint(1, 30)),
+                ),
+                Ticket(
+                    title="Cannot download report",
+                    description="The download button for reports is not functioning.",
+                    priority="high",
+                    status="open",
+                    creator=support2,
+                    assignee=None,
+                    created_at=mock_date(random.randint(1, 30)),
+                ),
+            ]
+
+            db.session.add_all(tickets)
+
+            # Commit the ticket data
+            db.session.commit()
+
+            # Creating comments with mocked creation dates
+            comments = [
+                Comment(
+                    comment_text="I am investigating the issue.",
+                    ticket=tickets[0],
+                    commenter=support1,
+                    created_at=mock_date(random.randint(1, 30)),
+                ),
+                Comment(
+                    comment_text="This issue seems to be caused by a server load spike.",
+                    ticket=tickets[1],
+                    commenter=support2,
+                    created_at=mock_date(random.randint(1, 30)),
+                ),
+                Comment(
+                    comment_text="I have experienced this as well. Please look into it.",
+                    ticket=tickets[3],
+                    commenter=user2,
+                    created_at=mock_date(random.randint(1, 30)),
+                ),
+                Comment(
+                    comment_text="Thank you for the suggestion! We will consider it in future updates.",
+                    ticket=tickets[8],
+                    commenter=support3,
+                    created_at=mock_date(random.randint(1, 30)),
+                ),
+                Comment(
+                    comment_text="Please try again after clearing your browser cache.",
+                    ticket=tickets[5],
+                    commenter=support3,
+                    created_at=mock_date(random.randint(1, 30)),
+                ),
+            ]
+
+            db.session.add_all(comments)
+
+            # Commit the comment data
+            db.session.commit()
+            logging.info("Initial data with mocked dates successfully added.")
 
         except IntegrityError as e:
             db.session.rollback()
-            logging.error(f"Error occurred while populating the database: {e}")
-
+            logging.error(f"IntegrityError occurred while populating the database: {e}")
         except Exception as e:
             db.session.rollback()
             logging.error(f"An unexpected error occurred: {e}")
@@ -118,10 +250,10 @@ def populate_database():
 def reset_database():
     """Resets the database by performing all necessary steps."""
     drop_database()
-    initialize_database()
+    initialise_database()
     create_migration()
     apply_migration()
-    # populate_database()
+    refined_populate_database()
     print("Database reset complete.")
 
 
