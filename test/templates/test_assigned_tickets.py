@@ -164,3 +164,83 @@ def test_admin_delete_button_visibility_for_assigned_ticket(
 
         # Check that the delete button is visible for admin
         assert b"Delete" in response.data
+
+
+@pytest.mark.parametrize("user_role", ["admin", "support", "regular"])
+def test_closed_tickets_button_visible_for_all_roles(
+    test_client, app, user_role, admin_user, support_user, regular_user
+):
+    with app.app_context():
+        # Log in as a user based on their role
+        if user_role == "admin":
+            user = db.session.merge(admin_user)
+        elif user_role == "support":
+            user = db.session.merge(support_user)
+        else:
+            user = db.session.merge(regular_user)
+
+        # Log in the user
+        login_response = login_user(test_client, user.email, "ValidPassword1!")
+
+        # Check if the login was successful (HTTP status 200)
+        assert (
+            login_response.status_code == 200
+        ), f"Login failed with status code {login_response.status_code}"
+
+        # Access the "Assigned Tickets" page
+        response = test_client.get(
+            url_for("main.assigned_tickets"), follow_redirects=False
+        )
+
+        if user_role == "regular":
+            # Expect a 302 redirect for regular users
+            assert response.status_code == 302
+            assert response.headers.get("Location") == url_for("main.all_tickets")
+
+            # Follow the redirect to the "All Tickets" page
+            response = test_client.get(
+                url_for("main.all_tickets"), follow_redirects=True
+            )
+
+            # Check that the button reads "Active" for regular users
+            assert response.status_code == 200
+            assert b"btn-toggle active" in response.data
+            assert b"Active" in response.data
+        else:
+            # For admin and support, ensure the response is 200 and the "Closed" button is visible
+            assert response.status_code == 200
+            assert b"Closed" in response.data
+
+
+@pytest.mark.parametrize("user_role", ["admin", "support", "regular"])
+def test_closed_button_active_for_closed_view(
+    test_client, app, user_role, admin_user, support_user, regular_user
+):
+    with app.app_context():
+        # Log in as a user based on their role
+        if user_role == "admin":
+            user = db.session.merge(admin_user)
+        elif user_role == "support":
+            user = db.session.merge(support_user)
+        else:
+            user = db.session.merge(regular_user)
+
+        # Log in the user
+        login_response = login_user(test_client, user.email, "ValidPassword1!")
+
+        # Check if the login was successful (HTTP status 200)
+        assert (
+            login_response.status_code == 200
+        ), f"Login failed with status code {login_response.status_code}"
+
+        # Access the "Closed Tickets" page (view = closed)
+        response = test_client.get(
+            url_for("main.closed_tickets"), follow_redirects=True
+        )
+
+        # Ensure the response is 200 and the "Closed" button is active
+        assert response.status_code == 200
+        assert b"Closed" in response.data
+        assert (
+            b"btn-toggle active" in response.data
+        )  # The active class for the "Closed" button
