@@ -37,7 +37,7 @@ def apply_migration():
     os.system("flask db upgrade")
 
 
-def refined_populate_database():
+def populate_database():
     """Populates the database with initial data, including mock creation dates."""
     with app.app_context():
         logging.info("Populating the database with initial data...")
@@ -297,7 +297,7 @@ def reset_database():
     initialise_database()
     create_migration()
     apply_migration()
-    refined_populate_database()
+    populate_database()
     print("Database reset complete.")
 
 
