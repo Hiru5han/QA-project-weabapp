@@ -1,8 +1,18 @@
+:root {
+  --primary-color: #283593;
+  --secondary-color: #5d646a;
+  --background-color: #f8f9fa;
+  --background-color-night-mode: #1e1e1e;
+  --accent-color: #ffff;
+  --green-color: #28a745;
+  --view-button: #c354ff;
+}
+
 body {
   font-family: "Roboto", sans-serif;
-  background-color: #f8f9fa;
+  background-color: var(--background-color);
   margin: 0;
-  color: #343a40; /* Text Colour */
+  color: var(--secondary-color);
 }
 
 /* General Styles */
@@ -34,7 +44,7 @@ h2 {
 }
 
 .card-header {
-  background-color: #283593 !important; /* Primary Colour */
+  background-color: var(--primary-color) !important; /* Primary Colour */
   color: #ffffff; /* Set text to white for visibility */
   font-size: 1.25rem;
   font-weight: 500;
@@ -55,24 +65,23 @@ h2 {
 
 .btn-primary,
 .btn-secondary,
-.btn-success,
-.btn-warning {
+.btn-success {
   margin-right: 10px;
 }
 
 .btn-primary {
-  background-color: #007bff;
-  border-color: #007bff;
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
 }
 
 .btn-secondary {
-  background-color: #6c757d;
-  border-color: #6c757d;
+  background-color: var(--secondary-color);
+  border-color: var(--secondary-color);
 }
 
 .btn-success {
-  background-color: #28a745;
-  border-color: #28a745;
+  background-color: var(--green-color);
+  border-color: var(--green-color);
   margin-left: auto;
   transition: transform 0.2s ease-in-out;
 }
@@ -82,28 +91,23 @@ h2 {
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-.btn-warning {
-  background-color: #ffc107;
-  border-color: #ffc107;
-}
-
 .btn-outline-primary {
-  border-color: #007bff; /* Primary Colour */
-  color: #007bff;
+  border-color: var(--primary-color); /* Primary Colour */
+  color: var(--primary-color);
 }
 
 .btn-outline-primary:hover {
-  background-color: #007bff;
+  background-color: var(--primary-color);
   color: #ffffff;
 }
 
 .btn-outline-update {
-  border-color: #c354ff; /* Primary Colour */
-  color: #c354ff;
+  border-color: var(--view-button); /* Primary Colour */
+  color: var(--view-button);
 }
 
 .btn-outline-update:hover {
-  background-color: #c354ff;
+  background-color: var(--view-button);
   color: #ffffff;
 }
 
@@ -112,7 +116,7 @@ h2 {
 }
 
 .text-primary {
-  color: #007bff !important; /* Primary Colour */
+  color: var(--primary-color) !important; /* Primary Colour */
   font-size: 2.2em;
 }
 
@@ -146,7 +150,7 @@ h2 {
 
 /* Navbar Customisation */
 .navbar {
-  background-color: #283593; /* Navbar Colour */
+  background-color: var(--primary-color); /* Navbar Colour */
   position: relative;
 }
 
@@ -165,7 +169,7 @@ h2 {
 }
 
 .navbar .nav-link:hover {
-  color: #f8f9fa; /* Hover text colour */
+  color: var(--background-color); /* Hover text colour */
 }
 
 .navbar .nav-link.active {
@@ -184,41 +188,6 @@ h2 {
   display: inline-block; /* Ensure it remains inline */
   text-align: center; /* Centre the text */
   width: auto; /* Adjust width as needed */
-}
-
-.badge-status-open {
-  background-color: #20c997; /* Green for open */
-  color: white;
-}
-
-.badge-status-in-progress {
-  background-color: #007bff; /* Yellow for in-progress */
-  color: rgb(255, 255, 255);
-}
-
-.badge-status-closed {
-  background-color: #5c636a; /* Red for closed */
-  color: rgb(0, 0, 0);
-}
-
-.login-header {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-}
-
-.login-title {
-  margin: 0 auto;
-  text-align: center;
-  margin-bottom: 1rem;
-}
-
-.login-page .btn-primary {
-  width: 100%;
-  padding: 0.75rem;
-  font-size: 1rem;
-  border-radius: 0.5rem;
 }
 
 /* Jumbotron Styles */
@@ -265,20 +234,6 @@ h2 {
   border: 1px solid transparent;
   border-radius: 4px;
 }
-.alert-warning {
-  color: #856404;
-  background-color: #fff3cd;
-  border-color: #ffeeba;
-}
-.alert-success {
-  color: #155724;
-  background-color: #d4edda;
-  border-color: #c3e6cb;
-}
-
-.btn-wide {
-  width: 200; /* Adjust the width as needed */
-}
 
 .back-button {
   margin-right: auto; /* Push the back button to the far left */
@@ -293,31 +248,11 @@ h2 {
 
 .back-button-icon {
   font-size: 48px;
-  color: #007bff; /* Change this to your desired colour */
+  color: var(--primary-button); /* Change this to your desired colour */
 }
 
 .back-button-icon:hover {
   color: #0056b3; /* Darker shade on hover */
-}
-
-.role-badge {
-  margin-left: 15px;
-  padding: 5px 10px;
-  background-color: #dc3545; /* Red background to match the badge style */
-  color: white;
-  border-radius: 5px;
-  font-weight: bold;
-  display: inline-block;
-  font-size: 1rem; /* Adjust font size as needed */
-  vertical-align: middle;
-}
-
-.badge-danger {
-  background-color: #dc3545;
-  color: white;
-  padding: 5px 10px;
-  border-radius: 5px;
-  font-size: 18px;
 }
 
 /* Theme Toggle Button */
@@ -356,44 +291,6 @@ body.light-mode #theme-toggle-icon {
 
 body.dark-mode #theme-toggle-icon {
   color: #ffcc66; /* Soft warm yellow */
-}
-
-.nav-tabs {
-  border-bottom: none;
-  margin-left: -20px; /* Adjust this value to move the tabs left */
-}
-
-.nav-tabs .nav-link {
-  background: linear-gradient(to bottom, #7bc043, #5aac35);
-  color: white;
-  border: 3px solid black;
-  border-radius: 20px 20px 0 0;
-  margin-right: -10px;
-  padding: 10px 20px;
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-.nav-tabs .nav-link:hover {
-  background-color: #5aac35;
-  color: white;
-}
-
-.nav-tabs .nav-link.active {
-  background-color: #3d7722;
-  color: white;
-  border-color: black;
-  border-bottom-color: transparent;
-}
-
-.nav-tabs .nav-link.active:hover {
-  background-color: #3d7722;
-}
-
-.tab-content {
-  border: 3px solid black;
-  padding: 1rem;
-  background-color: #1e1e1e;
-  border-radius: 0 20px 20px 20px;
 }
 
 /* Toggle Group Styling */
@@ -492,7 +389,7 @@ span.invalid {
 
 /* Dark Mode */
 body.dark-mode {
-  background-color: #1e1e1e; /* Darker background */
+  background-color: var(--background-color-night-mode); /* Darker background */
   color: #dcdcdc; /* Light grey text */
 }
 
@@ -536,9 +433,19 @@ body.dark-mode .btn-primary {
   border-color: #3a3a5a;
 }
 
+body.dark-mode .btn-primary:hover {
+  background-color: #6b6ba5; /* Muted blue */
+  border-color: #6b6ba5;
+}
+
 body.dark-mode .btn-secondary {
   background-color: #444444; /* Muted grey-blue */
   border-color: #444444;
+}
+
+body.dark-mode .btn-secondary:hover {
+  background-color: #707070; /* Muted grey-blue */
+  border-color: #707070;
 }
 
 body.dark-mode .btn-success {
@@ -546,18 +453,18 @@ body.dark-mode .btn-success {
   border-color: #135523;
 }
 
-body.dark-mode .btn-warning {
-  background-color: #e1a400; /* Warm yellow-orange */
-  border-color: #e1a400;
-}
-
 body.dark-mode .btn-outline-primary:hover,
 body.dark-mode .btn-outline-update:hover {
   color: #ffffff !important;
 }
 
+body.dark-mode .btn-outline-primary:hover {
+  background-color: #8787ce !important; /* Muted blue */
+  border-color: #3a3a5a;
+}
+
 body.dark-mode .btn-outline-update {
-  color: #c354ff !important;
+  color: var(--view-button) !important;
 }
 
 body.dark-mode .badge-role-support {
@@ -758,12 +665,6 @@ body.dark-mode .profile-badge:hover {
   display: inline-block;
 }
 
-.user-info {
-  color: white;
-  font-size: 1rem;
-  font-weight: 400;
-}
-
 /* Ensures proper alignment and spacing */
 .role-container .badge {
   display: inline-block;
@@ -808,12 +709,12 @@ body.dark-mode .profile-badge:hover {
   align-items: center;
   min-height: 40vh;
   padding: 20px; /* Additional padding to handle small viewport heights */
-  background-color: #f8f9fa; /* Background colour */
+  background-color: var(--background-color); /* Background colour */
 }
 
 /* Night mode styles */
 .dark-mode .auth-page {
-  background-color: #1e1e1e; /* Dark background */
+  background-color: var(--background-color-night-mode); /* Dark background */
   color: white; /* Light text */
 }
 
@@ -893,8 +794,8 @@ body.dark-mode .dropdown-box {
 }
 
 .btn-outline-secondary {
-  border-color: #6c757d;
-  color: #6c757d;
+  border-color: var(--secondary-color);
+  color: var(--secondary-color);
   width: 100%;
   padding: 0.75rem;
   margin-top: 10px;
@@ -953,7 +854,7 @@ span.invalid {
 
 /* Custom Badge Colors */
 .badge-active-tickets-low {
-  background-color: #28a745; /* Green */
+  background-color: var(--green-color); /* Green */
   color: white;
 }
 
@@ -1082,7 +983,7 @@ body.dark-mode .modal-footer {
 .status-closed,
 .readonly-status-closed-badge,
 .badge-status-closed {
-  background-color: #6c757d;
+  background-color: var(--secondary-color);
 }
 
 /* Assignee Badge */
@@ -1108,8 +1009,8 @@ body.dark-mode .badge-status-open {
 body.dark-mode .status-in-progress,
 body.dark-mode .readonly-status-in-progress-badge,
 body.dark-mode .badge-status-in-progress {
-  color: #28a745; /* Text colour */
-  border: 1px solid #28a745; /* Same colour for the outline */
+  color: var(--green-color); /* Text colour */
+  border: 1px solid var(--green-color); /* Same colour for the outline */
   background-color: transparent;
 }
 
@@ -1210,7 +1111,7 @@ body.dark-mode .assign-to-dropdown {
   }
   /* Make the active link more distinct */
   .dropdown-item.active {
-    background-color: #f8f9fa;
+    background-color: var(--background-color);
     color: #495057;
   }
 
@@ -1225,7 +1126,7 @@ body.dark-mode .assign-to-dropdown {
   .dropdown-toggle:active {
     background-color: #78d1de !important;
     color: #495057 !important;
-    border-color: #f8f9fa !important;
+    border-color: var(--background-color) !important;
     box-shadow: none !important; /* Remove the blue shadow */
   }
 
@@ -1279,13 +1180,13 @@ body.dark-mode .assign-to-dropdown {
     width: 170px; /* Adjust the width as needed */
     max-width: 80%; /* Ensure it doesn't exceed screen width */
     background-color: #ffffff;
-    border: 3px solid #283593;
+    border: 3px solid var(--primary-color);
     border-radius: 0 0 5px 5px;
   }
 
   body.dark-mode #navbarMenu {
     background-color: #353535;
-    border: 3px solid #28a745;
+    border: 3px solid var(--green-color);
   }
 
   #navbarMenu .btn-link {
@@ -1388,7 +1289,7 @@ body.dark-mode .assign-to-dropdown {
   align-items: center;
   width: 56px;
   height: 56px;
-  background-color: #28a745;
+  background-color: var(--green-color);
   color: #fff;
   border-radius: 50%;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
@@ -1440,13 +1341,13 @@ body.dark-mode .assign-to-dropdown {
 
 /* White line under navbar in night mode */
 body.dark-mode .navbar {
-  border-bottom: 3px solid #28a745;
+  border-bottom: 3px solid var(--green-color);
   z-index: 1000; /* Ensure it's above other content */
 }
 
 /* White line under navbar in night mode */
 .navbar {
-  border-bottom: 3px solid #283593;
+  border-bottom: 3px solid var(--accent-color);
   z-index: 1000; /* Ensure it's above other content */
 }
 
@@ -1466,12 +1367,12 @@ body.dark-mode .navbar {
   width: 85px; /* Make sure width and height are equal */
   height: 100px; /* Same as width for a perfect circle */
   border-radius: 50%; /* Ensures the image is a circle */
-  border: 3px solid #283593; /* Blue border around the circle */
+  border: 3px solid var(--accent-color); /* Blue border around the circle */
   object-fit: cover; /* Ensures the image fits the container without distortion */
 }
 
 body.dark-mode .logo-circle {
-  border: 3px solid #28a745; /* Blue border around the circle */
+  border: 3px solid var(--green-color); /* Blue border around the circle */
 }
 
 /* styles.css */
