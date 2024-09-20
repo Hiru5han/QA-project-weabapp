@@ -23,6 +23,7 @@
       {% endif %}
 
       <!-- Toggle buttons for medium and larger screens -->
+      <!-- Toggle buttons for medium and larger screens -->
       <div class="toggle-buttons d-none d-md-block">
         <div
           class="btn-group toggle-group"
@@ -42,14 +43,14 @@
           >
             Assigned
           </a>
-          {% elif current_user.role == 'admin' %}
+          {% endif %} {% if current_user.role == 'admin' %}
           <a
             href="{{ url_for('main.all_tickets') }}"
             class="btn btn-toggle {% if view == 'all' %}active{% endif %}"
           >
             All Tickets
           </a>
-          {% elif current_user.role == 'regular' %}
+          {% endif %} {% if current_user.role == 'regular' %}
           <a
             href="{{ url_for('main.all_tickets') }}"
             class="btn btn-toggle {% if view == 'active' %}active{% endif %}"
@@ -57,6 +58,7 @@
             Active
           </a>
           {% endif %}
+
           <a
             href="{{ url_for('main.closed_tickets') }}"
             class="btn btn-toggle {% if view == 'closed' %}active{% endif %}"
