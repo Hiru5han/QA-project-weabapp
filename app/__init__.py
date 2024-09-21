@@ -14,17 +14,6 @@ csrf = CSRFProtect()  # Initialize CSRFProtect
 moment = Moment()  # Initialize Flask-Moment
 
 
-# # Set up basic logging
-# logging.basicConfig(
-#     filename="app.log",  # Log to a file named app.log
-#     level=logging.DEBUG,  # Log all levels of messages (DEBUG and higher)
-#     format="%(asctime)s %(levelname)s: %(message)s",  # Define log format
-# )
-
-# # Log that the app is starting
-# logging.info("Starting the Flask app.")
-
-
 def create_app(config=None):
     """
     Initialise the Flask application.
