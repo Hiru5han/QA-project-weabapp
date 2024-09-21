@@ -22,11 +22,8 @@
 
   /* Role badges */
   --badge-admin-color: #dc3545;
-  --badge-admin-color-dark-mode: ;
   --badge-support-color: #b881b1;
-  --badge-support-color-dark-mode: ;
   --badge-regular-color: #5d9db9;
-  --badge-regular-color-dark-mode: ;
 }
 
 body {
