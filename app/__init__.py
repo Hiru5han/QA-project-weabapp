@@ -1,11 +1,11 @@
-from flask import Flask, render_template
-from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager
-from flask_migrate import Migrate
-from flask_wtf import CSRFProtect  # Import CSRFProtect
-from flask_moment import Moment  # Import Flask-Moment
 import logging
 
+from flask import Flask, render_template
+from flask_login import LoginManager
+from flask_migrate import Migrate
+from flask_moment import Moment  # Import Flask-Moment
+from flask_sqlalchemy import SQLAlchemy
+from flask_wtf import CSRFProtect  # Import CSRFProtect
 
 db = SQLAlchemy()
 login_manager = LoginManager()

@@ -1,12 +1,14 @@
-import re
-from flask import Blueprint, render_template, redirect, url_for, request, flash
-from flask_login import login_user, login_required, logout_user, current_user
-from werkzeug.security import generate_password_hash, check_password_hash
-from .models import User, Ticket, Comment, db
-from urllib.parse import urlparse, urljoin
-from werkzeug.utils import secure_filename
-from PIL import Image, ImageOps, ImageDraw
 import os
+import re
+from urllib.parse import urljoin, urlparse
+
+from flask import Blueprint, flash, redirect, render_template, request, url_for
+from flask_login import current_user, login_required, login_user, logout_user
+from PIL import Image, ImageDraw, ImageOps
+from werkzeug.security import check_password_hash, generate_password_hash
+from werkzeug.utils import secure_filename
+
+from .models import Comment, Ticket, User, db
 
 bp = Blueprint("main", __name__)
 
@@ -236,8 +238,9 @@ def all_tickets():
     )
 
 
-from flask import flash
 from datetime import datetime
+
+from flask import flash
 
 
 @bp.route("/create_ticket", methods=["GET", "POST"])

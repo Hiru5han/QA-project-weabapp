@@ -1,7 +1,8 @@
 import pytest
-from flask import url_for
-from app.models import Ticket, User, db
 from bs4 import BeautifulSoup
+from flask import url_for
+
+from app.models import Ticket, User, db
 
 
 # Helper function to extract CSRF token from HTML

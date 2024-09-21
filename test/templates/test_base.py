@@ -1,9 +1,7 @@
 import pytest
-from flask import url_for
 from bs4 import BeautifulSoup
-from app.models import User, db
+from flask import url_for
 
-import pytest
 from app.models import User, db
 
 
