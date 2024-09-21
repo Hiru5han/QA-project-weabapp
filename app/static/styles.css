@@ -1368,7 +1368,7 @@ body.dark-mode .logo-circle {
 
 /* Style for both submitted name and date text */
 .submitted-text {
-  color: #ffffff; /* Ensure both texts are bright white */
+  color: #000000; /* Ensure both texts are bright white */
   font-weight: normal; /* Adjust to your desired font-weight */
 }
 
