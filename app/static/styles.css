@@ -23,9 +23,9 @@
   --badge-support-color: #b881b1;
   --badge-regular-color: #5d9db9;
 
-  --badge-active-tickets-high: #dc3545;
-  --badge-active-tickets-medium: #ffc107;
-  --badge-active-tickets-low: var(--green-color);
+  --badge-active-tickets-high: var(--badge-priority-high);
+  --badge-active-tickets-medium: var(--badge-priority-medium);
+  --badge-active-tickets-low: var(--badge-priority-low);
 }
 
 body {
@@ -162,7 +162,7 @@ body.dark-mode .text-primary {
 }
 
 .list-unstyled li {
-  border-bottom: 1px solid #e9ecef;
+  border-bottom: 2px solid #e9ecef;
   padding: 10px 0;
 }
 
@@ -197,11 +197,6 @@ body.dark-mode .text-primary {
   color: #000000;
   background-color: #ffffff;
   border-radius: 5px;
-}
-
-.logout-badge,
-.profile-badge {
-  cursor: pointer;
 }
 
 .status-badge {
@@ -250,7 +245,7 @@ body.dark-mode .text-primary {
 .alert {
   padding: 15px;
   margin-bottom: 20px;
-  border: 1px solid transparent;
+  border: 2px solid transparent;
   border-radius: 4px;
 }
 
@@ -312,7 +307,7 @@ body.dark-mode #theme-toggle-icon {
 }
 
 .toggle-group {
-  border: 1px solid #ddd;
+  border: 2px solid #ddd;
   border-radius: 8px;
   overflow: hidden;
   display: inline-flex;
@@ -322,7 +317,7 @@ body.dark-mode #theme-toggle-icon {
   background-color: white;
   color: black;
   padding: 10px 20px;
-  border: 1px solid #ccc;
+  border: 2px solid #ccc;
   border-radius: 0;
   font-weight: bold;
   cursor: pointer;
@@ -474,7 +469,7 @@ body.dark-mode .btn-outline-primary:hover {
 
 body.dark-mode .btn-outline-primary {
   color: var(--view-button) !important;
-  border: 1px solid var(--view-button);
+  border-color: var(--view-button);
 }
 
 body.dark-mode .btn-outline-update {
@@ -483,19 +478,19 @@ body.dark-mode .btn-outline-update {
 
 body.dark-mode .badge-role-support {
   color: var(--badge-support-color);
-  border: 1px solid var(--badge-support-color);
+  border-color: var(--badge-support-color);
   background-color: transparent;
 }
 
 body.dark-mode .badge-role-admin {
   color: var(--badge-admin-color);
-  border: 1px solid var(--badge-admin-color);
+  border-color: var(--badge-admin-color);
   background-color: transparent;
 }
 
 body.dark-mode .badge-role-regular {
   color: var(--badge-regular-color);
-  border: 1px solid var(--badge-regular-color);
+  border-color: var(--badge-regular-color);
   background-color: transparent;
 }
 
@@ -554,7 +549,7 @@ body.dark-mode .jumbotron {
   align-items: center;
   padding: 5px 10px;
   border-radius: 5px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
   white-space: nowrap;
   justify-content: space-between;
   margin-left: 5px;
@@ -593,51 +588,42 @@ body.dark-mode .jumbotron {
   opacity: 0.8;
 }
 
+.badge-role-admin,
+.badge-role-support,
+.badge-role-regular,
 .logout-badge,
 .profile-badge {
-  cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
   display: inline-flex;
   align-items: center;
   padding: 5px 10px;
   border-radius: 5px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
   white-space: nowrap;
   justify-content: space-between;
-  color: #fff;
-  background-color: #dc3545;
   text-decoration: none !important;
   margin-left: auto;
   font-weight: bold;
 }
 
+.logout-badge,
+.profile-badge {
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  color: #ffff;
+  background-color: #dc3545;
+  border: 2px solid #dc3545;
+}
+
 body.dark-mode .logout-badge,
 body.dark-mode .profile-badge {
   background-color: transparent;
-}
-
-body.dark-mode .logout-badge {
-  border: 1x solid #a71d2a;
-}
-
-body.dark-mode .profile-badge {
-  border: 1px solid #a71d2a;
+  border: 2px solid #a71d2a;
 }
 
 .logout-badge:hover,
 .profile-badge:hover {
   transform: scale(1.05);
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-  background-color: #c82333;
-  color: #fff;
-}
-
-.profile-badge:hover {
-  background-color: #c82333;
-  color: #fff;
-}
-
-.logout-badge:hover {
   background-color: #c82333;
   color: #fff;
 }
@@ -671,40 +657,21 @@ body.dark-mode .profile-badge:hover {
   display: inline-block;
 }
 
-.badge-role-admin,
-.badge-role-support,
-.badge-role-regular {
-  padding: 0 15px;
-  border-radius: 5px;
-  font-weight: bold;
-  font-size: 1.2rem;
-  margin-right: 10px;
-  margin-left: 10px;
-  height: 38px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  line-height: 38px;
-  text-align: center;
-}
-
 .badge-role-admin {
   background-color: var(--badge-admin-color);
-  border: 1px solid var(--badge-admin-color);
+  border: 2px solid var(--badge-admin-color);
   color: #ffffff;
 }
 
 .badge-role-support {
   background-color: var(--badge-support-color);
-  border: 1px solid var(--badge-support-color);
-
+  border: 2px solid var(--badge-support-color);
   color: #ffffff;
 }
 
 .badge-role-regular {
   background-color: var(--badge-regular-color);
-  border: 1px solid var(--badge-regular-color);
-
+  border: 2px solid var(--badge-regular-color);
   color: #ffffff;
 }
 
@@ -751,7 +718,7 @@ body.dark-mode .create-ticket-card {
 }
 
 .auth-header {
-  border-bottom: 1px solid #dee2e6;
+  border-bottom: 2px solid #dee2e6;
   padding-bottom: 1rem;
   display: flex;
   align-items: center;
@@ -776,19 +743,19 @@ body.dark-mode .create-ticket-card {
   padding: 0.75rem;
   margin-top: 0.5rem;
   border-radius: 4px;
-  border: 1px solid #ced4da;
+  border: 2px solid #ced4da;
   color: #000000;
 }
 
 body.dark-mode .form-control {
   background-color: var(--card-background-dark-mode);
-  border: 1px solid #585858;
+  border: 2px solid #585858;
   color: #acacac;
 }
 
 body.dark-mode .dropdown-box {
   background-color: var(--card-background-dark-mode);
-  border: 1px solid #585858;
+  border: 2px solid #585858;
   color: #ffffff;
 }
 
@@ -852,37 +819,37 @@ span.invalid {
 .badge-active-tickets-low {
   background-color: var(--badge-active-tickets-low);
   color: white;
-  border: 1px solid var(--badge-active-tickets-low);
+  border: 2px solid var(--badge-active-tickets-low);
 }
 
 body.dark-mode .badge-active-tickets-low {
   background-color: transparent;
-  color: #000000;
-  border: 1px solid var(--badge-active-tickets-low);
+  color: white;
+  border: 2px solid var(--badge-active-tickets-low);
 }
 
 .badge-active-tickets-medium {
   background-color: var(--badge-active-tickets-medium);
-  color: #000000;
-  border: 1px solid var(--badge-active-tickets-medium);
+  color: white;
+  border: 2px solid var(--badge-active-tickets-medium);
 }
 
 body.dark-mode .badge-active-tickets-medium {
   background-color: transparent;
   color: var(--badge-active-tickets-medium);
-  border: 1px solid var(--badge-active-tickets-medium);
+  border: 2px solid var(--badge-active-tickets-medium);
 }
 
 .badge-active-tickets-high {
   background-color: var(--badge-active-tickets-high);
   color: white;
-  border: 1px solid var(--badge-active-tickets-high);
+  border: 2px solid var(--badge-active-tickets-high);
 }
 
 body.dark-mode .badge-active-tickets-high {
   background-color: transparent;
   color: var(--badge-active-tickets-high);
-  border: 1px solid var(--badge-active-tickets-high);
+  border: 2px solid var(--badge-active-tickets-high);
 }
 
 .title-spacing {
@@ -910,7 +877,7 @@ body.dark-mode .modal-content {
 }
 
 body.dark-mode .modal-header {
-  border-bottom: 1px solid #444;
+  border-bottom: 2px solid #444;
 }
 
 body.dark-mode .modal-body {
@@ -919,7 +886,7 @@ body.dark-mode .modal-body {
 }
 
 body.dark-mode .modal-footer {
-  border-top: 1px solid #444;
+  border-top: 2px solid #444;
 }
 
 .dataTables_length select {
@@ -959,19 +926,19 @@ body.dark-mode .modal-footer {
 .status-open,
 .readonly-status-open-badge {
   background-color: var(--badge-open-color);
-  border: 1px solid var(--badge-open-color);
+  border: 2px solid var(--badge-open-color);
 }
 
 .status-in-progress,
 .readonly-status-in-progress-badge {
   background-color: var(--badge-in-progress-color);
-  border: 1px solid var(--badge-in-progress-color);
+  border: 2px solid var(--badge-in-progress-color);
 }
 
 .status-closed,
 .readonly-status-closed-badge {
   background-color: var(--badge-closed-color);
-  border: 1px solid var(--badge-closed-color);
+  border: 2px solid var(--badge-closed-color);
 }
 
 .assignee-badge {
@@ -980,21 +947,21 @@ body.dark-mode .modal-footer {
 
 body.dark-mode .readonly-assignee-badge,
 body.dark-mode .assignee-badge {
-  border: 1px solid #c867a5;
+  border: 2px solid #c867a5;
   background-color: transparent;
 }
 
 body.dark-mode .status-open,
 body.dark-mode .readonly-status-open-badge {
   color: var(--badge-open-color);
-  border: 1px solid var(--badge-open-color);
+  border: 2px solid var(--badge-open-color);
   background-color: transparent;
 }
 
 body.dark-mode .status-in-progress,
 body.dark-mode .readonly-status-in-progress-badge {
   color: var(--badge-in-progress-color);
-  border: 1px solid var(--badge-in-progress-color);
+  border: 2px solid var(--badge-in-progress-color);
   background-color: transparent;
 }
 
@@ -1002,27 +969,27 @@ body.dark-mode .status-closed,
 body.dark-mode .readonly-status-closed-badge {
   background-color: transparent;
   color: var(--badge-closed-color-dark-mode);
-  border: 1px solid var(--badge-closed-color-dark-mode);
+  border: 2px solid var(--badge-closed-color-dark-mode);
 }
 
 body.dark-mode .readonly-priority-low-badge,
 body.dark-mode .priority-low {
   color: var(--badge-priority-low);
-  border: 1px solid var(--badge-priority-low);
+  border: 2px solid var(--badge-priority-low);
   background-color: transparent;
 }
 
 body.dark-mode .readonly-priority-medium-badge,
 body.dark-mode .priority-medium {
   color: var(--badge-priority-medium);
-  border: 1px solid var(--badge-priority-medium);
+  border: 2px solid var(--badge-priority-medium);
   background-color: transparent;
 }
 
 body.dark-mode .readonly-priority-high-badge,
 body.dark-mode .priority-high {
   color: var(--badge-priority-high);
-  border: 1px solid var(--badge-priority-high);
+  border: 2px solid var(--badge-priority-high);
   background-color: transparent;
 }
 
@@ -1069,11 +1036,11 @@ body.dark-mode .assign-to-dropdown {
     display: block;
     width: 250px;
     overflow: hidden;
-    border: 1px solid #ffffff;
+    border: 2px solid #ffffff;
   }
 
   .collapse.show {
-    border-right: 1px solid #ffffff;
+    border-right: 2px solid #ffffff;
   }
 
   .dropdown-menu {
