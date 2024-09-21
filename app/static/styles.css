@@ -601,6 +601,7 @@ body.dark-mode .jumbotron {
   white-space: nowrap;
   justify-content: space-between;
   text-decoration: none !important;
+  transition: transform 0.2s, box-shadow 0.2s;
   margin-left: auto;
   font-weight: bold;
 }
@@ -608,7 +609,6 @@ body.dark-mode .jumbotron {
 .logout-badge,
 .profile-badge {
   cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
   color: #ffff;
   background-color: #dc3545;
   border: 2px solid #dc3545;
@@ -1342,11 +1342,12 @@ body.dark-mode .logo-circle {
 }
 
 .submitter-profile-img {
-  width: 50px;
-  height: 50px;
+  width: 100px;
+  height: 100px;
   border-radius: 50%;
   object-fit: cover;
   margin-right: 15px;
+  border: 3px solid var(--accent-color);
 }
 
 .profile-circle {
@@ -1363,12 +1364,6 @@ body.dark-mode .logo-circle {
 
 .new-profile input {
   margin-top: 20px;
-}
-
-.submitter-profile-img {
-  width: 100px;
-  height: 100px;
-  object-fit: cover;
 }
 
 /* Style for both submitted name and date text */
