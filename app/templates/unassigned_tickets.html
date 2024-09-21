@@ -125,12 +125,10 @@
                   <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
                   <input type="hidden" name="ticket_id" value="{{ ticket.id }}" />
                   <select name="assigned_to" class="form-select form-select-sm mb-2 assign-to-dropdown">
-                    <option value="{{ current_user.id }}">
-                      Assign to Me ({{ current_user.name }})
-                    </option>
+                    <option value="">-- Select User --</option>
                     {% for staff in support_staff %}
                     <option value="{{ staff.id }}" {% if ticket.assignee_id==staff.id %}selected{% endif %}>
-                      {{ staff.name }}
+                      {{ staff.name }} ({{ staff.role }})
                     </option>
                     {% endfor %}
                   </select>

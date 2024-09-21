@@ -359,7 +359,7 @@ def create_ticket():
     if current_user.role in ["admin", "support"]:
         all_users = User.query.all()
     if current_user.role == "admin":
-        support_staff = User.query.filter_by(role="support").all()
+        support_staff = User.query.filter(User.role.in_(["admin", "support"])).all()
 
     return render_template(
         "create_ticket.html",
