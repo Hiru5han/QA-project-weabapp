@@ -911,16 +911,19 @@ body.dark-mode .modal-footer {
 .priority-high,
 .readonly-priority-high-badge {
   background-color: var(--badge-priority-high);
+  border: 2px solid var(--badge-priority-high);
 }
 
 .priority-medium,
 .readonly-priority-medium-badge {
   background-color: var(--badge-priority-medium);
+  border: 2px solid var(--badge-priority-medium);
 }
 
 .priority-low,
 .readonly-priority-low-badge {
   background-color: var(--badge-priority-low);
+  border: 2px solid var(--badge-priority-low);
 }
 
 .status-open,
