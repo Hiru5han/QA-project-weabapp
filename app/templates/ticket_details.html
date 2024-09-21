@@ -1,4 +1,5 @@
-{% extends "base.html" %} {% block content %}
+{% extends "base.html" %}
+{% block content %}
 <div class="auth-page">
   <div class="create-ticket-card">
     <!-- Back Button, Header, and Profile Image -->
@@ -21,7 +22,7 @@
       </div>
     </div>
 
-    <!-- Priority, Status, and Assignee Section -->
+    <!-- Priority, Status, Assignee, and Delete Button Section -->
     <div class="row mb-4">
       <div class="col-md-12">
         <div class="card">
@@ -38,54 +39,75 @@
                 </div>
               </div>
 
-              <!-- Priority, Status, and Assignee -->
+              <!-- Priority, Status, Assignee, and Delete Button -->
               <div class="status-priority-container d-flex flex-column align-items-end">
-                <!-- Priority Button -->
+                <!-- Priority Badge -->
                 <div class="mb-2">
                   <p class="mb-0">
                     <span class="title-spacing"><strong>Priority:</strong></span>
                     <span
-                      class="badge text-white {% if current_user.role == 'admin' or current_user.role == 'support' %}clickable-badge{% endif %} {% if ticket.priority == 'high' %}priority-high{% elif ticket.priority == 'medium' %}priority-medium{% else %}priority-low{% endif %}"
+                      class="badge text-white {% if current_user.role in ['admin', 'support'] %}clickable-badge{% endif %} {% if ticket.priority == 'high' %}priority-high{% elif ticket.priority == 'medium' %}priority-medium{% else %}priority-low{% endif %}"
                       id="priority-badge">
-                      {{ ticket.priority }}{% if current_user.role == 'admin' or
-                      current_user.role == 'support' %}<i class="fas fa-edit ms-2"></i>{% endif %}
+                      {{ ticket.priority }}
+                      {% if current_user.role in ['admin', 'support'] %}
+                      <i class="fas fa-edit ms-2"></i>
+                      {% endif %}
                     </span>
                   </p>
                 </div>
 
-                <!-- Status Button -->
+                <!-- Status Badge -->
                 <div class="mb-2">
                   <p class="mb-0">
                     <span class="title-spacing"><strong>Status:</strong></span>
                     <span
-                      class="badge text-white {% if current_user.role == 'admin' or current_user.role == 'support' %}clickable-badge{% endif %} {% if ticket.status == 'open' %}status-open{% elif ticket.status == 'in-progress' %}status-in-progress{% else %}status-closed{% endif %}"
+                      class="badge text-white {% if current_user.role in ['admin', 'support'] %}clickable-badge{% endif %} {% if ticket.status == 'open' %}status-open{% elif ticket.status == 'in-progress' %}status-in-progress{% else %}status-closed{% endif %}"
                       id="status-badge">
-                      {{ ticket.status }}{% if current_user.role == 'admin' or
-                      current_user.role == 'support' %}<i class="fas fa-edit ms-2"></i>{% endif %}
+                      {{ ticket.status }}
+                      {% if current_user.role in ['admin', 'support'] %}
+                      <i class="fas fa-edit ms-2"></i>
+                      {% endif %}
                     </span>
                   </p>
                 </div>
 
-                <!-- Assignee Button -->
+                <!-- Assignee Badge -->
                 <div class="mb-2">
                   <p class="mb-0">
                     <span class="title-spacing"><strong>Assignee:</strong></span>
                     <span
-                      class="badge text-white {% if current_user.role == 'admin' or current_user.role == 'support' %}clickable-badge{% endif %} assignee-badge"
+                      class="badge text-white {% if current_user.role in ['admin', 'support'] %}clickable-badge{% endif %} assignee-badge"
                       id="assignee-badge">
-                      {% if ticket.assignee %} {{ ticket.assignee.name }}{% if
-                      current_user.role == 'admin' or current_user.role ==
-                      'support' %}<i class="fas fa-edit ms-2"></i>{% endif %} {%
-                      else %} No assignee yet {% endif %}
+                      {% if ticket.assignee %}
+                      {{ ticket.assignee.name }}
+                      {% else %}
+                      No assignee yet
+                      {% endif %}
+                      {% if current_user.role in ['admin', 'support'] %}
+                      <i class="fas fa-edit ms-2"></i>
+                      {% endif %}
                     </span>
                   </p>
                 </div>
+
+                <!-- Delete Button for Admin Users -->
+                {% if current_user.role == 'admin' %}
+                <div class="mb-2">
+                  <form method="POST" action="{{ url_for('main.delete_ticket', ticket_id=ticket.id) }}"
+                    style="display: inline" onsubmit="return confirm('Are you sure you want to delete this ticket?');">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+                    <button type="submit" class="btn btn-danger btn-sm">
+                      <i class="fas fa-trash"></i> Delete Ticket
+                    </button>
+                  </form>
+                </div>
+                {% endif %}
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </div>
+      </div> <!-- End of col-md-12 -->
+    </div> <!-- End of row -->
 
     <!-- Description Section -->
     <div class="row mb-4">
@@ -140,13 +162,15 @@
         </div>
       </div>
     </div>
-  </div>
-</div>
+
+  </div> <!-- End of create-ticket-card -->
+</div> <!-- End of auth-page -->
 
 <!-- Priority Modal -->
 <div class="modal fade" id="priorityModal" tabindex="-1" aria-labelledby="priorityModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
+      <!-- Modal content for updating priority -->
       <div class="modal-header">
         <h5 class="modal-title" id="priorityModalLabel">Update Priority</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -162,7 +186,7 @@
               <option value="high" {% if ticket.priority=='high' %}selected{% endif %}>High</option>
             </select>
           </div>
-          <button type="submit" class="btn btn-primary">Update</button>
+          <button type="submit" class="btn btn-primary mt-2">Update</button>
         </form>
       </div>
     </div>
@@ -173,6 +197,7 @@
 <div class="modal fade" id="statusModal" tabindex="-1" aria-labelledby="statusModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
+      <!-- Modal content for updating status -->
       <div class="modal-header">
         <h5 class="modal-title" id="statusModalLabel">Update Status</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -188,7 +213,7 @@
               <option value="closed" {% if ticket.status=='closed' %}selected{% endif %}>Closed</option>
             </select>
           </div>
-          <button type="submit" class="btn btn-primary">Update</button>
+          <button type="submit" class="btn btn-primary mt-2">Update</button>
         </form>
       </div>
     </div>
@@ -199,6 +224,7 @@
 <div class="modal fade" id="assigneeModal" tabindex="-1" aria-labelledby="assigneeModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
+      <!-- Modal content for updating assignee -->
       <div class="modal-header">
         <h5 class="modal-title" id="assigneeModalLabel">Update Assignee</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -215,12 +241,42 @@
               {% endfor %}
             </select>
           </div>
-          <button type="submit" class="btn btn-primary">Update</button>
+          <button type="submit" class="btn btn-primary mt-2">Update</button>
         </form>
       </div>
     </div>
   </div>
 </div>
+
+<!-- Delete Confirmation Modal (Only for Admin Users) -->
+{% if current_user.role == 'admin' %}
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteModalLabel">Confirm Deletion</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Are you sure you want to delete this ticket? This action cannot be undone.
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Cancel
+        </button>
+        <form method="POST" action="{{ url_for('main.delete_ticket', ticket_id=ticket.id) }}" style="display: inline">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+          <button type="submit" class="btn btn-danger">
+            Delete
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+<!-- Scripts -->
 <script>
   // Handle back navigation
   function goBack() {
@@ -238,7 +294,7 @@
   }
 </script>
 
-{% if current_user.role == 'admin' or current_user.role == 'support' %}
+{% if current_user.role in ['admin', 'support'] %}
 <script>
   document
     .getElementById("status-badge")
@@ -273,4 +329,5 @@
     return new bootstrap.Tooltip(tooltipTriggerEl);
   });
 </script>
-{% endif %} {% endblock %}
+{% endif %}
+{% endblock %}

@@ -26,6 +26,8 @@
   --badge-active-tickets-high: var(--badge-priority-high);
   --badge-active-tickets-medium: var(--badge-priority-medium);
   --badge-active-tickets-low: var(--badge-priority-low);
+
+  --delete-button: var(--badge-priority-high);
 }
 
 body {
@@ -1366,18 +1368,21 @@ body.dark-mode .logo-circle {
   margin-top: 20px;
 }
 
-/* Style for both submitted name and date text */
 .submitted-text {
-  color: #000000; /* Ensure both texts are bright white */
-  font-weight: normal; /* Adjust to your desired font-weight */
+  color: #000000;
+  font-weight: normal;
 }
 
-/* If you're using a dark mode, make sure it applies for dark-mode too */
 body.dark-mode .submitted-text {
-  color: #ffffff; /* Ensure both texts remain white in dark mode */
+  color: #ffffff;
 }
 
-/* Optional: Ensure the global text-muted or other conflicting classes don't override this */
 .text-muted {
-  color: inherit !important; /* Prevent muted text from affecting the appearance */
+  color: inherit !important;
+}
+
+body.dark-mode .btn-danger {
+  background-color: transparent;
+  color: var(--accent-color);
+  border: 2px solid var(--delete-button);
 }
