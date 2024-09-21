@@ -1,11 +1,12 @@
 :root {
-  --primary-color: #283593;
+  --primary-color: #2f40ba;
   --secondary-color: #5d646a;
   --background-color: #f8f9fa;
   --background-color-dark-mode: #1e1e1e;
   --accent-color: #ffffff;
   --green-color: #28a745;
-  --view-button: #c354ff;
+  --update-button: #c354ff;
+  --view-button: #398fff;
   --card-background-dark-mode: #2e2e2e;
   --text-color-dark-mode: #f8f9fa;
 
@@ -112,22 +113,22 @@ h2 {
 }
 
 .btn-outline-primary {
-  border-color: var(--primary-color); /* Primary Colour */
-  color: var(--primary-color);
-}
-
-.btn-outline-primary:hover {
-  background-color: var(--primary-color);
-  color: #ffffff;
-}
-
-.btn-outline-update {
   border-color: var(--view-button); /* Primary Colour */
   color: var(--view-button);
 }
 
-.btn-outline-update:hover {
+.btn-outline-primary:hover {
   background-color: var(--view-button);
+  color: #ffffff;
+}
+
+.btn-outline-update {
+  border-color: var(--update-button); /* Primary Colour */
+  color: var(--update-button);
+}
+
+.btn-outline-update:hover {
+  background-color: var(--update-button);
   color: #ffffff;
 }
 
@@ -484,12 +485,17 @@ body.dark-mode .btn-outline-update:hover {
 }
 
 body.dark-mode .btn-outline-primary:hover {
-  background-color: #8787ce !important; /* Muted blue */
-  border-color: #3a3a5a;
+  background-color: var(--view-button); /* Muted blue */
+  border-color: var(--view-button);
+}
+
+body.dark-mode .btn-outline-primary {
+  color: var(--view-button) !important;
+  border: 1px solid var(--view-button); /* Same colour for the outline */
 }
 
 body.dark-mode .btn-outline-update {
-  color: var(--view-button) !important;
+  color: var(--update-button) !important;
 }
 
 body.dark-mode .badge-role-support {
