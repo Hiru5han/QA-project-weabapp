@@ -12,17 +12,12 @@
         <h2 class="text-primary mb-0">Ticket Details</h2>
         <p class="lead">{{ ticket.title }}</p>
       </div>
-      <div
-        class="col-md-2 text-end d-flex align-items-center justify-content-end"
-      >
+      <div class="col-md-2 text-end d-flex align-items-center justify-content-end">
         <!-- Submitter's Profile Image aligned to the top-right -->
         <img
           src="{{ url_for('static', filename='uploads/profile_images/' + (ticket.creator.profile_image or 'default.jpg')) }}"
-          alt="{{ ticket.creator.name }}'s Profile Image"
-          class="submitter-profile-img rounded-circle"
-          width="50"
-          height="50"
-        />
+          alt="{{ ticket.creator.name }}'s Profile Image" class="submitter-profile-img rounded-circle" width="50"
+          height="50" />
       </div>
     </div>
 
@@ -34,33 +29,26 @@
             <div class="d-flex align-items-center justify-content-between">
               <div class="d-flex flex-column">
                 <div>
-                  <strong>Submitted by:</strong> {{ ticket.creator.name }}
+                  <strong>Submitted by:</strong>
+                  <span class="submitted-text">{{ ticket.creator.name }}</span>
                 </div>
-                <div class="text-muted">
-                  <strong>Submitted on:</strong> {{
-                  ticket.created_at.strftime('%Y-%m-%d %H:%M:%S') }}
+                <div>
+                  <strong>Submitted on:</strong>
+                  <span class="submitted-text">{{ ticket.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</span>
                 </div>
               </div>
 
               <!-- Priority, Status, and Assignee -->
-              <div
-                class="status-priority-container d-flex flex-column align-items-end"
-              >
+              <div class="status-priority-container d-flex flex-column align-items-end">
                 <!-- Priority Button -->
                 <div class="mb-2">
                   <p class="mb-0">
-                    <span class="title-spacing"
-                      ><strong>Priority:</strong></span
-                    >
+                    <span class="title-spacing"><strong>Priority:</strong></span>
                     <span
                       class="badge text-white {% if current_user.role == 'admin' or current_user.role == 'support' %}clickable-badge{% endif %} {% if ticket.priority == 'high' %}priority-high{% elif ticket.priority == 'medium' %}priority-medium{% else %}priority-low{% endif %}"
-                      id="priority-badge"
-                    >
+                      id="priority-badge">
                       {{ ticket.priority }}{% if current_user.role == 'admin' or
-                      current_user.role == 'support' %}<i
-                        class="fas fa-edit ms-2"
-                      ></i
-                      >{% endif %}
+                      current_user.role == 'support' %}<i class="fas fa-edit ms-2"></i>{% endif %}
                     </span>
                   </p>
                 </div>
@@ -71,13 +59,9 @@
                     <span class="title-spacing"><strong>Status:</strong></span>
                     <span
                       class="badge text-white {% if current_user.role == 'admin' or current_user.role == 'support' %}clickable-badge{% endif %} {% if ticket.status == 'open' %}status-open{% elif ticket.status == 'in-progress' %}status-in-progress{% else %}status-closed{% endif %}"
-                      id="status-badge"
-                    >
+                      id="status-badge">
                       {{ ticket.status }}{% if current_user.role == 'admin' or
-                      current_user.role == 'support' %}<i
-                        class="fas fa-edit ms-2"
-                      ></i
-                      >{% endif %}
+                      current_user.role == 'support' %}<i class="fas fa-edit ms-2"></i>{% endif %}
                     </span>
                   </p>
                 </div>
@@ -85,13 +69,10 @@
                 <!-- Assignee Button -->
                 <div class="mb-2">
                   <p class="mb-0">
-                    <span class="title-spacing"
-                      ><strong>Assignee:</strong></span
-                    >
+                    <span class="title-spacing"><strong>Assignee:</strong></span>
                     <span
                       class="badge text-white {% if current_user.role == 'admin' or current_user.role == 'support' %}clickable-badge{% endif %} assignee-badge"
-                      id="assignee-badge"
-                    >
+                      id="assignee-badge">
                       {% if ticket.assignee %} {{ ticket.assignee.name }}{% if
                       current_user.role == 'admin' or current_user.role ==
                       'support' %}<i class="fas fa-edit ms-2"></i>{% endif %} {%
@@ -125,20 +106,10 @@
           <div class="card-body">
             <h5 class="card-title">Comments</h5>
             <form method="POST" class="mb-3">
-              <input
-                type="hidden"
-                name="csrf_token"
-                value="{{ csrf_token() }}"
-              />
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
               <div class="form-group">
                 <label for="comment_text">Add a comment</label>
-                <textarea
-                  class="form-control"
-                  id="comment_text"
-                  name="comment_text"
-                  rows="3"
-                  required
-                ></textarea>
+                <textarea class="form-control" id="comment_text" name="comment_text" rows="3" required></textarea>
               </div>
               <button type="submit" class="btn btn-primary mt-2">
                 Add Comment
@@ -151,21 +122,16 @@
                   <!-- Commenter's Profile Image -->
                   <img
                     src="{{ url_for('static', filename='uploads/profile_images/' + (comment.commenter.profile_image or 'default.jpg')) }}"
-                    alt="{{ comment.commenter.name }}'s Profile Image"
-                    class="comment-profile-img rounded-circle me-2"
-                    width="40"
-                    height="40"
-                  />
+                    alt="{{ comment.commenter.name }}'s Profile Image" class="comment-profile-img rounded-circle me-2"
+                    width="40" height="40" />
                   <div>
                     <strong>{{ comment.commenter.name }}:</strong> {{
                     comment.comment_text }}
                   </div>
                 </div>
                 <div class="text-muted">
-                  <em
-                    >{{ moment(comment.created_at).format('YYYY-MM-DD HH:mm:ss')
-                    }}</em
-                  >
+                  <em>{{ moment(comment.created_at).format('YYYY-MM-DD HH:mm:ss')
+                    }}</em>
                 </div>
               </li>
               {% endfor %}
@@ -191,9 +157,9 @@
           <div class="form-group">
             <label for="priority">Select New Priority</label>
             <select class="dropdown-box" id="priority" name="priority">
-              <option value="low" {% if ticket.priority == 'low' %}selected{% endif %}>Low</option>
-              <option value="medium" {% if ticket.priority == 'medium' %}selected{% endif %}>Medium</option>
-              <option value="high" {% if ticket.priority == 'high' %}selected{% endif %}>High</option>
+              <option value="low" {% if ticket.priority=='low' %}selected{% endif %}>Low</option>
+              <option value="medium" {% if ticket.priority=='medium' %}selected{% endif %}>Medium</option>
+              <option value="high" {% if ticket.priority=='high' %}selected{% endif %}>High</option>
             </select>
           </div>
           <button type="submit" class="btn btn-primary">Update</button>
@@ -217,9 +183,9 @@
           <div class="form-group">
             <label for="status">Select New Status</label>
             <select class="dropdown-box" id="status" name="status">
-              <option value="open" {% if ticket.status == 'open' %}selected{% endif %}>Open</option>
-              <option value="in-progress" {% if ticket.status == 'in-progress' %}selected{% endif %}>In Progress</option>
-              <option value="closed" {% if ticket.status == 'closed' %}selected{% endif %}>Closed</option>
+              <option value="open" {% if ticket.status=='open' %}selected{% endif %}>Open</option>
+              <option value="in-progress" {% if ticket.status=='in-progress' %}selected{% endif %}>In Progress</option>
+              <option value="closed" {% if ticket.status=='closed' %}selected{% endif %}>Closed</option>
             </select>
           </div>
           <button type="submit" class="btn btn-primary">Update</button>
@@ -244,7 +210,8 @@
             <label for="assignee">Select New Assignee</label>
             <select class="dropdown-box" id="assignee" name="assignee">
               {% for user in users %}
-              <option value="{{ user.id }}" {% if ticket.assigned_to == user.id %}selected{% endif %}>{{ user.name }}</option>
+              <option value="{{ user.id }}" {% if ticket.assigned_to==user.id %}selected{% endif %}>{{ user.name }}
+              </option>
               {% endfor %}
             </select>
           </div>
