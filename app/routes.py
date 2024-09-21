@@ -541,7 +541,7 @@ def assign_ticket(ticket_id):
         return redirect(url_for("main.all_tickets"))
 
     ticket = Ticket.query.get_or_404(ticket_id)
-    support_staff = User.query.filter_by(role="support").all()
+    support_staff = User.query.filter(User.role.in_(["admin", "support"])).all()
 
     if request.method == "POST":
         assigned_to_id = request.form.get("assigned_to")
@@ -652,7 +652,7 @@ def assigned_tickets():
             .all()
         )
 
-    support_staff = User.query.filter_by(role="support").all()
+    support_staff = User.query.filter(User.role.in_(["admin", "support"])).all()
     return render_template(
         "assigned_tickets.html",
         assigned_tickets=assigned_tickets,  # Ensure this matches the template variable

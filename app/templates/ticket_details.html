@@ -173,7 +173,9 @@
       <!-- Modal content for updating priority -->
       <div class="modal-header">
         <h5 class="modal-title" id="priorityModalLabel">Update Priority</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
       </div>
       <div class="modal-body">
         <form method="POST">
@@ -200,7 +202,9 @@
       <!-- Modal content for updating status -->
       <div class="modal-header">
         <h5 class="modal-title" id="statusModalLabel">Update Status</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
       </div>
       <div class="modal-body">
         <form method="POST">
@@ -227,7 +231,9 @@
       <!-- Modal content for updating assignee -->
       <div class="modal-header">
         <h5 class="modal-title" id="assigneeModalLabel">Update Assignee</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
       </div>
       <div class="modal-body">
         <form method="POST">
@@ -236,7 +242,8 @@
             <label for="assignee">Select New Assignee</label>
             <select class="dropdown-box" id="assignee" name="assignee">
               {% for user in users %}
-              <option value="{{ user.id }}" {% if ticket.assigned_to==user.id %}selected{% endif %}>{{ user.name }}
+              <option value="{{ user.id }}" {% if ticket.assigned_to==user.id %}selected{% endif %}>{{ user.name }} ({{
+                user.role }})
               </option>
               {% endfor %}
             </select>
