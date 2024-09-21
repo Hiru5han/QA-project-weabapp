@@ -10,7 +10,6 @@
   --card-background-dark-mode: #2e2e2e;
   --text-color-dark-mode: #f8f9fa;
 
-  /* Ticket badges */
   --badge-open-color: #a9be77;
   --badge-in-progress-color: #359d73;
   --badge-closed-color: var(--secondary-color);
@@ -20,12 +19,10 @@
   --badge-priority-medium: #ea8553;
   --badge-priority-low: #5d9db9;
 
-  /* Role badges */
   --badge-admin-color: #dc3545;
   --badge-support-color: #b881b1;
   --badge-regular-color: #5d9db9;
 
-  /* Active badge */
   --badge-active-tickets-high: #dc3545;
   --badge-active-tickets-medium: #ffc107;
   --badge-active-tickets-low: var(--green-color);
@@ -38,13 +35,12 @@ body {
   color: var(--secondary-color);
 }
 
-/* General Styles */
 .container {
   margin-top: 50px;
 }
 
 h2 {
-  color: #007bff; /* Primary Colour */
+  color: #007bff;
 }
 
 .table th,
@@ -67,8 +63,8 @@ h2 {
 }
 
 .card-header {
-  background-color: var(--primary-color) !important; /* Primary Colour */
-  color: #ffffff; /* Set text to white for visibility */
+  background-color: var(--primary-color) !important;
+  color: #ffffff;
   font-size: 1.25rem;
   font-weight: 500;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -76,8 +72,8 @@ h2 {
   justify-content: space-between;
   align-items: center;
   position: relative;
-  padding-top: 20px; /* Adjust the top padding as needed */
-  padding-bottom: 20px; /* Adjust the bottom padding as needed */
+  padding-top: 20px;
+  padding-bottom: 20px;
 }
 
 .card-header .text-center {
@@ -115,7 +111,7 @@ h2 {
 }
 
 .btn-outline-primary {
-  border-color: var(--view-button); /* Primary Colour */
+  border-color: var(--view-button);
   color: var(--view-button);
 }
 
@@ -125,7 +121,7 @@ h2 {
 }
 
 .btn-outline-update {
-  border-color: var(--update-button); /* Primary Colour */
+  border-color: var(--update-button);
   color: var(--update-button);
 }
 
@@ -139,28 +135,26 @@ h2 {
 }
 
 .text-primary {
-  color: var(--primary-color) !important; /* Primary Colour */
+  color: var(--primary-color) !important;
   font-size: 2.2em;
 }
 
 body.dark-mode .text-primary {
-  color: var(--text-color-dark-mode) !important; /* Primary Colour */
+  color: var(--text-color-dark-mode) !important;
   font-size: 2.2em;
 }
 
-/* Ensure consistent width for status and priority badges */
 .badge-status {
   display: block;
-  width: 100%; /* Allows the badge to take the full width of its container */
-  text-align: center; /* Centre the text */
+  width: 100%;
+  text-align: center;
 }
 
-/* Ensure the container for status and priority badges is constrained */
 .badge-container {
   display: flex;
-  justify-content: center; /* Centre align the badges */
+  justify-content: center;
   align-items: center;
-  width: 100px; /* This width should match the width you want for the badges */
+  width: 100px;
 }
 
 .list-unstyled {
@@ -176,49 +170,46 @@ body.dark-mode .text-primary {
   border-bottom: none;
 }
 
-/* Navbar Customisation */
 .navbar {
-  background-color: var(--primary-color); /* Navbar Colour */
+  background-color: var(--primary-color);
   position: relative;
 }
 
 .navbar .navbar-brand,
 .navbar .nav-link {
-  color: #ffffff; /* Custom text colour */
+  color: #ffffff;
 }
 
 .navbar-brand {
   display: flex;
   align-items: center;
-  pointer-events: none; /* Disables hover interaction on the image */
+  pointer-events: none;
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
 }
 
 .navbar .nav-link:hover {
-  color: var(--background-color); /* Hover text colour */
+  color: var(--background-color);
 }
 
 .navbar .nav-link.active {
-  color: #000000; /* Active link colour */
-  background-color: #ffffff; /* Active link background colour */
-  border-radius: 5px; /* Optional: rounded corners */
+  color: #000000;
+  background-color: #ffffff;
+  border-radius: 5px;
 }
 
-/* Make the cursor a pointer when hovering over the logout button */
 .logout-badge,
 .profile-badge {
   cursor: pointer;
 }
 
 .status-badge {
-  display: inline-block; /* Ensure it remains inline */
-  text-align: center; /* Centre the text */
-  width: auto; /* Adjust width as needed */
+  display: inline-block;
+  text-align: center;
+  width: auto;
 }
 
-/* Jumbotron Styles */
 .jumbotron {
   background-color: #ffffff;
   border-radius: 0.5rem;
@@ -227,7 +218,7 @@ body.dark-mode .text-primary {
   margin: 2rem auto;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   text-align: centre;
-  margin-top: 50px; /* Same margin as container and login-page */
+  margin-top: 50px;
 }
 
 .jumbotron h1 {
@@ -264,30 +255,29 @@ body.dark-mode .text-primary {
 }
 
 .back-button {
-  margin-right: auto; /* Push the back button to the far left */
+  margin-right: auto;
   display: flex;
   align-items: center;
-  text-decoration: none; /* Remove the underline */
+  text-decoration: none;
 }
 
 .back-button:hover {
-  text-decoration: none; /* Ensure no underline appears on hover */
+  text-decoration: none;
 }
 
 .back-button-icon {
   font-size: 48px;
-  color: var(--primary-button); /* Change this to your desired colour */
+  color: var(--primary-button);
 }
 
 .back-button-icon:hover {
-  color: #0056b3; /* Darker shade on hover */
+  color: #0056b3;
 }
 
-/* Theme Toggle Button */
 #theme-toggle-button {
   font-size: 1.5rem;
   cursor: pointer;
-  height: 30px; /* Match the height of the logo */
+  height: 30px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -299,8 +289,8 @@ body.dark-mode .text-primary {
 
 #theme-toggle-button .fas {
   transition: color 0.3s ease;
-  font-size: 40px; /* Increase the icon size to match the logo's proportions */
-  line-height: 40px; /* Vertically center the icon */
+  font-size: 40px;
+  line-height: 40px;
 }
 
 .toggle-buttons {
@@ -314,14 +304,13 @@ body.dark-mode .text-primary {
 }
 
 body.light-mode #theme-toggle-icon {
-  color: #f39c12; /* Sun color */
+  color: #f39c12;
 }
 
 body.dark-mode #theme-toggle-icon {
-  color: #ffcc66; /* Soft warm yellow */
+  color: #ffcc66;
 }
 
-/* Toggle Group Styling */
 .toggle-group {
   border: 1px solid #ddd;
   border-radius: 8px;
@@ -329,51 +318,46 @@ body.dark-mode #theme-toggle-icon {
   display: inline-flex;
 }
 
-/* Individual Toggle Button Styling */
 .btn-toggle {
   background-color: white;
   color: black;
   padding: 10px 20px;
-  border: 1px solid #ccc; /* Or the border style you need */
+  border: 1px solid #ccc;
   border-radius: 0;
   font-weight: bold;
   cursor: pointer;
   transition: background-color 0.3s ease, color 0.3s ease;
-  text-decoration: none; /* Ensures links look like buttons */
+  text-decoration: none;
 }
 
-/* Active Toggle Button Styling */
 .btn-toggle.active {
-  background-color: #00bcd4; /* Adjust to your desired active color */
+  background-color: #00bcd4;
   color: white;
   border-color: #00838f;
 }
 
 body.dark-mode .btn-toggle.active {
-  background-color: #2a2a2a; /* Darker version of #00bcd4 */
-  color: #eceff1; /* Light grey for better contrast */
+  background-color: #2a2a2a;
+  color: #eceff1;
 }
 
 body.dark-mode .btn-toggle {
   background-color: transparent;
-  color: #6f6f6f; /* Light grey for better contrast */
-  border-color: #6f6f6f; /* Darker version of #00838f */
+  color: #6f6f6f;
+  border-color: #6f6f6f;
 }
 
-/* Hover Effect for Inactive Toggle Buttons */
 .btn-toggle:not(.active):hover {
-  background-color: #80deea; /* Adjust to your desired active color */
+  background-color: #80deea;
   color: #37474f;
   border-color: #4dd0e1;
 }
 
-/* Hover Effect for Inactive Toggle Buttons - Night Mode */
 body.dark-mode .btn-toggle:not(.active):hover {
-  background-color: #29575e; /* Darker version of #80deea */
-  color: #eceff1; /* Lightened text color for better contrast */
+  background-color: #29575e;
+  color: #eceff1;
 }
 
-/* Rounded Corners for Toggle Buttons */
 .toggle-group .btn-toggle:first-child {
   border-top-left-radius: 8px;
   border-bottom-left-radius: 8px;
@@ -384,7 +368,6 @@ body.dark-mode .btn-toggle:not(.active):hover {
   border-bottom-right-radius: 8px;
 }
 
-/* General styles for criteria */
 .criteria {
   display: flex;
   justify-content: space-between;
@@ -410,74 +393,72 @@ span.invalid {
   color: red;
 }
 
-/* Adjust the button for toggling password visibility */
 #togglePassword {
   margin-top: 10px;
 }
 
-/* Dark Mode */
 body.dark-mode {
-  background-color: var(--background-color-dark-mode); /* Darker background */
-  color: #dcdcdc; /* Light grey text */
+  background-color: var(--background-color-dark-mode);
+  color: #dcdcdc;
 }
 
 body.dark-mode h2 {
-  color: #79a8ff; /* Softer blue for headings */
+  color: #79a8ff;
 }
 
 body.dark-mode .table td {
-  color: #dcdcdc; /* Light grey text for better readability */
+  color: #dcdcdc;
 }
 
 body.dark-mode .table th {
-  color: #dcdcdc; /* Light grey text for better readability */
-  background-color: #2a2a2a; /* Darker grey for table header */
+  color: #dcdcdc;
+  background-color: #2a2a2a;
 }
 
 body.dark-mode .table td a {
-  color: #79a8ff; /* Ensure links are visible */
+  color: #79a8ff;
 }
 
 body.dark-mode .table td a:hover {
-  color: #a3c1ff; /* Lighter blue on hover for links */
+  color: #a3c1ff;
 }
 
 body.dark-mode .table-hover tbody tr:hover {
-  background-color: #333333; /* A bit brighter for hover effect */
+  background-color: #333333;
 }
 
 body.dark-mode .card {
-  background-color: #191919; /* Dark slate for cards */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Darker shadow for contrast */
+  background-color: #191919;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
 }
 
 body.dark-mode .card-header {
-  background-color: #000000 !important; /* Apply the new colour with higher specificity */
-  color: #dcdcdc !important; /* Ensure text colour is also applied */
+  background-color: #000000 !important;
+  color: #dcdcdc !important;
 }
 
 body.dark-mode .btn-primary {
-  background-color: #3a3a5a; /* Muted blue */
+  background-color: #3a3a5a;
   border-color: #3a3a5a;
 }
 
 body.dark-mode .btn-primary:hover {
-  background-color: #6b6ba5; /* Muted blue */
+  background-color: #6b6ba5;
   border-color: #6b6ba5;
 }
 
 body.dark-mode .btn-secondary {
-  background-color: #444444; /* Muted grey-blue */
+  background-color: #444444;
   border-color: #444444;
 }
 
 body.dark-mode .btn-secondary:hover {
-  background-color: #707070; /* Muted grey-blue */
+  background-color: #707070;
   border-color: #707070;
 }
 
 body.dark-mode .btn-success {
-  background-color: #135523; /* Fresh teal */
+  background-color: #135523;
   border-color: #135523;
 }
 
@@ -487,13 +468,13 @@ body.dark-mode .btn-outline-update:hover {
 }
 
 body.dark-mode .btn-outline-primary:hover {
-  background-color: var(--view-button); /* Muted blue */
+  background-color: var(--view-button);
   border-color: var(--view-button);
 }
 
 body.dark-mode .btn-outline-primary {
   color: var(--view-button) !important;
-  border: 1px solid var(--view-button); /* Same colour for the outline */
+  border: 1px solid var(--view-button);
 }
 
 body.dark-mode .btn-outline-update {
@@ -501,49 +482,49 @@ body.dark-mode .btn-outline-update {
 }
 
 body.dark-mode .badge-role-support {
-  color: var(--badge-support-color); /* Text colour */
-  border: 1px solid var(--badge-support-color); /* Same colour for the outline */
+  color: var(--badge-support-color);
+  border: 1px solid var(--badge-support-color);
   background-color: transparent;
 }
 
 body.dark-mode .badge-role-admin {
-  color: var(--badge-admin-color); /* Text colour */
-  border: 1px solid var(--badge-admin-color); /* Same colour for the outline */
+  color: var(--badge-admin-color);
+  border: 1px solid var(--badge-admin-color);
   background-color: transparent;
 }
 
 body.dark-mode .badge-role-regular {
-  color: var(--badge-regular-color); /* Text colour */
-  border: 1px solid var(--badge-regular-color); /* Same colour for the outline */
+  color: var(--badge-regular-color);
+  border: 1px solid var(--badge-regular-color);
   background-color: transparent;
 }
 
 body.dark-mode .navbar {
-  background-color: #000000; /* Darker navbar */
+  background-color: #000000;
 }
 
 body.dark-mode .navbar .navbar-brand,
 body.dark-mode .navbar .nav-link {
-  color: #e0e0e0; /* Soft light blue */
+  color: #e0e0e0;
 }
 
 body.dark-mode .navbar .nav-link:hover {
-  color: #ffffff95; /* Pure white on hover */
+  color: #ffffff95;
 }
 
 body.dark-mode .navbar .nav-link.active {
   color: #1b1b1b;
-  background-color: #79a8ff; /* Vibrant blue */
+  background-color: #79a8ff;
 }
 
 body.dark-mode .login-card {
-  background-color: #242424; /* Consistent dark slate */
-  color: #dcdcdc; /* Consistent light text */
+  background-color: #242424;
+  color: #dcdcdc;
 }
 
 body.dark-mode .jumbotron {
-  background-color: #242424; /* Consistent dark slate */
-  color: #dcdcdc; /* Consistent light text */
+  background-color: #242424;
+  color: #dcdcdc;
 }
 
 .status-priority-container {
@@ -576,7 +557,7 @@ body.dark-mode .jumbotron {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   white-space: nowrap;
   justify-content: space-between;
-  margin-left: 5px; /* Small margin to create space between "Priority:" and the badge */
+  margin-left: 5px;
 }
 
 .clickable-badge {
@@ -623,9 +604,9 @@ body.dark-mode .jumbotron {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   white-space: nowrap;
   justify-content: space-between;
-  color: #fff; /* White text for visibility */
-  background-color: #dc3545; /* Red background specific to logout */
-  text-decoration: none !important; /* Remove underline from link */
+  color: #fff;
+  background-color: #dc3545;
+  text-decoration: none !important;
   margin-left: auto;
   font-weight: bold;
 }
@@ -636,47 +617,47 @@ body.dark-mode .profile-badge {
 }
 
 body.dark-mode .logout-badge {
-  border: 1x solid #a71d2a; /* Same colour for the outline */
+  border: 1x solid #a71d2a;
 }
 
 body.dark-mode .profile-badge {
-  border: 1px solid #a71d2a; /* Same colour for the outline */
+  border: 1px solid #a71d2a;
 }
 
 .logout-badge:hover,
 .profile-badge:hover {
   transform: scale(1.05);
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-  background-color: #c82333; /* Darker red on hover */
-  color: #fff; /* Keep the text white */
+  background-color: #c82333;
+  color: #fff;
 }
 
 .profile-badge:hover {
-  background-color: #c82333; /* Darker red on hover */
-  color: #fff; /* Keep the text white */
+  background-color: #c82333;
+  color: #fff;
 }
 
 .logout-badge:hover {
-  background-color: #c82333; /* Darker red on hover */
-  color: #fff; /* Keep the text white */
+  background-color: #c82333;
+  color: #fff;
 }
 
 body.dark-mode .logout-badge:hover,
 body.dark-mode .profile-badge:hover {
-  background-color: transparent; /* Darker red on hover */
+  background-color: transparent;
 }
 
 .logout-badge i,
 .profile-badge i {
   margin-left: 5px;
-  margin-right: 10px; /* Adjust the value to your preference */
+  margin-right: 10px;
   font-size: 1.2em;
   opacity: 0.8;
 }
 
 .navbar-nav {
   display: flex;
-  align-items: center; /* Vertically aligns children (Logout button and toggle button) */
+  align-items: center;
   margin-left: auto;
 }
 
@@ -686,7 +667,6 @@ body.dark-mode .profile-badge:hover {
   display: inline-block;
 }
 
-/* Ensures proper alignment and spacing */
 .role-container .badge {
   display: inline-block;
 }
@@ -694,57 +674,54 @@ body.dark-mode .profile-badge:hover {
 .badge-role-admin,
 .badge-role-support,
 .badge-role-regular {
-  padding: 0 15px; /* Adjust padding for horizontal centering */
+  padding: 0 15px;
   border-radius: 5px;
   font-weight: bold;
-  font-size: 1.2rem; /* Consistent font size */
+  font-size: 1.2rem;
   margin-right: 10px;
   margin-left: 10px;
-  height: 38px; /* Consistent height */
+  height: 38px;
   display: flex;
   align-items: center;
   justify-content: center;
-  line-height: 38px; /* Ensure text is vertically centered */
+  line-height: 38px;
   text-align: center;
 }
 
 .badge-role-admin {
-  background-color: var(--badge-admin-color); /* Red for admin role */
-  border: 1px solid var(--badge-admin-color); /* Same colour for the outline */
+  background-color: var(--badge-admin-color);
+  border: 1px solid var(--badge-admin-color);
   color: #ffffff;
 }
 
 .badge-role-support {
   background-color: var(--badge-support-color);
-  border: 1px solid var(--badge-support-color); /* Same colour for the outline */
+  border: 1px solid var(--badge-support-color);
 
   color: #ffffff;
 }
 
 .badge-role-regular {
   background-color: var(--badge-regular-color);
-  border: 1px solid var(--badge-regular-color); /* Same colour for the outline */
+  border: 1px solid var(--badge-regular-color);
 
   color: #ffffff;
 }
 
-/* General Container Styling */
 .auth-page {
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 40vh;
-  padding: 20px; /* Additional padding to handle small viewport heights */
-  background-color: var(--background-color); /* Background colour */
+  padding: 20px;
+  background-color: var(--background-color);
 }
 
-/* Night mode styles */
 .dark-mode .auth-page {
-  background-color: var(--background-color-dark-mode); /* Dark background */
-  color: white; /* Light text */
+  background-color: var(--background-color-dark-mode);
+  color: white;
 }
 
-/* Auth Card Styling */
 .auth-card,
 .create-ticket-card {
   width: 100%;
@@ -752,7 +729,7 @@ body.dark-mode .profile-badge:hover {
   background: #fff;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  box-sizing: border-box; /* Ensure padding is included in width */
+  box-sizing: border-box;
 }
 
 .auth-card {
@@ -763,19 +740,16 @@ body.dark-mode .profile-badge:hover {
   max-width: 900px;
 }
 
-/* Night mode styles */
 body.dark-mode .auth-card {
-  background-color: var(--card-background-dark-mode); /* Dark background */
-  color: white; /* Light text */
+  background-color: var(--card-background-dark-mode);
+  color: white;
 }
 
-/* Night mode styles */
 body.dark-mode .create-ticket-card {
-  background-color: var(--card-background-dark-mode); /* Dark background */
-  color: white; /* Light text */
+  background-color: var(--card-background-dark-mode);
+  color: white;
 }
 
-/* Header Styling */
 .auth-header {
   border-bottom: 1px solid #dee2e6;
   padding-bottom: 1rem;
@@ -786,13 +760,12 @@ body.dark-mode .create-ticket-card {
 
 .auth-title {
   font-size: 1.5rem;
-  color: #007bff; /* Ensure the text colour matches */
-  margin: 0 auto; /* Ensure the title is centred */
+  color: #007bff;
+  margin: 0 auto;
   text-align: center;
-  flex-grow: 1; /* Allow the title to take up available space */
+  flex-grow: 1;
 }
 
-/* Form Styling */
 .form-group {
   margin-bottom: 1.5rem;
 }
@@ -827,7 +800,6 @@ body.dark-mode .dropdown-box {
   margin-top: 10px;
 }
 
-/* Flash Messages */
 .flashes .alert {
   margin-bottom: 1rem;
 }
@@ -857,28 +829,26 @@ span.invalid {
   font-weight: bold;
 }
 
-/* Assignee Badge Styling - Centered Text */
 .badge-assignee {
-  background-color: #17a2b8; /* Example Colour: A Teal Blue for Assignee */
-  color: #ffffff; /* White text color */
-  padding: 0.5rem 1rem; /* Adjust padding for better spacing */
-  border-radius: 0.25rem; /* Rounded corners */
-  display: inline-flex; /* Ensures it's an inline flex box */
-  align-items: center; /* Center items vertically */
-  justify-content: center; /* Center items horizontally */
-  font-size: 1.2rem; /* Adjust font size for readability */
+  background-color: #17a2b8;
+  color: #ffffff;
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
 }
 
 .badge-assignee i {
-  margin-left: 0.5rem; /* Adds space between text and icon */
+  margin-left: 0.5rem;
 }
 
 .badge-assignee:hover {
-  background-color: #138496; /* Slightly darker on hover */
-  color: #ffffff; /* Maintain white text on hover */
+  background-color: #138496;
+  color: #ffffff;
 }
 
-/* Custom Badge Colors */
 .badge-active-tickets-low {
   background-color: var(--badge-active-tickets-low);
   color: white;
@@ -916,12 +886,12 @@ body.dark-mode .badge-active-tickets-high {
 }
 
 .title-spacing {
-  margin-right: 5px; /* Adjust this value as needed */
+  margin-right: 5px;
 }
 
 .modal-header .btn-close {
-  z-index: 1056; /* Ensure it's above other elements */
-  position: relative; /* Ensure it stays within the flow */
+  z-index: 1056;
+  position: relative;
   padding: 0.5rem;
   width: 2rem;
   height: 2rem;
@@ -934,7 +904,6 @@ body.dark-mode .badge-active-tickets-high {
   opacity: 1;
 }
 
-/* Modal styling */
 body.dark-mode .modal-content {
   background-color: var(--card-background-dark-mode);
   color: #ffffff;
@@ -958,10 +927,9 @@ body.dark-mode .modal-footer {
 }
 
 .wide-delete-btn {
-  width: 150px; /* Set the desired width */
+  width: 150px;
 }
 
-/* General Badge Styles */
 .dashboard-badge {
   transition: none;
   transform: none;
@@ -973,25 +941,24 @@ body.dark-mode .modal-footer {
   color: white;
 }
 
-/* Priority and Status Badge Colours */
 .priority-high,
 .readonly-priority-high-badge {
-  background-color: var(--badge-priority-high); /* Equivalent to bg-danger */
+  background-color: var(--badge-priority-high);
 }
 
 .priority-medium,
 .readonly-priority-medium-badge {
-  background-color: var(--badge-priority-medium); /* Equivalent to bg-danger */
+  background-color: var(--badge-priority-medium);
 }
 
 .priority-low,
 .readonly-priority-low-badge {
-  background-color: var(--badge-priority-low); /* Equivalent to bg-danger */
+  background-color: var(--badge-priority-low);
 }
 
 .status-open,
 .readonly-status-open-badge {
-  background-color: var(--badge-open-color); /* Equivalent to bg-success */
+  background-color: var(--badge-open-color);
   border: 1px solid var(--badge-open-color);
 }
 
@@ -1007,29 +974,27 @@ body.dark-mode .modal-footer {
   border: 1px solid var(--badge-closed-color);
 }
 
-/* Assignee Badge */
 .assignee-badge {
   background-color: #704776;
 }
 
-/* Dark Mode Badge Adjustments */
 body.dark-mode .readonly-assignee-badge,
 body.dark-mode .assignee-badge {
-  border: 1px solid #c867a5; /* Same colour for the outline */
+  border: 1px solid #c867a5;
   background-color: transparent;
 }
 
 body.dark-mode .status-open,
 body.dark-mode .readonly-status-open-badge {
-  color: var(--badge-open-color); /* Text colour */
-  border: 1px solid var(--badge-open-color); /* Same colour for the outline */
+  color: var(--badge-open-color);
+  border: 1px solid var(--badge-open-color);
   background-color: transparent;
 }
 
 body.dark-mode .status-in-progress,
 body.dark-mode .readonly-status-in-progress-badge {
-  color: var(--badge-in-progress-color); /* Text colour */
-  border: 1px solid var(--badge-in-progress-color); /* Same colour for the outline */
+  color: var(--badge-in-progress-color);
+  border: 1px solid var(--badge-in-progress-color);
   background-color: transparent;
 }
 
@@ -1037,70 +1002,64 @@ body.dark-mode .status-closed,
 body.dark-mode .readonly-status-closed-badge {
   background-color: transparent;
   color: var(--badge-closed-color-dark-mode);
-  border: 1px solid var(--badge-closed-color-dark-mode); /* Same colour for the outline */
+  border: 1px solid var(--badge-closed-color-dark-mode);
 }
 
-/* Dark Mode Priority Colours */
 body.dark-mode .readonly-priority-low-badge,
 body.dark-mode .priority-low {
-  color: var(--badge-priority-low); /* Text colour */
-  border: 1px solid var(--badge-priority-low); /* Same colour for the outline */
+  color: var(--badge-priority-low);
+  border: 1px solid var(--badge-priority-low);
   background-color: transparent;
 }
 
 body.dark-mode .readonly-priority-medium-badge,
 body.dark-mode .priority-medium {
-  color: var(--badge-priority-medium); /* Text colour */
-  border: 1px solid var(--badge-priority-medium); /* Same colour for the outline */
+  color: var(--badge-priority-medium);
+  border: 1px solid var(--badge-priority-medium);
   background-color: transparent;
 }
 
 body.dark-mode .readonly-priority-high-badge,
 body.dark-mode .priority-high {
-  color: var(--badge-priority-high); /* Text colour */
-  border: 1px solid var(--badge-priority-high); /* Same colour for the outline */
+  color: var(--badge-priority-high);
+  border: 1px solid var(--badge-priority-high);
   background-color: transparent;
 }
 
-/* Change the font color of the length menu selector */
 .dataTables_length select {
-  color: rgb(0, 0, 0); /* Replace 'blue' with any color you prefer */
+  color: rgb(0, 0, 0);
 }
 
 body.dark-mode .dataTables_length select {
-  color: rgb(255, 255, 255); /* Replace 'blue' with any color you prefer */
+  color: rgb(255, 255, 255);
 }
 
 body.dark-mode .assign-to-dropdown {
-  background-color: #000000; /* Change this to the desired background colour */
-  color: #ffffff; /* Ensure text is readable */
+  background-color: #000000;
+  color: #ffffff;
 }
 
 @media (max-width: 576px) {
-  /* Light mode styles for dropdown */
   .dropdown-content {
     background-color: #ffffff;
-    width: 250px; /* Fix the width */
+    width: 250px;
     border-radius: 5px;
-    overflow: hidden; /* Prevent overflow */
+    overflow: hidden;
   }
 
   .custom-dropdown {
-    width: 100%; /* For smaller screens, adjust it to a percentage if needed */
+    width: 100%;
   }
 
-  /* Dark mode styles for dropdown */
   body.dark-mode .dropdown-content {
     background-color: #000000;
     color: #ffffff;
   }
 
-  /* Dark mode styles for dropdown */
   body.dark-mode .dropdown-content a {
     color: #ffffff;
   }
 
-  /* Ensure collapse behavior is smooth and keeps the borders intact */
   .collapse {
     display: none;
     transition: height 0.35s ease;
@@ -1108,50 +1067,44 @@ body.dark-mode .assign-to-dropdown {
 
   .collapse.show {
     display: block;
-    width: 250px; /* Fix the width during expansion */
+    width: 250px;
     overflow: hidden;
-    border: 1px solid #ffffff; /* Apply border in both states */
+    border: 1px solid #ffffff;
   }
 
-  /* Optional: Improve border appearance */
   .collapse.show {
-    border-right: 1px solid #ffffff; /* Ensure the right border is visible */
+    border-right: 1px solid #ffffff;
   }
 
-  /* Make dropdown background white */
   .dropdown-menu {
     background-color: #ffffff;
     width: 250px;
     border-radius: 5px;
   }
-  /* Make the active link more distinct */
+
   .dropdown-item.active {
     background-color: var(--background-color);
     color: #495057;
   }
 
-  /* Style the dropdown toggle button normally */
   .dropdown-toggle {
     background-color: #ffffff !important;
     color: #000000 !important;
   }
 
-  /* Prevent the button from turning blue when clicked */
   .dropdown-toggle:focus,
   .dropdown-toggle:active {
     background-color: #78d1de !important;
     color: #495057 !important;
     border-color: var(--background-color) !important;
-    box-shadow: none !important; /* Remove the blue shadow */
+    box-shadow: none !important;
   }
 
-  /* Night mode styles */
   body.dark-mode .dropdown-menu {
-    background-color: #333333; /* Desired background color for night mode */
-    color: #ffffff; /* Text color for night mode */
+    background-color: #333333;
+    color: #ffffff;
   }
 
-  /* Night mode styles for dropdown items */
   body.dark-mode .dropdown-menu .dropdown-item {
     color: #ffffff;
   }
@@ -1162,7 +1115,6 @@ body.dark-mode .assign-to-dropdown {
     color: #ffffff;
   }
 
-  /* Navbar adjustments */
   .navbar {
     display: flex;
     justify-content: space-between;
@@ -1176,24 +1128,22 @@ body.dark-mode .assign-to-dropdown {
     left: 50%;
     transform: translateX(-50%);
   }
-  /* Hide the desktop navbar content */
+
   .navbar-content .d-md-inline-block {
     display: none !important;
   }
 
-  /* Adjust the theme toggle button */
   #theme-toggle-button {
     margin-right: 10px;
   }
 
-  /* Dropdown menu styles */
   #navbarMenu {
     position: absolute;
-    top: 56px; /* Adjust if your navbar height is different */
+    top: 56px;
     left: 0;
     z-index: 1000;
-    width: 170px; /* Adjust the width as needed */
-    max-width: 80%; /* Ensure it doesn't exceed screen width */
+    width: 170px;
+    max-width: 80%;
     background-color: #ffffff;
     border: 3px solid var(--primary-color);
     border-radius: 0 0 5px 5px;
@@ -1210,15 +1160,14 @@ body.dark-mode .assign-to-dropdown {
     padding-left: 0;
   }
 
-  /* Style the hamburger icon */
   .navbar-toggler .fas {
-    color: #ffffff; /* Set to your desired color */
-    font-size: 24px; /* Adjust size as needed */
+    color: #ffffff;
+    font-size: 24px;
   }
 
   .navbar-toggler {
-    border: none; /* Optional: remove the default border */
-    padding: 0.25rem 0.75rem; /* Adjust padding as needed */
+    border: none;
+    padding: 0.25rem 0.75rem;
   }
 
   .navbar-nav {
@@ -1230,7 +1179,6 @@ body.dark-mode .assign-to-dropdown {
     display: inline-block;
   }
 
-  /* Signed-in overlay for mobile */
   .signed-in-overlay {
     position: fixed;
     bottom: 0;
@@ -1247,7 +1195,6 @@ body.dark-mode .assign-to-dropdown {
     font-size: 12px;
   }
 
-  /* DataTables adjustments for mobile */
   .dataTables_filter input {
     width: 100%;
     font-size: 12px;
@@ -1264,23 +1211,20 @@ body.dark-mode .assign-to-dropdown {
   }
 }
 
-/* Hide signed-in overlay on larger screens */
 @media (min-width: 577px) {
   .signed-in-overlay {
     display: none;
   }
-  /* Adjust the navbar toggler */
+
   .navbar-toggler {
     border: none;
   }
 
-  /* Hide the navbar toggler and dropdown menu */
   .navbar-toggler,
   #navbarMenu {
     display: none !important;
   }
 
-  /* Reset the logo positioning */
   .navbar-brand {
     position: static;
     transform: none;
@@ -1288,12 +1232,10 @@ body.dark-mode .assign-to-dropdown {
   }
 }
 
-/* Table responsiveness */
 .table-responsive {
   overflow-x: auto;
 }
 
-/* FAB Styles */
 .fab {
   position: fixed;
   bottom: 70px;
@@ -1334,12 +1276,10 @@ body.dark-mode .assign-to-dropdown {
   text-decoration: none;
 }
 
-/* Change hamburger icon to white */
 .navbar-toggler .fas {
   color: white;
 }
 
-/* Override Bootstrap's .btn-link styles */
 .btn-link {
   text-decoration: none !important;
 }
@@ -1354,30 +1294,28 @@ body.dark-mode .assign-to-dropdown {
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-/* White line under navbar in night mode */
 .navbar {
   border-bottom: 3px solid var(--accent-color);
-  z-index: 1000; /* Ensure it's above other content */
+  z-index: 1000;
 }
 
-/* Adjust icon size and positioning */
 .navbar-brand {
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  bottom: -55px !important; /* Adjust to control how much logo goes below navbar */
+  bottom: -55px !important;
 }
 
 .navbar-brand img {
-  height: 85px; /* Increase size of the logo */
+  height: 85px;
 }
 
 .logo-circle {
-  width: 85px; /* Make sure width and height are equal */
-  height: 100px; /* Same as width for a perfect circle */
-  border-radius: 50%; /* Ensures the image is a circle */
-  border: 3px solid var(--accent-color); /* Blue border around the circle */
-  object-fit: cover; /* Ensures the image fits the container without distortion */
+  width: 85px;
+  height: 100px;
+  border-radius: 50%;
+  border: 3px solid var(--accent-color);
+  object-fit: cover;
 }
 
 body.dark-mode .logo-circle {
@@ -1418,7 +1356,6 @@ body.dark-mode .logo-circle {
   background-color: #0056b3;
 }
 
-/* Styling the file name label */
 .file-name {
   margin-left: 10px;
   font-size: 14px;
@@ -1431,7 +1368,7 @@ body.dark-mode .logo-circle {
   height: 40px;
   border-radius: 50%;
   object-fit: cover;
-  margin-right: 15px; /* Increase margin-right to 15px for more spacing */
+  margin-right: 15px;
 }
 
 .submitter-profile-img {
@@ -1439,27 +1376,27 @@ body.dark-mode .logo-circle {
   height: 50px;
   border-radius: 50%;
   object-fit: cover;
-  margin-right: 15px; /* Increase margin-right to 15px for more spacing */
+  margin-right: 15px;
 }
 
 .profile-circle {
-  width: 100px; /* Adjust this to the size of your box */
-  height: 100px; /* Keep the height the same as width for a square or circle */
-  object-fit: cover; /* Ensures the image is cropped to fit within the box */
-  border-radius: 50%; /* Makes the image a circle */
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 50%;
 }
 
 .current-profile,
 .new-profile {
-  margin-right: 20px; /* Add space between current and new profile images */
+  margin-right: 20px;
 }
 
 .new-profile input {
-  margin-top: 20px; /* Add space above the new profile image upload */
+  margin-top: 20px;
 }
 
 .submitter-profile-img {
   width: 100px;
   height: 100px;
-  object-fit: cover; /* Ensures the image maintains aspect ratio */
+  object-fit: cover;
 }
