@@ -820,3 +820,26 @@ def test_update_profile_password_mismatch(test_client, app, regular_user):
 
         assert b"Passwords do not match" in response.data
         assert response.status_code == 200
+
+
+def test_login_authenticated_user_redirects_based_on_role(
+    test_client, app, regular_user
+):
+    """
+    Test that an authenticated user is redirected based on their role when accessing the login page.
+    """
+    with app.app_context():
+        # Re-attach the regular user to the session
+        regular_user = db.session.merge(regular_user)
+
+        # Log in the regular user
+        login_user(test_client, regular_user.email, "ValidPassword1!")
+
+        # Simulate accessing the login page as an authenticated user
+        response = test_client.get("/login", follow_redirects=False)
+
+        # Check that the response is a redirect to the role-based page (in this case, '/all_tickets')
+        assert response.status_code == 302  # 302 is a redirect
+        assert (
+            "/all_tickets" in response.headers["Location"]
+        )  # Ensure redirection to the regular user's page
