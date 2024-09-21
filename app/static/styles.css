@@ -2,10 +2,30 @@
   --primary-color: #283593;
   --secondary-color: #5d646a;
   --background-color: #f8f9fa;
-  --background-color-night-mode: #1e1e1e;
-  --accent-color: #ffff;
+  --background-color-dark-mode: #1e1e1e;
+  --accent-color: #ffffff;
   --green-color: #28a745;
   --view-button: #c354ff;
+  --card-background-dark-mode: #2e2e2e;
+  --text-color-dark-mode: #f8f9fa;
+
+  /* Ticket badges */
+  --badge-open-color: #a9be77;
+  --badge-in-progress-color: #359d73;
+  --badge-closed-color: var(--secondary-color);
+  --badge-closed-color-dark-mode: var(--background-color);
+
+  --priority-high: #e54a50;
+  --priority-medium: #ea8553;
+  --priority-low: #5d9db9;
+
+  /* Role badges */
+  --badge-admin-color: #dc3545;
+  --badge-admin-color-dark-mode: ;
+  --badge-support-color: #b881b1;
+  --badge-support-color-dark-mode: ;
+  --badge-regular-color: #5d9db9;
+  --badge-regular-color-dark-mode: ;
 }
 
 body {
@@ -117,6 +137,11 @@ h2 {
 
 .text-primary {
   color: var(--primary-color) !important; /* Primary Colour */
+  font-size: 2.2em;
+}
+
+body.dark-mode .text-primary {
+  color: var(--text-color-dark-mode) !important; /* Primary Colour */
   font-size: 2.2em;
 }
 
@@ -389,7 +414,7 @@ span.invalid {
 
 /* Dark Mode */
 body.dark-mode {
-  background-color: var(--background-color-night-mode); /* Darker background */
+  background-color: var(--background-color-dark-mode); /* Darker background */
   color: #dcdcdc; /* Light grey text */
 }
 
@@ -468,33 +493,21 @@ body.dark-mode .btn-outline-update {
 }
 
 body.dark-mode .badge-role-support {
-  color: #874f80; /* Text colour */
-  border: 1px solid #874f80; /* Same colour for the outline */
+  color: var(--badge-support-color); /* Text colour */
+  border: 1px solid var(--badge-support-color); /* Same colour for the outline */
   background-color: transparent;
 }
 
 body.dark-mode .badge-role-admin {
-  color: #ac1917; /* Text colour */
-  border: 1px solid #ac1917; /* Same colour for the outline */
+  color: var(--badge-admin-color); /* Text colour */
+  border: 1px solid var(--badge-admin-color); /* Same colour for the outline */
   background-color: transparent;
 }
 
 body.dark-mode .badge-role-regular {
-  color: #156b8a; /* Text colour */
-  border: 1px solid #156b8a; /* Same colour for the outline */
+  color: var(--badge-regular-color); /* Text colour */
+  border: 1px solid var(--badge-regular-color); /* Same colour for the outline */
   background-color: transparent;
-}
-
-body.dark-mode .badge-status-open {
-  background-color: #148f77; /* Consistent teal */
-}
-
-body.dark-mode .badge-status-in-progress {
-  background-color: #0056b3; /* Vibrant blue */
-}
-
-body.dark-mode .badge-status-closed {
-  background-color: #3a3f44; /* Soft grey */
 }
 
 body.dark-mode .navbar {
@@ -688,17 +701,17 @@ body.dark-mode .profile-badge:hover {
 }
 
 .badge-role-admin {
-  background-color: #dc3545; /* Red for admin role */
+  background-color: var(--badge-admin-color); /* Red for admin role */
   color: #ffffff;
 }
 
 .badge-role-support {
-  background-color: #b881b1; /* Green for support role */
+  background-color: var(--badge-support-color); /* Green for support role */
   color: #ffffff;
 }
 
 .badge-role-regular {
-  background-color: #5d9db9; /* Teal for regular role */
+  background-color: var(--badge-regular-color); /* Teal for regular role */
   color: #ffffff;
 }
 
@@ -714,7 +727,7 @@ body.dark-mode .profile-badge:hover {
 
 /* Night mode styles */
 .dark-mode .auth-page {
-  background-color: var(--background-color-night-mode); /* Dark background */
+  background-color: var(--background-color-dark-mode); /* Dark background */
   color: white; /* Light text */
 }
 
@@ -738,14 +751,14 @@ body.dark-mode .profile-badge:hover {
 }
 
 /* Night mode styles */
-.dark-mode .auth-card {
-  background-color: #2e2e2e; /* Dark background */
+body.dark-mode .auth-card {
+  background-color: var(--card-background-dark-mode); /* Dark background */
   color: white; /* Light text */
 }
 
 /* Night mode styles */
-.dark-mode .create-ticket-card {
-  background-color: #2e2e2e; /* Dark background */
+body.dark-mode .create-ticket-card {
+  background-color: var(--card-background-dark-mode); /* Dark background */
   color: white; /* Light text */
 }
 
@@ -782,13 +795,13 @@ body.dark-mode .profile-badge:hover {
 }
 
 body.dark-mode .form-control {
-  background-color: #2e2e2e;
+  background-color: var(--card-background-dark-mode);
   border: 1px solid #585858;
   color: #acacac;
 }
 
 body.dark-mode .dropdown-box {
-  background-color: #2e2e2e;
+  background-color: var(--card-background-dark-mode);
   border: 1px solid #585858;
   color: #ffffff;
 }
@@ -906,7 +919,7 @@ body.dark-mode .badge-active-tickets-medium {
 
 /* Modal styling */
 body.dark-mode .modal-content {
-  background-color: #2e2e2e;
+  background-color: var(--card-background-dark-mode);
   color: #ffffff;
 }
 
@@ -915,7 +928,7 @@ body.dark-mode .modal-header {
 }
 
 body.dark-mode .modal-body {
-  background-color: #2e2e2e;
+  background-color: var(--card-background-dark-mode);
   color: #e0e0e0;
 }
 
@@ -932,13 +945,7 @@ body.dark-mode .modal-footer {
 }
 
 /* General Badge Styles */
-.dashboard-badge,
-.badge-priority-low,
-.badge-priority-medium,
-.badge-priority-high,
-.badge-status-open,
-.badge-status-in-progress,
-.badge-status-closed {
+.dashboard-badge {
   transition: none;
   transform: none;
   pointer-events: none;
@@ -951,39 +958,36 @@ body.dark-mode .modal-footer {
 
 /* Priority and Status Badge Colours */
 .priority-high,
-.readonly-priority-high-badge,
-.badge-priority-high {
-  background-color: #e54a50; /* Equivalent to bg-danger */
+.readonly-priority-high-badge {
+  background-color: var(--priority-high); /* Equivalent to bg-danger */
 }
 
 .priority-medium,
-.readonly-priority-medium-badge,
-.badge-priority-medium {
+.readonly-priority-medium-badge {
   background-color: #ea8553; /* Equivalent to bg-warning */
 }
 
 .priority-low,
-.readonly-priority-low-badge,
-.badge-priority-low {
+.readonly-priority-low-badge {
   background-color: #5d9db9; /* Equivalent to bg-info */
 }
 
 .status-open,
-.readonly-status-open-badge,
-.badge-status-open {
-  background-color: #a9be77; /* Equivalent to bg-success */
+.readonly-status-open-badge {
+  background-color: var(--badge-open-color); /* Equivalent to bg-success */
+  border: 1px solid var(--badge-open-color);
 }
 
 .status-in-progress,
-.readonly-status-in-progress-badge,
-.badge-status-in-progress {
-  background-color: #359d73; /* Equivalent to bg-warning */
+.readonly-status-in-progress-badge {
+  background-color: var(--badge-in-progress-color);
+  border: 1px solid var(--badge-in-progress-color);
 }
 
 .status-closed,
-.readonly-status-closed-badge,
-.badge-status-closed {
-  background-color: var(--secondary-color);
+.readonly-status-closed-badge {
+  background-color: var(--badge-closed-color);
+  border: 1px solid var(--badge-closed-color);
 }
 
 /* Assignee Badge */
@@ -999,31 +1003,27 @@ body.dark-mode .assignee-badge {
 }
 
 body.dark-mode .status-open,
-body.dark-mode .readonly-status-open-badge,
-body.dark-mode .badge-status-open {
-  color: #c0982b; /* Text colour */
-  border: 1px solid #c0982b; /* Same colour for the outline */
+body.dark-mode .readonly-status-open-badge {
+  color: var(--badge-open-color); /* Text colour */
+  border: 1px solid var(--badge-open-color); /* Same colour for the outline */
   background-color: transparent;
 }
 
 body.dark-mode .status-in-progress,
-body.dark-mode .readonly-status-in-progress-badge,
-body.dark-mode .badge-status-in-progress {
-  color: var(--green-color); /* Text colour */
-  border: 1px solid var(--green-color); /* Same colour for the outline */
+body.dark-mode .readonly-status-in-progress-badge {
+  color: var(--badge-in-progress-color); /* Text colour */
+  border: 1px solid var(--badge-in-progress-color); /* Same colour for the outline */
   background-color: transparent;
 }
 
 body.dark-mode .status-closed,
-body.dark-mode .readonly-status-closed-badge,
-body.dark-mode .badge-status-closed {
+body.dark-mode .readonly-status-closed-badge {
   background-color: transparent;
-  color: rgb(255, 255, 255);
-  border: 1px solid #ffffff; /* Same colour for the outline */
+  color: var(--badge-closed-color-dark-mode);
+  border: 1px solid var(--badge-closed-color-dark-mode); /* Same colour for the outline */
 }
 
 /* Dark Mode Priority Colours */
-body.dark-mode .badge-priority-low,
 body.dark-mode .readonly-priority-low-badge,
 body.dark-mode .priority-low {
   color: #4a9daa; /* Text colour */
@@ -1031,7 +1031,6 @@ body.dark-mode .priority-low {
   background-color: transparent;
 }
 
-body.dark-mode .badge-priority-medium,
 body.dark-mode .readonly-priority-medium-badge,
 body.dark-mode .priority-medium {
   color: #ea8553; /* Text colour */
@@ -1039,11 +1038,10 @@ body.dark-mode .priority-medium {
   background-color: transparent;
 }
 
-body.dark-mode .badge-priority-high,
 body.dark-mode .readonly-priority-high-badge,
 body.dark-mode .priority-high {
-  color: #c82333; /* Text colour */
-  border: 1px solid #c82333; /* Same colour for the outline */
+  color: var(--priority-high); /* Text colour */
+  border: 1px solid var(--priority-high); /* Same colour for the outline */
   background-color: transparent;
 }
 
@@ -1401,7 +1399,7 @@ body.dark-mode .logo-circle {
   font-size: 16px;
   font-weight: 600;
   color: white;
-  background-color: #007bff;
+  background-color: var(--primary-color);
   border: none;
   border-radius: 4px;
   cursor: pointer;
