@@ -18,7 +18,10 @@ def create_app(config=None):
     """
     app = Flask(__name__, instance_relative_config=True)
 
-    if config:
+    if isinstance(config, str):
+        # Load the config by string reference, assuming 'TestingConfig' is in app.config
+        app.config.from_object(f"app.config.{config}")
+    elif config:
         app.config.from_object(config)
     else:
         app.config.from_pyfile("config.py")
