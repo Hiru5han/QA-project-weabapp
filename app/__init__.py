@@ -21,8 +21,9 @@ def create_app(config=None):
     if isinstance(config, str):
         # Load the config by string reference, assuming 'TestingConfig' is in app.config
         app.config.from_object(f"app.config.{config}")
-    elif config:
-        app.config.from_object(config)
+    elif isinstance(config, dict):
+        # Load the configuration directly from the dictionary (useful for testing)
+        app.config.update(config)
     else:
         app.config.from_pyfile("config.py")
 
