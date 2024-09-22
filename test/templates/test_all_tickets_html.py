@@ -13,10 +13,10 @@ def get_csrf_token(response_data):
 
 
 # Helper function to log in a user with CSRF token
-def login_user(test_client, email, password):
+def login_user(client, email, password):
     """Helper function to log in a user during tests."""
     # First, get the CSRF token from the login page
-    response = test_client.get(url_for("main.login"))
+    response = client.get(url_for("main.login"))
     csrf_token = get_csrf_token(response.data)
 
     # Submit the login form with the CSRF token included
@@ -25,7 +25,7 @@ def login_user(test_client, email, password):
         "password": password,
         "csrf_token": csrf_token,  # Include the CSRF token in the form data
     }
-    response = test_client.post(
+    response = client.post(
         url_for("main.login"), data=login_data, follow_redirects=True
     )
     assert response.status_code == 200
@@ -76,16 +76,16 @@ def regular_user(app):
         return user
 
 
-def test_all_tickets_page_renders_correctly_for_admin(test_client, app, admin_user):
+def test_all_tickets_page_renders_correctly_for_admin(client, app, admin_user):
     with app.app_context():
         # Re-attach the user to the session
         admin_user = db.session.merge(admin_user)
 
         # Log in as the existing user
-        login_user(test_client, admin_user.email, "ValidPassword1!")
+        login_user(client, admin_user.email, "ValidPassword1!")
 
         # Access the all tickets page
-        response = test_client.get(url_for("main.all_tickets"))
+        response = client.get(url_for("main.all_tickets"))
         assert response.status_code == 200
 
         # Check that the correct template is used
@@ -97,7 +97,7 @@ def test_all_tickets_page_renders_correctly_for_admin(test_client, app, admin_us
         assert b"Your Tickets" not in response.data
 
 
-def test_ticket_table_content(test_client, app, existing_user):
+def test_ticket_table_content(client, app, existing_user):
     with app.app_context():
         # Re-attach the user to the session
         existing_user = db.session.merge(existing_user)
@@ -127,10 +127,10 @@ def test_ticket_table_content(test_client, app, existing_user):
         db.session.commit()
 
         # Log in as the existing user
-        login_user(test_client, existing_user.email, "ValidPassword1!")
+        login_user(client, existing_user.email, "ValidPassword1!")
 
         # Access the all tickets page
-        response = test_client.get(url_for("main.all_tickets"))
+        response = client.get(url_for("main.all_tickets"))
         assert response.status_code == 200
 
         # Verify the tickets are displayed in the table
@@ -146,7 +146,7 @@ def test_ticket_table_content(test_client, app, existing_user):
 
 
 # Test for checking visibility of the create ticket button
-def test_create_ticket_button_visibility(test_client, app, existing_user):
+def test_create_ticket_button_visibility(client, app, existing_user):
     with app.app_context():
         # Re-attach the user to the session
         existing_user = db.session.merge(existing_user)
@@ -156,10 +156,10 @@ def test_create_ticket_button_visibility(test_client, app, existing_user):
         db.session.commit()  # Commit the role change
 
         # Log in as the existing user
-        login_user(test_client, existing_user.email, "ValidPassword1!")
+        login_user(client, existing_user.email, "ValidPassword1!")
 
         # Access the all tickets page
-        response = test_client.get(url_for("main.all_tickets"))
+        response = client.get(url_for("main.all_tickets"))
         assert response.status_code == 200
 
         # Check that the "Create Ticket" button is visible
@@ -167,7 +167,7 @@ def test_create_ticket_button_visibility(test_client, app, existing_user):
 
 
 # Test for admin's ability to see the delete button
-def test_admin_delete_button_visibility(test_client, app, admin_user):
+def test_admin_delete_button_visibility(client, app, admin_user):
     with app.app_context():
 
         # Re-attach the user to the session
@@ -185,10 +185,10 @@ def test_admin_delete_button_visibility(test_client, app, admin_user):
         db.session.commit()
 
         # Log in as the admin user
-        login_user(test_client, admin_user.email, "ValidPassword1!")
+        login_user(client, admin_user.email, "ValidPassword1!")
 
         # Access the all tickets page
-        response = test_client.get(url_for("main.all_tickets"))
+        response = client.get(url_for("main.all_tickets"))
         assert response.status_code == 200
 
         # Check that the delete button is visible for admin
@@ -196,7 +196,7 @@ def test_admin_delete_button_visibility(test_client, app, admin_user):
 
 
 # Test that non-admin users cannot see the delete button
-def test_non_admin_delete_button_visibility(test_client, app, regular_user):
+def test_non_admin_delete_button_visibility(client, app, regular_user):
     with app.app_context():
         # Re-attach the regular_user to the session
         regular_user = db.session.merge(regular_user)
@@ -217,10 +217,10 @@ def test_non_admin_delete_button_visibility(test_client, app, regular_user):
         regular_user = db.session.merge(regular_user)
 
     # Log in as the regular user
-    login_user(test_client, regular_user.email, "ValidPassword1!")
+    login_user(client, regular_user.email, "ValidPassword1!")
 
     # Access the all tickets page
-    response = test_client.get(url_for("main.all_tickets"))
+    response = client.get(url_for("main.all_tickets"))
     assert response.status_code == 200
 
     # Check that the delete button is not visible for non-admin
@@ -232,22 +232,22 @@ import pytest
 
 @pytest.mark.parametrize("user_role", ["admin", "support", "regular"])
 def test_closed_tickets_button_visible_for_all_roles(
-    test_client, app, user_role, admin_user, support_user, regular_user
+    client, app, user_role, admin_user, support_user, regular_user
 ):
     with app.app_context():
         # Re-attach the user to the session based on their role
         if user_role == "admin":
             admin_user = db.session.merge(admin_user)
-            login_user(test_client, admin_user.email, "ValidPassword1!")
+            login_user(client, admin_user.email, "ValidPassword1!")
         elif user_role == "support":
             support_user = db.session.merge(support_user)
-            login_user(test_client, support_user.email, "ValidPassword1!")
+            login_user(client, support_user.email, "ValidPassword1!")
         elif user_role == "regular":
             regular_user = db.session.merge(regular_user)
-            login_user(test_client, regular_user.email, "ValidPassword1!")
+            login_user(client, regular_user.email, "ValidPassword1!")
 
         # Access the all tickets page
-        response = test_client.get(url_for("main.all_tickets"))
+        response = client.get(url_for("main.all_tickets"))
 
         # Verify the response is successful
         assert response.status_code == 200
