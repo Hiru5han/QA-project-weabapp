@@ -1,4 +1,5 @@
-{% extends "base.html" %} {% block content %}
+{% extends "base.html" %}
+{% block content %}
 <div class="auth-page">
   <div class="create-ticket-card">
     <div class="auth-header d-flex align-items-center mb-4">
@@ -16,20 +17,22 @@
 
       <div class="form-group">
         <label for="title">Title</label>
-        <input type="text" class="form-control" id="title" name="title" required />
+        <input type="text" class="form-control" id="title" name="title" value="{{ form_data.get('title', '') }}"
+          required />
       </div>
 
       <div class="form-group">
         <label for="description">Description</label>
-        <textarea class="form-control" id="description" name="description" rows="4" required></textarea>
+        <textarea class="form-control" id="description" name="description" rows="4"
+          required>{{ form_data.get('description', '') }}</textarea>
       </div>
 
       <div class="form-group">
         <label for="priority">Priority</label>
         <select class="form-control" id="priority" name="priority" required>
-          <option value="low">Low</option>
-          <option value="medium">Medium</option>
-          <option value="high">High</option>
+          <option value="low" {% if form_data.get('priority')=='low' %}selected{% endif %}>Low</option>
+          <option value="medium" {% if form_data.get('priority')=='medium' %}selected{% endif %}>Medium</option>
+          <option value="high" {% if form_data.get('priority')=='high' %}selected{% endif %}>High</option>
         </select>
       </div>
 
@@ -37,9 +40,11 @@
       <div class="form-group">
         <label for="user_id">Raise on Behalf of</label>
         <select class="form-control" id="user_id" name="user_id">
-          <option value="{{ current_user.id }}">-- Myself --</option>
+          <option value="{{ current_user.id }}" {% if form_data.get('user_id')==current_user.id %}selected{% endif %}>--
+            Myself --</option>
           {% for user in all_users %}
-          <option value="{{ user.id }}">{{ user.name }}</option>
+          <option value="{{ user.id }}" {% if form_data.get('user_id')==user.id %}selected{% endif %}>{{ user.name }}
+          </option>
           {% endfor %}
         </select>
       </div>
@@ -47,22 +52,25 @@
       <div class="form-group">
         <label for="status">Current State</label>
         <select class="form-control" id="status" name="status" required>
-          <option value="open">Open</option>
-          <option value="in-progress">In-Progress</option>
-          <option value="closed">Closed</option>
+          <option value="open" {% if form_data.get('status')=='open' %}selected{% endif %}>Open</option>
+          <option value="in-progress" {% if form_data.get('status')=='in-progress' %}selected{% endif %}>In-Progress
+          </option>
+          <option value="closed" {% if form_data.get('status')=='closed' %}selected{% endif %}>Closed</option>
         </select>
       </div>
-      {% endif %} {% if current_user.role == 'admin' %}
+      {% endif %}
+
+      {% if current_user.role == 'admin' %}
       <div class="form-group">
         <label for="assigned_to">Assign to User</label>
         <select class="form-control" id="assigned_to" name="assigned_to">
           <option value="">-- Select User --</option>
-          <!-- Optionally include 'Assign to Me' -->
-          <option value="{{ current_user.id }}">
+          <option value="{{ current_user.id }}" {% if form_data.get('assigned_to')==current_user.id %}selected{% endif
+            %}>
             Assign to Me ({{ current_user.name }})
           </option>
           {% for staff in support_staff %}
-          <option value="{{ staff.id }}">
+          <option value="{{ staff.id }}" {% if form_data.get('assigned_to')==staff.id %}selected{% endif %}>
             {{ staff.name }} ({{ staff.role }})
           </option>
           {% endfor %}

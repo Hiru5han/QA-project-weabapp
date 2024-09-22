@@ -20,11 +20,13 @@ class CreateTicketView(MethodView):
         if current_user.role == "admin":
             support_staff = User.query.filter(User.role.in_(["admin", "support"])).all()
 
+        # Pass an empty form_data dictionary to the template
         return render_template(
             "create_ticket.html",
             support_staff=support_staff,
             all_users=all_users,
             referrer=referrer,
+            form_data={},  # Pass empty form_data for GET requests
         )
 
     def post(self):
@@ -33,18 +35,22 @@ class CreateTicketView(MethodView):
         priority = request.form.get("priority")
         status = None
 
+        all_users = []
+        support_staff = []
+        if current_user.role in ["admin", "support"]:
+            all_users = User.query.all()
+        if current_user.role == "admin":
+            support_staff = User.query.filter(User.role.in_(["admin", "support"])).all()
+
         # Default status to 'open' if the user is not admin or support
         if current_user.role in ["admin", "support"]:
             status = request.form.get("status")
         else:
             status = "open"
 
-        user_id = request.form.get("user_id")  # Get user_id from the form
-        assigned_to_id = request.form.get(
-            "assigned_to"
-        )  # Get assigned_to value from the form
+        user_id = request.form.get("user_id")
+        assigned_to_id = request.form.get("assigned_to")
 
-        # If no user is selected, default to the current user
         if not user_id:
             user_id = current_user.id
 
@@ -54,7 +60,13 @@ class CreateTicketView(MethodView):
                 "Title must contain non-numeric characters, be at least 5 characters long, and not exceed 100 characters.",
                 "warning",
             )
-            return redirect(request.referrer or url_for("main.create_ticket"))
+            return render_template(
+                "create_ticket.html",
+                support_staff=support_staff,
+                all_users=all_users,
+                referrer=request.referrer,
+                form_data=request.form,  # Pass the form data back on validation failure
+            )
 
         # Validation: Description should not be empty, not only numbers, length should be between 10-1000
         if (
@@ -67,7 +79,13 @@ class CreateTicketView(MethodView):
                 "Description must contain non-numeric characters, be at least 10 characters long, and not exceed 1000 characters.",
                 "warning",
             )
-            return redirect(request.referrer or url_for("main.create_ticket"))
+            return render_template(
+                "create_ticket.html",
+                support_staff=support_staff,
+                all_users=all_users,
+                referrer=request.referrer,
+                form_data=request.form,  # Pass the form data back on validation failure
+            )
 
         # Validation: Priority must be one of 'low', 'medium', or 'high'
         valid_priorities = ["low", "medium", "high"]
@@ -76,16 +94,28 @@ class CreateTicketView(MethodView):
                 "Invalid priority value. Choose either 'low', 'medium', or 'high'.",
                 "warning",
             )
-            return redirect(request.referrer or url_for("main.create_ticket"))
+            return render_template(
+                "create_ticket.html",
+                support_staff=support_staff,
+                all_users=all_users,
+                referrer=request.referrer,
+                form_data=request.form,  # Pass the form data back on validation failure
+            )
 
         # Validation: If 'assigned_to' exists, it must be a valid user
         if current_user.role == "admin" and assigned_to_id:
             assigned_user = User.query.get(assigned_to_id)
             if not assigned_user:
                 flash("Invalid user selected for assignment.", "warning")
-                return redirect(request.referrer or url_for("main.create_ticket"))
+                return render_template(
+                    "create_ticket.html",
+                    support_staff=support_staff,
+                    all_users=all_users,
+                    referrer=request.referrer,
+                    form_data=request.form,  # Pass the form data back on validation failure
+                )
 
-        # Prevent Duplicate Tickets based on title and creation time (within 1 minute)
+        # Prevent duplicate tickets based on title and creation time (within 1 minute)
         recent_ticket = (
             Ticket.query.filter_by(user_id=current_user.id, title=title)
             .order_by(Ticket.created_at.desc())
@@ -94,12 +124,19 @@ class CreateTicketView(MethodView):
         if (
             recent_ticket
             and (datetime.utcnow() - recent_ticket.created_at).total_seconds() < 60
-        ):  # 1 minute
+        ):
             flash(
                 "A similar ticket was created within the last minute. Please wait before creating a new one.",
                 "warning",
             )
-            return redirect(request.referrer or url_for("main.create_ticket"))
+            return render_template(
+                "create_ticket.html",
+                support_staff=support_staff,
+                all_users=all_users,
+                referrer=request.referrer,
+                form_data=request.form,  # Pass the form data back on validation failure
+            )
+
         # Create new ticket and save to database
         new_ticket = Ticket(
             title=title,
