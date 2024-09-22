@@ -39,7 +39,7 @@ class TicketDetailsView(MethodView):
                 )
                 db.session.add(status_comment)
 
-        if "priority" in request.form and current_user.role == "admin":
+        if "priority" in request.form:
             priority = request.form.get("priority")
             if ticket.priority != priority:
                 ticket.priority = priority
@@ -51,7 +51,7 @@ class TicketDetailsView(MethodView):
                 )
                 db.session.add(priority_comment)
 
-        if "assignee" in request.form and current_user.role == "admin":
+        if "assignee" in request.form:
             new_assignee_id = request.form.get("assignee")
             if ticket.assigned_to != new_assignee_id:
                 ticket.assigned_to = new_assignee_id
