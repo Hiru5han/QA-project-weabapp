@@ -12,16 +12,11 @@
         <h2 class="text-primary mb-0">Ticket Details</h2>
         <p class="lead">{{ ticket.title }}</p>
       </div>
-      <div
-        class="col-md-2 text-end d-flex align-items-center justify-content-end"
-      >
+      <div class="col-md-2 text-end d-flex align-items-center justify-content-end">
         <img
           src="{{ url_for('static', filename='uploads/profile_images/' + (ticket.creator.profile_image or 'default.jpg')) }}"
-          alt="{{ ticket.creator.name }}'s Profile Image"
-          class="submitter-profile-img rounded-circle"
-          width="50"
-          height="50"
-        />
+          alt="{{ ticket.creator.name }}'s Profile Image" class="submitter-profile-img rounded-circle" width="50"
+          height="50" />
       </div>
     </div>
 
@@ -43,18 +38,13 @@
               </div>
 
               <!-- Priority, Status, and Assignee inside the Submitted By Box -->
-              <div
-                class="status-priority-container d-flex flex-column align-items-end"
-              >
+              <div class="status-priority-container d-flex flex-column align-items-end">
                 <!-- Priority (Read-only) -->
                 <div class="mb-2">
                   <p class="mb-0">
-                    <span class="title-spacing"
-                      ><strong>Priority:</strong></span
-                    >
+                    <span class="title-spacing"><strong>Priority:</strong></span>
                     <span
-                      class="badge text-white {% if ticket.priority == 'high' %}readonly-priority-high-badge{% elif ticket.priority == 'medium' %}readonly-priority-medium-badge{% else %}readonly-priority-low-badge{% endif %}"
-                    >
+                      class="badge text-white {% if ticket.priority == 'high' %}readonly-priority-high-badge{% elif ticket.priority == 'medium' %}readonly-priority-medium-badge{% else %}readonly-priority-low-badge{% endif %}">
                       {{ ticket.priority }}
                     </span>
                   </p>
@@ -65,8 +55,7 @@
                   <p class="mb-0">
                     <span class="title-spacing"><strong>Status:</strong></span>
                     <span
-                      class="badge text-white {% if ticket.status == 'open' %}readonly-status-open-badge{% elif ticket.status == 'in-progress' %}readonly-status-in-progress-badge{% else %}readonly-status-closed-badge{% endif %}"
-                    >
+                      class="badge text-white {% if ticket.status == 'open' %}readonly-status-open-badge{% elif ticket.status == 'in-progress' %}readonly-status-in-progress-badge{% else %}readonly-status-closed-badge{% endif %}">
                       {{ ticket.status }}
                     </span>
                   </p>
@@ -75,9 +64,7 @@
                 <!-- Assignee (Read-only) -->
                 <div class="mb-2">
                   <p class="mb-0">
-                    <span class="title-spacing"
-                      ><strong>Assignee:</strong></span
-                    >
+                    <span class="title-spacing"><strong>Assignee:</strong></span>
                     <span class="badge text-white readonly-assignee-badge">
                       {% if ticket.assignee %} {{ ticket.assignee.name }} {%
                       else %} No assignee yet {% endif %}
@@ -116,21 +103,16 @@
                   <!-- Commenter's Profile Image -->
                   <img
                     src="{{ url_for('static', filename='uploads/profile_images/' + (comment.commenter.profile_image or 'default.jpg')) }}"
-                    alt="{{ comment.commenter.name }}'s Profile Image"
-                    class="comment-profile-img rounded-circle me-2"
-                    width="40"
-                    height="40"
-                  />
+                    alt="{{ comment.commenter.name }}'s Profile Image" class="comment-profile-img rounded-circle me-2"
+                    width="40" height="40" />
                   <div>
                     <strong>{{ comment.commenter.name }}:</strong> {{
                     comment.comment_text }}
                   </div>
                 </div>
                 <div class="text-muted">
-                  <em
-                    >{{ moment(comment.created_at).format('YYYY-MM-DD HH:mm:ss')
-                    }}</em
-                  >
+                  <em>{{ moment(comment.created_at).format('YYYY-MM-DD HH:mm:ss')
+                    }}</em>
                 </div>
               </li>
               {% endfor %}

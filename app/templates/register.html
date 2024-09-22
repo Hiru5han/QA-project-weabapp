@@ -1,4 +1,4 @@
-{% extends "base.html" %} 
+{% extends "base.html" %}
 {% block content %}
 <div class="auth-page">
     <div class="auth-card">
@@ -7,20 +7,20 @@
                 <i class="fas fa-chevron-left back-button-icon"></i>
             </a>
             <h2 class="auth-title mb-0">Register</h2>
-        </div>            
+        </div>
         <div class="auth-body">
-            
+
             <form method="POST" action="{{ url_for('main.register') }}" enctype="multipart/form-data">
                 <!-- Include CSRF token for security -->
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                
+
                 <!-- Role Selection -->
                 <div class="form-group">
                     <label for="role">Role</label>
                     <select class="dropdown-box" id="role" name="role" required>
-                        <option value="admin" {% if role == 'admin' %}selected{% endif %}>Admin</option>
-                        <option value="support" {% if role == 'support' %}selected{% endif %}>Support</option>
-                        <option value="regular" {% if role == 'regular' %}selected{% endif %}>Regular</option>
+                        <option value="admin" {% if role=='admin' %}selected{% endif %}>Admin</option>
+                        <option value="support" {% if role=='support' %}selected{% endif %}>Support</option>
+                        <option value="regular" {% if role=='regular' %}selected{% endif %}>Regular</option>
                     </select>
                 </div>
 
@@ -29,19 +29,20 @@
                     <label for="name">Name</label>
                     <input type="text" class="form-control" id="name" name="name" value="{{ name or '' }}" required />
                 </div>
-                
+
                 <!-- Email Field -->
                 <div class="form-group">
                     <label for="email">Email address</label>
-                    <input type="email" class="form-control" id="email" name="email" value="{{ email or '' }}" required />
+                    <input type="email" class="form-control" id="email" name="email" value="{{ email or '' }}"
+                        required />
                 </div>
-                
+
                 <!-- Password Field -->
                 <div class="form-group">
                     <label for="password">Password</label>
                     <input type="password" class="form-control" id="password" name="password" required />
                     <button type="button" id="togglePassword" class="btn btn-outline-secondary mt-2">Show</button>
-                    
+
                     <!-- Password requirements -->
                     <div id="password-requirements" class="form-text text-muted mt-2">
                         <div class="criteria">
@@ -60,7 +61,8 @@
                 <div class="form-group file-upload">
                     <label for="profile_image">Upload Profile Image (optional)</label>
                     <button class="file-upload-btn" type="button">Choose File</button>
-                    <input type="file" class="form-control" id="profile_image" name="profile_image" accept="image/*" onchange="displayFileName()">
+                    <input type="file" class="form-control" id="profile_image" name="profile_image" accept="image/*"
+                        onchange="displayFileName()">
                     <span id="file-name" class="file-name">No file selected</span>
                 </div>
 
@@ -78,7 +80,7 @@
         document.getElementById("file-name").textContent = fileName;
     }
 
-    document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("DOMContentLoaded", function () {
         const passwordInput = document.getElementById("password");
         const lengthCriteria = document.getElementById("length");
         const numberCriteria = document.getElementById("number");
@@ -87,7 +89,7 @@
         const specialCriteria = document.getElementById("special");
         const togglePassword = document.getElementById("togglePassword");
 
-        passwordInput.addEventListener("input", function() {
+        passwordInput.addEventListener("input", function () {
             const password = passwordInput.value;
 
             // Check the length
@@ -139,12 +141,12 @@
                 specialCriteria.classList.add("valid");
                 specialCriteria.classList.remove("invalid");
                 specialCriteria.innerHTML =
-                  "✓ One special character !@#$%^&*()_+-=[]{}|;:,.<>?/";
+                    "✓ One special character !@#$%^&*()_+-=[]{}|;:,.<>?/";
             } else {
                 specialCriteria.classList.add("invalid");
                 specialCriteria.classList.remove("valid");
                 specialCriteria.innerHTML =
-                  "✗ One special character !@#$%^&*()_+-=[]{}|;:,.<>?/";
+                    "✗ One special character !@#$%^&*()_+-=[]{}|;:,.<>?/";
             }
         });
 

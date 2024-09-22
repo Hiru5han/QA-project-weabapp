@@ -14,11 +14,7 @@
         optional, and your current details will remain if left unchanged.
       </p>
 
-      <form
-        method="POST"
-        action="{{ url_for('main.update_profile') }}"
-        enctype="multipart/form-data"
-      >
+      <form method="POST" action="{{ url_for('main.update_profile') }}" enctype="multipart/form-data">
         <!-- Include CSRF token for security -->
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
 
@@ -28,121 +24,66 @@
         <!-- Name Field -->
         <div class="form-group">
           <label for="name">Name</label>
-          <input
-            type="text"
-            class="form-control"
-            id="name"
-            name="name"
-            placeholder="Leave unchanged to keep current name"
-            value="{{ current_user.name }}"
-          />
-          <small class="form-text text-muted"
-            >Leave unchanged if you don’t want to update your name.</small
-          >
+          <input type="text" class="form-control" id="name" name="name"
+            placeholder="Leave unchanged to keep current name" value="{{ current_user.name }}" />
+          <small class="form-text text-muted">Leave unchanged if you don’t want to update your name.</small>
         </div>
 
         <!-- Email Field -->
         <div class="form-group">
           <label for="email">Email address</label>
-          <input
-            type="email"
-            class="form-control"
-            id="email"
-            name="email"
-            placeholder="Leave unchanged to keep current email"
-            value="{{ current_user.email }}"
-          />
-          <small class="form-text text-muted"
-            >Leave unchanged if you don’t want to update your email
-            address.</small
-          >
+          <input type="email" class="form-control" id="email" name="email"
+            placeholder="Leave unchanged to keep current email" value="{{ current_user.email }}" />
+          <small class="form-text text-muted">Leave unchanged if you don’t want to update your email
+            address.</small>
         </div>
 
         <!-- Profile Image Upload Section -->
         <div class="file-upload form-group text-center">
           <div class="d-flex flex-column align-items-center">
             <!-- Custom button to trigger file input -->
-            <button
-              type="button"
-              class="btn btn-primary mt-3"
-              id="chooseImageButton"
-              onclick="document.getElementById('profile_image').click()"
-            >
+            <button type="button" class="btn btn-primary mt-3" id="chooseImageButton"
+              onclick="document.getElementById('profile_image').click()">
               Choose New Image
             </button>
             <!-- Hidden file input -->
-            <input
-              type="file"
-              id="profile_image"
-              name="profile_image"
-              accept="image/*"
-              style="display: none"
-              onchange="previewImage(event)"
-            />
-            <span id="file-name" class="file-name d-block mt-2"
-              >No file selected</span
-            >
+            <input type="file" id="profile_image" name="profile_image" accept="image/*" style="display: none"
+              onchange="previewImage(event)" />
+            <span id="file-name" class="file-name d-block mt-2">No file selected</span>
 
             <!-- Profile Images - Current and New Side by Side -->
             <div class="d-flex justify-content-center align-items-start mt-3">
               <!-- Current Profile Image -->
               <div class="current-profile mx-2 text-center">
-                <label for="current_profile_image" class="d-block"
-                  >Current Profile Image</label
-                >
+                <label for="current_profile_image" class="d-block">Current Profile Image</label>
                 <div class="mt-2">
                   <img
                     src="{{ url_for('static', filename='uploads/profile_images/' + (current_user.profile_image or 'default.jpg')) }}"
-                    alt="Current Profile Image"
-                    class="profile-circle"
-                  />
+                    alt="Current Profile Image" class="profile-circle" />
                 </div>
               </div>
 
               <!-- New Profile Image Preview -->
               <div class="new-profile mx-2 text-center">
-                <label for="new_profile_image" class="d-block"
-                  >New Profile Image</label
-                >
+                <label for="new_profile_image" class="d-block">New Profile Image</label>
                 <div class="mt-2" id="image-preview">
-                  <img
-                    id="new-profile-img"
-                    src=""
-                    alt="New Profile Image"
-                    class="profile-circle"
-                    style="display: none"
-                  />
+                  <img id="new-profile-img" src="" alt="New Profile Image" class="profile-circle"
+                    style="display: none" />
                 </div>
               </div>
             </div>
-            <small class="form-text text-muted"
-              >Leave unchanged to keep the current profile image.</small
-            >
+            <small class="form-text text-muted">Leave unchanged to keep the current profile image.</small>
           </div>
         </div>
 
         <!-- Password Fields -->
         <div class="form-group">
-          <label for="password"
-            >New Password (leave blank to keep current password)</label
-          >
-          <input
-            type="password"
-            class="form-control"
-            id="password"
-            name="password"
-            placeholder="Enter new password"
-          />
-          <button
-            type="button"
-            id="togglePassword"
-            class="btn btn-outline-secondary mt-2"
-          >
+          <label for="password">New Password (leave blank to keep current password)</label>
+          <input type="password" class="form-control" id="password" name="password" placeholder="Enter new password" />
+          <button type="button" id="togglePassword" class="btn btn-outline-secondary mt-2">
             Show
           </button>
-          <small class="form-text text-muted"
-            >Leave this field blank to keep your current password.</small
-          >
+          <small class="form-text text-muted">Leave this field blank to keep your current password.</small>
 
           <!-- Password requirements -->
           <div id="password-requirements" class="form-text text-muted mt-2">
@@ -150,15 +91,9 @@
               <div class="criteria-item">
                 <span id="length" class="invalid">✗ 8 characters minimum</span>
                 <span id="number" class="invalid">✗ One number</span>
-                <span id="uppercase" class="invalid"
-                  >✗ One uppercase letter</span
-                >
-                <span id="lowercase" class="invalid"
-                  >✗ One lowercase letter</span
-                >
-                <span id="special" class="invalid"
-                  >✗ One special character !@#$%^&*</span
-                >
+                <span id="uppercase" class="invalid">✗ One uppercase letter</span>
+                <span id="lowercase" class="invalid">✗ One lowercase letter</span>
+                <span id="special" class="invalid">✗ One special character !@#$%^&*</span>
               </div>
             </div>
           </div>
@@ -167,13 +102,8 @@
         <!-- Confirm Password Field -->
         <div class="form-group">
           <label for="password_confirm">Confirm New Password</label>
-          <input
-            type="password"
-            class="form-control"
-            id="password_confirm"
-            name="password_confirm"
-            placeholder="Confirm new password"
-          />
+          <input type="password" class="form-control" id="password_confirm" name="password_confirm"
+            placeholder="Confirm new password" />
         </div>
 
         <!-- Submit Button -->

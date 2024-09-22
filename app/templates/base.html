@@ -1,226 +1,175 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
 
-    <!-- Bootstrap CSS -->
-    <link
-      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 
-    <!-- DataTables CSS -->
-    <link
-      href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css"
-      rel="stylesheet"
-    />
+  <!-- Bootstrap CSS -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
 
-    <!-- DataTables Responsive CSS -->
-    <link
-      href="https://cdn.datatables.net/responsive/2.4.1/css/responsive.dataTables.min.css"
-      rel="stylesheet"
-    />
+  <!-- DataTables CSS -->
+  <link href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css" rel="stylesheet" />
 
-    <!-- Font Awesome CSS -->
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
-    />
+  <!-- DataTables Responsive CSS -->
+  <link href="https://cdn.datatables.net/responsive/2.4.1/css/responsive.dataTables.min.css" rel="stylesheet" />
 
-    <!-- Your Custom Styles -->
-    <link
-      href="{{ url_for('static', filename='styles.css') }}"
-      rel="stylesheet"
-    />
+  <!-- Font Awesome CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
 
-    <title>Help Desk</title>
-  </head>
-  <body class="light-mode">
-    <!-- Navbar -->
-    <nav class="navbar navbar-light">
-      <div class="container-fluid position-relative">
-        <!-- Left: Hamburger Menu for Mobile -->
-        <div class="d-flex align-items-center" style="z-index: 10">
-          {% if current_user.is_authenticated %}
-          <button
-            class="navbar-toggler"
-            type="button"
-            data-toggle="collapse"
-            data-target="#navbarMenu"
-            aria-controls="navbarMenu"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-          >
-            <span class="fas fa-bars"></span>
-          </button>
-          {% endif %}
+  <!-- Your Custom Styles -->
+  <link href="{{ url_for('static', filename='styles.css') }}" rel="stylesheet" />
 
-          <!-- Role Badge for Desktop -->
-          {% if current_user.is_authenticated %}
-          <span
-            class="badge badge-role-{{ current_user.role }} d-none d-md-inline-block ml-2"
-          >
-            {{ current_user.role.capitalize() }}
-          </span>
-          {% endif %}
-        </div>
+  <title>Help Desk</title>
+</head>
 
-        <!-- Center: Logo, absolutely positioned -->
-        <a class="navbar-brand position-absolute" href="#">
-          {% if current_user.is_authenticated %}
-          <img
-            src="{{ url_for('static', filename='uploads/profile_images/' + (current_user.profile_image or 'default.jpg')) }}?{{ current_user.profile_image or '' }}"
-            alt="Profile Image"
-            class="logo-circle"
-          />
-          {% else %}
-          <img
-            src="{{ url_for('static', filename='logo.png') }}"
-            alt="Help Desk Logo"
-            class="logo-circle"
-          />
-          {% endif %}
-        </a>
-
-        <!-- Right: Theme Toggle and Profile/Logout Links -->
-        <div
-          class="d-flex align-items-center navbar-content"
-          style="z-index: 10"
-        >
-          <!-- Theme Toggle -->
-          <button id="theme-toggle-button" class="btn btn-link">
-            <i id="theme-toggle-icon" class="fas fa-sun"></i>
-          </button>
-
-          {% if current_user.is_authenticated %}
-          <!-- Profile and Logout Links -->
-          <a
-            class="profile-badge mr-2 d-none d-md-inline-block"
-            href="{{ url_for('main.update_profile', next=request.path) }}"
-          >
-            Profile
-          </a>
-          <a
-            class="logout-badge mr-2 d-none d-md-inline-block"
-            href="{{ url_for('main.logout') }}"
-          >
-            Logout
-          </a>
-          {% endif %}
-        </div>
-      </div>
-
-      <!-- Dropdown Menu Content for Mobile -->
-      <div class="collapse navbar-collapse" id="navbarMenu">
-        <div class="dropdown-content p-4 custom-dropdown">
-          {% if current_user.is_authenticated %}
-          <!-- Role Badge -->
-          <span class="badge badge-role-{{ current_user.role }} mb-3">
-            {{ current_user.role.capitalize() }}
-          </span>
-          <!-- Signed in as Message -->
-          <div class="mb-3">
-            <span class="text-muted"
-              >Signed in as: {{ current_user.name }}</span
-            >
-          </div>
-          <!-- Profile Link -->
-          <div class="mb-2">
-            <a
-              href="{{ url_for('main.update_profile', next=request.path) }}"
-              class="btn btn-link"
-            >
-              Profile
-            </a>
-          </div>
-          <!-- Logout Link -->
-          <div>
-            <a href="{{ url_for('main.logout') }}" class="btn btn-link">
-              Logout
-            </a>
-          </div>
-          {% endif %}
-        </div>
-      </div>
-    </nav>
-
-    <div class="container">
-      <!-- Flash message block -->
-      {% with messages = get_flashed_messages(with_categories=true) %} {% if
-      messages %} {% for category, message in messages %}
-      <div
-        class="alert alert-{{ category }} alert-dismissible fade show text-center"
-        role="alert"
-      >
-        {{ message }}
-        <button
-          type="button"
-          class="close"
-          data-dismiss="alert"
-          aria-label="Close"
-        >
-          <span aria-hidden="true">&times;</span>
+<body class="light-mode">
+  <!-- Navbar -->
+  <nav class="navbar navbar-light">
+    <div class="container-fluid position-relative">
+      <!-- Left: Hamburger Menu for Mobile -->
+      <div class="d-flex align-items-center" style="z-index: 10">
+        {% if current_user.is_authenticated %}
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarMenu"
+          aria-controls="navbarMenu" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="fas fa-bars"></span>
         </button>
+        {% endif %}
+
+        <!-- Role Badge for Desktop -->
+        {% if current_user.is_authenticated %}
+        <span class="badge badge-role-{{ current_user.role }} d-none d-md-inline-block ml-2">
+          {{ current_user.role.capitalize() }}
+        </span>
+        {% endif %}
       </div>
-      {% endfor %} {% endif %} {% endwith %} {% block content %} {% endblock %}
+
+      <!-- Center: Logo, absolutely positioned -->
+      <a class="navbar-brand position-absolute" href="#">
+        {% if current_user.is_authenticated %}
+        <img
+          src="{{ url_for('static', filename='uploads/profile_images/' + (current_user.profile_image or 'default.jpg')) }}?{{ current_user.profile_image or '' }}"
+          alt="Profile Image" class="logo-circle" />
+        {% else %}
+        <img src="{{ url_for('static', filename='logo.png') }}" alt="Help Desk Logo" class="logo-circle" />
+        {% endif %}
+      </a>
+
+      <!-- Right: Theme Toggle and Profile/Logout Links -->
+      <div class="d-flex align-items-center navbar-content" style="z-index: 10">
+        <!-- Theme Toggle -->
+        <button id="theme-toggle-button" class="btn btn-link">
+          <i id="theme-toggle-icon" class="fas fa-sun"></i>
+        </button>
+
+        {% if current_user.is_authenticated %}
+        <!-- Profile and Logout Links -->
+        <a class="profile-badge mr-2 d-none d-md-inline-block"
+          href="{{ url_for('main.update_profile', next=request.path) }}">
+          Profile
+        </a>
+        <a class="logout-badge mr-2 d-none d-md-inline-block" href="{{ url_for('main.logout') }}">
+          Logout
+        </a>
+        {% endif %}
+      </div>
     </div>
 
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <!-- Place scripts just before the closing </body> tag -->
+    <!-- Dropdown Menu Content for Mobile -->
+    <div class="collapse navbar-collapse" id="navbarMenu">
+      <div class="dropdown-content p-4 custom-dropdown">
+        {% if current_user.is_authenticated %}
+        <!-- Role Badge -->
+        <span class="badge badge-role-{{ current_user.role }} mb-3">
+          {{ current_user.role.capitalize() }}
+        </span>
+        <!-- Signed in as Message -->
+        <div class="mb-3">
+          <span class="text-muted">Signed in as: {{ current_user.name }}</span>
+        </div>
+        <!-- Profile Link -->
+        <div class="mb-2">
+          <a href="{{ url_for('main.update_profile', next=request.path) }}" class="btn btn-link">
+            Profile
+          </a>
+        </div>
+        <!-- Logout Link -->
+        <div>
+          <a href="{{ url_for('main.logout') }}" class="btn btn-link">
+            Logout
+          </a>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </nav>
 
-    <!-- jQuery (required for Bootstrap 4 and DataTables) -->
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <div class="container">
+    <!-- Flash message block -->
+    {% with messages = get_flashed_messages(with_categories=true) %} {% if
+    messages %} {% for category, message in messages %}
+    <div class="alert alert-{{ category }} alert-dismissible fade show text-center" role="alert">
+      {{ message }}
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    {% endfor %} {% endif %} {% endwith %} {% block content %} {% endblock %}
+  </div>
 
-    <!-- Popper.js (required for Bootstrap 4 dropdowns) -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"></script>
+  <!-- Optional JavaScript -->
+  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+  <!-- Place scripts just before the closing </body> tag -->
 
-    <!-- Bootstrap JS -->
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <!-- jQuery (required for Bootstrap 4 and DataTables) -->
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 
-    <!-- DataTables JS -->
-    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+  <!-- Popper.js (required for Bootstrap 4 dropdowns) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"></script>
 
-    <!-- DataTables Responsive JS -->
-    <script src="https://cdn.datatables.net/responsive/2.4.1/js/dataTables.responsive.min.js"></script>
+  <!-- Bootstrap JS -->
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-    <!-- Your Custom Scripts -->
-    <script src="{{ url_for('static', filename='theme-toggle.js') }}"></script>
+  <!-- DataTables JS -->
+  <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
 
-    <!-- Initialize DataTables on specific tables -->
-    <script>
-      $(document).ready(function () {
-        $("#tickets-table").DataTable({
-          responsive: true, // Enable responsive behavior
-          paging: true,
-          ordering: true,
-          info: true,
-          searching: true,
-          lengthMenu: [5, 10, 25, 50, 100],
-          pageLength: 5,
+  <!-- DataTables Responsive JS -->
+  <script src="https://cdn.datatables.net/responsive/2.4.1/js/dataTables.responsive.min.js"></script>
 
-          // Fix the width of the Actions column (assuming it's the last column)
-          columnDefs: [
-            { targets: -1, width: "220px" }, // Set width of the last column (Actions)
-          ],
-        });
+  <!-- Your Custom Scripts -->
+  <script src="{{ url_for('static', filename='theme-toggle.js') }}"></script>
 
-        // Customize search input styling
-        $(".dataTables_filter input")
-          .attr("placeholder", "Search across all categories...")
-          .css({
-            color: "grey",
-            width: "250px",
-          });
+  <!-- Initialize DataTables on specific tables -->
+  <script>
+    $(document).ready(function () {
+      $("#tickets-table").DataTable({
+        responsive: true, // Enable responsive behavior
+        paging: true,
+        ordering: true,
+        info: true,
+        searching: true,
+        lengthMenu: [5, 10, 25, 50, 100],
+        pageLength: 5,
+
+        // Fix the width of the Actions column (assuming it's the last column)
+        columnDefs: [
+          { targets: -1, width: "220px" }, // Set width of the last column (Actions)
+        ],
       });
-    </script>
 
-    <!-- Include Flask-Moment JavaScript -->
-    {{ moment.include_moment() }}
-  </body>
+      // Customize search input styling
+      $(".dataTables_filter input")
+        .attr("placeholder", "Search across all categories...")
+        .css({
+          color: "grey",
+          width: "250px",
+        });
+    });
+  </script>
+
+  <!-- Include Flask-Moment JavaScript -->
+  {{ moment.include_moment() }}
+</body>
+
 </html>
