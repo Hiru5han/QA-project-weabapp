@@ -158,11 +158,15 @@ def test_create_ticket_route_post(client, setup_test_data):
         data={
             "title": "Test Ticket",
             "description": "Test description",
-            "priority": "High",
-            "status": "Open",
+            "priority": "high",
+            "status": "open",
             "csrf_token": csrf_token,  # Include CSRF token
         },
     )
+
+    # Print response data to check for error messages
+    print(response.data.decode())  # Temporarily add this line to inspect the output
+
     assert response.status_code == 302  # Assuming successful creation redirects
 
 
