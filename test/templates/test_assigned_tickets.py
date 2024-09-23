@@ -9,7 +9,16 @@ from test.test_config import TestConfig
 
 @pytest.fixture
 def app():
-    app = create_app(config=TestConfig)
+    """Fixture to create a Flask app instance for testing."""
+    app = create_app(
+        {
+            "TESTING": True,
+            "SECRET_KEY": "test-secret-key",  # Add this line
+            "SQLALCHEMY_DATABASE_URI": "sqlite:///:memory:",  # Use in-memory database
+            "SQLALCHEMY_TRACK_MODIFICATIONS": False,
+            "WTF_CSRF_ENABLED": False,  # Optionally disable CSRF for testing
+        }
+    )
 
     with app.app_context():
         db.create_all()

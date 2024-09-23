@@ -1,34 +1,64 @@
+from unittest.mock import patch
 from bs4 import BeautifulSoup
 from flask import url_for
 import pytest
-from app import db
+from app import create_app, db
 from app.models import User, Ticket
+from app.routes import load_user
 
 
 @pytest.fixture
-def setup_test_data():
-    db.session.query(User).delete()
-    db.session.query(Ticket).delete()
-
-    # Create a test user with an appropriate role
-    user = User(
-        email="testuser@example.com", name="Test User", role="admin"
-    )  # Use 'support' or another role with access
-    user.set_password("gyjvo9-kewvoh-Vurmuj!")  # Set password using set_password
-    db.session.add(user)
-    db.session.commit()
-
-    # Create an active test ticket
-    ticket = Ticket(
-        title="Active Ticket",
-        description="An active test ticket",
-        status="Open",  # Ensure the ticket status is set to 'Open' or 'Active'
-        priority="High",
-        user_id=user.id,
-        assigned_to=user.id,  # Assign the ticket to the user
+def app():
+    """Fixture to create a Flask app instance for testing."""
+    app = create_app(
+        {
+            "TESTING": True,
+            "SECRET_KEY": "test-secret-key",  # Add this line
+            "SQLALCHEMY_DATABASE_URI": "sqlite:///:memory:",  # Use in-memory database
+            "SQLALCHEMY_TRACK_MODIFICATIONS": False,
+            "WTF_CSRF_ENABLED": False,  # Optionally disable CSRF for testing
+        }
     )
-    db.session.add(ticket)
-    db.session.commit()
+
+    with app.app_context():
+        db.create_all()
+        yield app
+        db.session.remove()
+        db.drop_all()
+
+
+@pytest.fixture
+def setup_test_data(app):
+    """Fixture to set up test data in the in-memory database."""
+    with app.app_context():
+        # Ensure all tables are created in the temp DB
+        db.create_all()
+
+        # Clear any existing data in the temp DB
+        db.session.query(User).delete()
+        db.session.query(Ticket).delete()
+
+        # Create a test user and ticket
+        user = User(email="testuser@example.com", name="Test User", role="admin")
+        user.set_password("gyjvo9-kewvoh-Vurmuj!")  # Set password
+        db.session.add(user)
+        db.session.commit()
+
+        ticket = Ticket(
+            title="Active Ticket",
+            description="An active test ticket",
+            status="Open",
+            priority="High",
+            user_id=user.id,
+            assigned_to=user.id,
+        )
+        db.session.add(ticket)
+        db.session.commit()
+
+        yield  # Run the test
+
+        # Cleanup: Drop tables from the in-memory database
+        db.drop_all()
 
 
 def get_csrf_token(response_data):
@@ -288,3 +318,39 @@ def test_delete_ticket_route_post(client, setup_test_data):
     assert (
         b"Ticket has been deleted successfully." in response.data
     )  # Or whatever message you expect
+
+
+def test_load_user_valid_user(setup_test_data, app):
+    # Run the test within the application context
+    with app.app_context():
+        # Mock the User.query.get method to return a user object
+        with patch("app.models.User.query.get") as mock_get:
+            # Create a mock user object
+            mock_user = User(id=1, email="test@example.com")
+            mock_get.return_value = mock_user
+
+            # Call the load_user function with a valid user ID
+            result = load_user(1)
+
+            # Assert that User.query.get was called with the correct ID
+            mock_get.assert_called_once_with(1)
+            # Assert that the result is the mock user
+            assert result == mock_user
+
+
+def test_load_user_invalid_user(setup_test_data, app):
+    # Run the test within the application context
+    with app.app_context():
+        # Mock the 'query' method in the SQLAlchemy session
+        with patch.object(db.session, "query") as mock_query:
+            mock_get = mock_query.return_value.get
+            mock_get.return_value = None
+
+            # Call the load_user function with an invalid user ID
+            result = load_user(999)
+
+            # Assert that db.session.query(User).get was called with the correct ID
+            mock_get.assert_called_once_with(999)
+
+            # Assert that the result is None since the user was not found
+            assert result is None

@@ -87,6 +87,7 @@ login_manager.login_view = "main.login"
 
 @login_manager.user_loader
 def load_user(user_id):
+    print(f"load_user called with user_id: {user_id}")  # Debugging line
     return User.query.get(int(user_id))
 
 
