@@ -321,36 +321,21 @@ def test_delete_ticket_route_post(client, setup_test_data):
 
 
 def test_load_user_valid_user(setup_test_data, app):
-    # Run the test within the application context
     with app.app_context():
-        # Mock the User.query.get method to return a user object
-        with patch("app.models.User.query.get") as mock_get:
-            # Create a mock user object
-            mock_user = User(id=1, email="test@example.com")
-            mock_get.return_value = mock_user
+        # Retrieve the user from the database
+        user = User.query.first()
+        assert user is not None, "Test user not found in the database."
 
-            # Call the load_user function with a valid user ID
-            result = load_user(1)
-
-            # Assert that User.query.get was called with the correct ID
-            mock_get.assert_called_once_with(1)
-            # Assert that the result is the mock user
-            assert result == mock_user
+        # Call load_user with the user's ID
+        result = load_user(user.id)
+        assert result is not None, "load_user returned None for a valid user ID."
+        assert result.id == user.id, "User IDs do not match."
+        assert result.email == user.email, "User emails do not match."
 
 
 def test_load_user_invalid_user(setup_test_data, app):
-    # Run the test within the application context
     with app.app_context():
-        # Mock the 'query' method in the SQLAlchemy session
-        with patch.object(db.session, "query") as mock_query:
-            mock_get = mock_query.return_value.get
-            mock_get.return_value = None
-
-            # Call the load_user function with an invalid user ID
-            result = load_user(999)
-
-            # Assert that db.session.query(User).get was called with the correct ID
-            mock_get.assert_called_once_with(999)
-
-            # Assert that the result is None since the user was not found
-            assert result is None
+        # Call load_user with an ID that doesn't exist
+        non_existent_user_id = 999  # Assuming this ID doesn't exist
+        result = load_user(non_existent_user_id)
+        assert result is None, "load_user should return None for an invalid user ID."
