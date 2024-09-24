@@ -71,7 +71,7 @@ def populate_database():
                 name="Bart Simpson",
                 email="bart@support.com",
                 role="support",
-                profile_image="starting_user_profile_images/marge-profile.png",
+                profile_image="starting_user_profile_images/bart-profile.png",
             )
             support1.set_password(password)
 
