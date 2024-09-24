@@ -1019,6 +1019,12 @@ body.dark-mode .assign-to-dropdown {
     overflow: hidden;
   }
 
+  /* Dark mode specific dropdown styles */
+  body.dark-mode .dropdown-menu {
+    background-color: #333333;
+    color: #ffffff;
+  }
+
   .custom-dropdown {
     width: 100%;
   }
@@ -1070,6 +1076,15 @@ body.dark-mode .assign-to-dropdown {
     color: #495057 !important;
     border-color: var(--background-color) !important;
     box-shadow: none !important;
+  }
+
+  /* Active and hover state in dark mode */
+  body.dark-mode .dropdown-menu .dropdown-item.active,
+  body.dark-mode .dropdown-menu .dropdown-item:active,
+  body.dark-mode .dropdown-menu .dropdown-item:hover,
+  body.dark-mode .dropdown-menu .dropdown-item:focus {
+    background-color: #444444; /* Custom highlight background in dark mode */
+    color: #ffffff; /* Text colour */
   }
 
   body.dark-mode .dropdown-menu {
