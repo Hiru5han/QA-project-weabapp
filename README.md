@@ -1,6 +1,7 @@
 # **Help Desk Ticketing System**
 
-A comprehensive help desk ticketing system built with Flask, offering role-based access for managing IT support tickets. The system is fully responsive, includes night mode support, and enables admins, support staff, and regular users to efficiently handle support requests.
+A comprehensive help desk ticketing system built with Flask, offering role-based access for managing IT support tickets.
+The system is fully responsive, includes night mode support, and enables admins, support staff, and regular users to efficiently handle support requests.
 
 ---
 
@@ -28,7 +29,7 @@ A comprehensive help desk ticketing system built with Flask, offering role-based
 
    ```bash
    git clone https://github.com/Hiru5han/QA-project-weabapp.git
-   cd helpdesk-ticketing-system
+   cd QA-project-weabapp
    ```
 
 2. **Create and Activate a Virtual Environment**
@@ -52,7 +53,15 @@ A comprehensive help desk ticketing system built with Flask, offering role-based
    flask db upgrade
    ```
 
-5. **Run the Application**
+5. **(Optional) Reset and Populate the Database with Sample Data**
+
+   You can use the `reset_db.py` script to wipe the database and populate it with sample tickets and users. This script includes pre-loaded profile images like "homer-profile.png", "bart-profile.png", and others.
+
+   ```bash
+   python reset_db.py
+   ```
+
+6. **Run the Application**
 
    ```bash
    flask run --host=0.0.0.0
@@ -66,6 +75,51 @@ A comprehensive help desk ticketing system built with Flask, offering role-based
 
 - Ensure your laptop and mobile device are on the same Wi-Fi network.
 - Find your laptop’s local IP address (e.g., `192.168.1.5`).
+- Open your mobile browser and visit: `http://<laptop-ip>:5000`.
+
+---
+
+## **Running Tests**
+
+This project includes unit tests located in the `test/` directory. The tests can be run using `pytest`. Additionally, HTML coverage reports are generated and stored in the `htmlcov/` directory.
+
+1. **Run all tests**:
+
+   ```bash
+   pytest
+   ```
+
+2. **View test coverage**:
+
+   After running the tests, open the `htmlcov/index.html` file in a browser to view the detailed test coverage report.
+
+---
+
+## **Configuration**
+
+Configuration is managed through the `config.py` file located in the `app/` directory. Key settings include:
+
+- **Database URI**: Define the URI for the database (SQLite or other).
+- **Flask Environment Settings**: Set up environment variables, secret keys, and other configuration options.
+
+---
+
+### **Running the Application on a Mobile Device**
+
+To access the application from a mobile device:
+
+1. Ensure both the laptop and mobile device are connected to the same network.
+2. On your laptop, run the Flask application using:
+
+   ```bash
+   flask run --host=0.0.0.0
+   ```
+
+3. Find your laptop’s local IP address (e.g., `192.168.1.5`).
+4. Open your mobile browser and visit: `http://<laptop-ip>:5000`.
+
+---
+
 - Open a web browser on your mobile device and visit `http://<laptop-ip>:5000` (e.g., `http://192.168.1.5:5000`).
 
 ### **User Roles**
@@ -87,87 +141,136 @@ A comprehensive help desk ticketing system built with Flask, offering role-based
 ## **Project Structure**
 
 ```plaintext
-helpdesk-ticketing-system/
+QA-project-weabapp/
 │
-├── README.md               # Documentation for the project
-├── app/                    # Main application package
-│   ├── __init__.py         # Initialises the Flask application
-│   ├── models.py           # Database models (User, Ticket, Comment)
-│   ├── routes.py           # Application routes and logic
-│   ├── static/             # Static assets (CSS, JavaScript, images)
-│   │   ├── favicon.ico
-│   │   ├── logo.png
-│   │   ├── profile_images/ # Folder for storing user profile images
-│   │   ├── styles.css      # Main stylesheet
-│   │   └── theme-toggle.js # JavaScript for theme toggle (light/dark mode)
-│   ├── templates/          # HTML templates for rendering views
-│   │   ├── all_tickets.html
-│   │   ├── assign_ticket.html
-│   │   ├── assigned_tickets.html
-│   │   ├── base.html
-│   │   ├── closed_tickets.html
-│   │   ├── create_ticket.html
-│   │   ├── index.html
-│   │   ├── login.html
-│   │   ├── register.html
-│   │   ├── ticket_details.html
-│   │   ├── ticket_details_readonly.html
-│   │   ├── unassigned_tickets.html
-│   │   └── update_profile.html
-│   └── docs/               # Documentation-related files
-│       ├── build/
-│       └── source/
-├── build/                  # Build files for documentation (auto-generated)
-├── htmlcov/                # Test coverage reports in HTML format
-│   ├── class_index.html
-│   ├── index.html
-│   ├── function_index.html
-│   └── coverage reports for various files...
-├── instance/               # Instance-specific configuration and database
-│   ├── config.py           # Instance-specific configurations
-│   └── helpdesk.db         # SQLite database
-├── migrations/             # Alembic migration scripts
-│   ├── README
-│   ├── alembic.ini         # Alembic configuration
-│   ├── env.py              # Environment setup for migrations
-│   ├── versions/           # Versioned migration scripts
-│       └── 0deaae28b6fd_initial_migration.py
-├── requirements.txt        # Python dependencies for the project
-├── reset_db.py             # Script to reset the database
-├── run.py                  # Entry point for running the Flask application
-├── source/                 # Source files for documentation
-├── test/                   # Unit tests for the application
-│   ├── __init__.py
-│   ├── conftest.py         # Test configuration
-│   ├── templates/          # Unit tests for templates
-│   │   ├── test_all_tickets_html.py
-│   │   └── test_assigned_tickets.py
-│   └── test_config.py      # Test for configuration
+├── README.md
+├── SoftEng Design Doc.docx
+├── app
+│   ├── __init__.py
+│   ├── __pycache__
+│   │   ├── __init__.cpython-312.pyc
+│   │   ├── models.cpython-312.pyc
+│   │   └── routes.cpython-312.pyc
+│   ├── config.py
+│   ├── docs
+│   │   ├── build
+│   │   │   ├── doctrees
+│   │   │   └── html
+│   │   │       ├── _sources
+│   │   │       └── _static
+│   │   └── source
+│   │       ├── _static
+│   │       └── _templates
+│   ├── models.py
+│   ├── routes.py
+│   ├── static
+│   │   ├── favicon.ico
+│   │   ├── logo.png
+│   │   ├── styles.css
+│   │   ├── theme-toggle.js
+│   │   └── uploads
+│   │       └── profile_images
+│   │           ├── default.jpg
+│   │           ├── default_image
+│   │           │   └── default.jpg
+│   │           └── starting_user_profile_images
+│   │               ├── bart-profile.png
+│   │               ├── burns-profile.png
+│   │               ├── doctor-profile.png
+│   │               ├── homer-profile.png
+│   │               ├── krusty-profile.png
+│   │               ├── lisa-profile.png
+│   │               ├── maggie-profile.png
+│   │               ├── marge-profile.png
+│   │               └── ralph-profile.png
+│   ├── templates
+│   │   ├── all_tickets.html
+│   │   ├── assign_ticket.html
+│   │   ├── assigned_tickets.html
+│   │   ├── base.html
+│   │   ├── closed_tickets.html
+│   │   ├── create_ticket.html
+│   │   ├── index.html
+│   │   ├── login.html
+│   │   ├── register.html
+│   │   ├── ticket_details.html
+│   │   ├── ticket_details_readonly.html
+│   │   ├── unassigned_tickets.html
+│   │   └── update_profile.html
+│   ├── utils.py
+│   └── views
+│       ├── __init__.py
+│       ├── active_tickets_view.py
+│       ├── all_tickets_view.py
+│       ├── assign_ticket_view.py
+│       ├── assigned_tickets_view.py
+│       ├── closed_tickets_view.py
+│       ├── create_ticket_view.py
+│       ├── delete_ticket_view.py
+│       ├── index_view.py
+│       ├── login_view.py
+│       ├── logout_view.py
+│       ├── register_view.py
+│       ├── ticket_details_readonly_view.py
+│       ├── ticket_details_view.py
+│       ├── unassigned_tickets_view.py
+│       ├── update_profile_view.py
+│       └── update_status_view.py
+├── build
+├── htmlcov
+│   ├── class_index.html
+│   ├── coverage_html_cb_6fb7b396.js
+│   ├── favicon_32_cb_58284776.png
+│   ├── function_index.html
+│   ├── index.html
+│   ├── keybd_closed_cb_ce680311.png
+│   ├── run_py.html
+│   ├── status.json
+│   ├── style_cb_8e611ae1.css
+│   ├── z_36f028580bb02cc8___init___py.html
+│   ├── z_36f028580bb02cc8_conftest_py.html
+│   ├── z_36f028580bb02cc8_test_config_py.html
+│   ├── z_5f5a17c013354698___init___py.html
+│   ├── z_5f5a17c013354698_models_py.html
+│   ├── z_5f5a17c013354698_routes_py.html
+│   ├── z_cb9fd7c543aa674d_test_base_html_py.html
+│   ├── z_cb9fd7c543aa674d_test_login_html_py.html
+│   └── z_cb9fd7c543aa674d_test_register_html_py.html
+├── instance
+│   ├── config.py
+│   └── helpdesk.db
+├── migrations
+│   ├── README
+│   ├── alembic.ini
+│   ├── env.py
+│   ├── script.py.mako
+│   └── versions
+│       ├── 0deaae28b6fd_initial_migration.py
+│       └── b2c9f5207fcb_added_profile_image_column_to_user_model.py
+├── requirements.txt
+├── reset_db.py
+├── run.py
+├── source
+│   ├── _static
+│   └── _templates
+├── test
+│   ├── __init__.py
+│   ├── conftest.py
+│   ├── templates
+│   │   ├── test_all_tickets_html.py
+│   │   ├── test_assigned_tickets.py
+│   │   └── test_base.py
+│   ├── test_config.py
+│   ├── test_files
+│   │   └── profile.jpg
+│   ├── test_routes.py
+│   ├── tree.txt
+│   └── views
+│       ├── test_active_tickets_view.py
+│       ├── test_all_tickets_view.py
+│       ├── test_assign_ticket_view.py
+│       ├── test_assigned_tickets_view.py
+│       ├── test_closed_tickets_view.py
+│       └── test_create_ticket_view.py
+└── tree.txt
 ```
-
----
-
-## **Configuration**
-
-Configuration is managed through the `config.py` file located in the `app/` directory. Key settings include:
-
-- **Database URI**: Define the URI for the database (SQLite or other).
-- **Flask Environment Settings**: Set up environment variables, secret keys, and other configuration options.
-
----
-
-### **Running the Application on a Mobile Device**
-
-To access the application from a mobile device:
-
-1. Ensure both the laptop and mobile device are connected to the same network.
-2. On your laptop, run the Flask application using:
-   ```bash
-   flask run --host=0.0.0.0
-   ```
-3. Find your laptop’s local IP address (e.g., `192.168.1.5`).
-4. Open your mobile browser and visit: `http://<laptop-ip>:5000`.
-
----
-
-This updated README provides a more detailed overview of the Help Desk Ticketing System, its features, and the steps to set up and run the application. Let me know if you'd like any further adjustments!
