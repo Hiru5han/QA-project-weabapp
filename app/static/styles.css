@@ -214,7 +214,7 @@ body.dark-mode .text-primary {
   max-width: 600px;
   margin: 2rem auto;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  text-align: centre;
+  text-align: center;
   margin-top: 50px;
 }
 
@@ -237,7 +237,7 @@ body.dark-mode .text-primary {
 
 .d-flex.justify-content-center {
   display: flex;
-  justify-content: centre;
+  justify-content: center;
   margin-bottom: 1rem;
 }
 
