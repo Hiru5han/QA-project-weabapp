@@ -7,7 +7,12 @@ from flask_login import login_user
 from PIL import Image, ImageOps
 
 from app.models import User, db
-from app.utils import UPLOAD_FOLDER, allowed_file, redirect_based_on_role
+from app.utils import (
+    UPLOAD_FOLDER,
+    allowed_file,
+    redirect_based_on_role,
+    sanitize_html,
+)
 
 
 class RegisterView(MethodView):
@@ -15,9 +20,9 @@ class RegisterView(MethodView):
         return render_template("register.html")
 
     def post(self):
-        name = request.form.get("name")
-        email = request.form.get("email")
-        password = request.form.get("password")
+        name = request.form.get("name", "")
+        email = request.form.get("email", "")
+        password = request.form.get("password", "")
         role = request.form.get("role")
         profile_image = request.files.get("profile_image")
 
@@ -33,7 +38,7 @@ class RegisterView(MethodView):
 
         # Validate email format
         email_regex = r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
-        if not re.match(email_regex, email):
+        if not re.fullmatch(email_regex, email):
             flash("Invalid email address.", "warning")
             return render_template("register.html", name=name, email=email, role=role)
 
@@ -66,11 +71,15 @@ class RegisterView(MethodView):
             flash("Invalid role selected.", "warning")
             return render_template("register.html", name=name, email=email, role=role)
 
+        # Sanitize inputs before saving
+        name = sanitize_html(name)
+        email = sanitize_html(email)
+
         # Create the new user
         new_user = User(
-            name=name,
-            email=email,
-            role=role,
+            name=name,  # type: ignore
+            email=email,  # type: ignore
+            role=role,  # type: ignore
         )
         new_user.set_password(password)
 
@@ -80,28 +89,26 @@ class RegisterView(MethodView):
         # Handle profile image upload
         if profile_image and allowed_file(profile_image.filename):
             try:
-                # Generate a unique filename based on the new user's ID and the file extension
-                file_ext = profile_image.filename.rsplit(".", 1)[1].lower()
-                filename = f"user_{new_user.id}.{file_ext}"
+                if profile_image.filename and "." in profile_image.filename:
+                    file_ext = profile_image.filename.rsplit(".", 1)[1].lower()
+                    filename = f"user_{new_user.id}.{file_ext}"
+                    file_path = os.path.join(UPLOAD_FOLDER, filename)
 
-                file_path = os.path.join(UPLOAD_FOLDER, filename)
+                    # Ensure the upload folder exists
+                    if not os.path.exists(UPLOAD_FOLDER):
+                        os.makedirs(UPLOAD_FOLDER)
 
-                # Ensure the upload folder exists
-                if not os.path.exists(UPLOAD_FOLDER):
-                    os.makedirs(UPLOAD_FOLDER)
+                    # Save and resize the file
+                    profile_image.save(file_path)
+                    img = Image.open(file_path)
+                    img = ImageOps.fit(img, (200, 200), Image.Resampling.LANCZOS)
+                    img.save(file_path)
 
-                # Save the file
-                profile_image.save(file_path)
-
-                # Optionally resize or crop the image
-                img = Image.open(file_path)
-                img = ImageOps.fit(img, (200, 200), Image.Resampling.LANCZOS)
-                img.save(file_path)
-
-                # Update the new user's profile image field in the database
-                new_user.profile_image = filename
-                db.session.commit()
-
+                    # Update DB with filename
+                    new_user.profile_image = filename
+                    db.session.commit()
+                else:
+                    flash("Invalid profile image filename.", "warning")
             except Exception as e:
                 flash(f"An error occurred while uploading the image: {e}", "danger")
 

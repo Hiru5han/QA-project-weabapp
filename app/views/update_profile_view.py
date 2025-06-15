@@ -7,11 +7,12 @@ from flask_login import current_user, login_required
 from PIL import Image, ImageOps
 
 from app.models import User, db
-from app.utils import UPLOAD_FOLDER, allowed_file, is_safe_url
+from app.utils import UPLOAD_FOLDER, allowed_file, is_safe_url, sanitize_html
+from typing import Any, Callable, ClassVar
 
 
 class UpdateProfileView(MethodView):
-    decorators = [login_required]
+    decorators: ClassVar[list[Callable[[Any], Any]]] = [login_required]
 
     def get(self):
         next_url = request.args.get("next") or url_for("main.index")
@@ -27,10 +28,10 @@ class UpdateProfileView(MethodView):
             next_url = url_for("main.index")
 
         # Get form data
-        name = request.form.get("name")
-        email = request.form.get("email")
-        password = request.form.get("password")
-        password_confirm = request.form.get("password_confirm")
+        name = request.form.get("name", "")
+        email = request.form.get("email", "")
+        password = request.form.get("password", "")
+        password_confirm = request.form.get("password_confirm", "")
         file = request.files.get("profile_image")
 
         # Validate name
@@ -102,29 +103,31 @@ class UpdateProfileView(MethodView):
             current_user.set_password(password)
 
         # Handle profile image upload
-        if file and allowed_file(file.filename):
+        if file and hasattr(file, "filename") and allowed_file(file.filename):
             try:
+                filename_raw = file.filename
+                if not filename_raw or "." not in filename_raw:
+                    raise ValueError("Filename is missing or invalid.")
+
                 # Generate a unique filename based on the user's ID
-                file_ext = file.filename.rsplit(".", 1)[1].lower()
+                file_ext = filename_raw.rsplit(".", 1)[1].lower()
                 filename = f"user_{current_user.id}.{file_ext}"
 
                 file_path = os.path.join(UPLOAD_FOLDER, filename)
 
                 # Ensure the upload folder exists
-                if not os.path.exists(UPLOAD_FOLDER):
-                    os.makedirs(UPLOAD_FOLDER)
+                os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
                 # Save the file
                 file.save(file_path)
 
-                # Optionally resize or crop the image
+                # Resize/crop the image
                 img = Image.open(file_path)
                 img = ImageOps.fit(img, (200, 200), Image.Resampling.LANCZOS)
                 img.save(file_path)
 
-                # Update the user's profile image in the database
                 current_user.profile_image = filename
-                db.session.commit()  # Save the new filename in the database
+                db.session.commit()
 
                 flash("Profile image updated successfully!", "success")
             except Exception as e:
@@ -136,9 +139,13 @@ class UpdateProfileView(MethodView):
                     "warning",
                 )
 
+        # Sanitize inputs before saving
+        sanitized_name = sanitize_html(name)
+        sanitized_email = sanitize_html(email)
+
         # Update user profile and save to database
-        current_user.name = name
-        current_user.email = email
+        current_user.name = sanitized_name
+        current_user.email = sanitized_email
         db.session.commit()
 
         flash("Your profile has been updated.", "success")

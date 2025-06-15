@@ -3,10 +3,12 @@ from flask.views import MethodView
 from flask_login import current_user, login_required
 
 from app.models import Comment, Ticket, User, db
+from app.utils import sanitize_html
+from typing import Any, Callable, ClassVar
 
 
 class TicketDetailsView(MethodView):
-    decorators = [login_required]
+    decorators: ClassVar[list[Callable[[Any], Any]]] = [login_required]
 
     def get(self, ticket_id):
         ticket = Ticket.query.get_or_404(ticket_id)
@@ -21,9 +23,9 @@ class TicketDetailsView(MethodView):
         ticket = Ticket.query.get_or_404(ticket_id)
 
         if "comment_text" in request.form:
-            comment_text = request.form.get("comment_text")
+            comment_text = sanitize_html(request.form.get("comment_text", ""))
             new_comment = Comment(
-                comment_text=comment_text, ticket_id=ticket.id, user_id=current_user.id
+                comment_text=comment_text, ticket_id=ticket.id, user_id=current_user.id  # type: ignore
             )
             db.session.add(new_comment)
 
@@ -31,11 +33,11 @@ class TicketDetailsView(MethodView):
             status = request.form.get("status")
             if ticket.status != status:
                 ticket.status = status
-                status_comment_text = f"Status changed to {status}."
+                status_comment_text = sanitize_html(f"Status changed to {status}.")
                 status_comment = Comment(
-                    comment_text=status_comment_text,
-                    ticket_id=ticket.id,
-                    user_id=current_user.id,
+                    comment_text=status_comment_text,  # type: ignore
+                    ticket_id=ticket.id,  # type: ignore
+                    user_id=current_user.id,  # type: ignore
                 )
                 db.session.add(status_comment)
 
@@ -43,11 +45,13 @@ class TicketDetailsView(MethodView):
             priority = request.form.get("priority")
             if ticket.priority != priority:
                 ticket.priority = priority
-                priority_comment_text = f"Priority changed to {priority}."
+                priority_comment_text = sanitize_html(
+                    f"Priority changed to {priority}."
+                )
                 priority_comment = Comment(
-                    comment_text=priority_comment_text,
-                    ticket_id=ticket.id,
-                    user_id=current_user.id,
+                    comment_text=priority_comment_text,  # type: ignore
+                    ticket_id=ticket.id,  # type: ignore
+                    user_id=current_user.id,  # type: ignore
                 )
                 db.session.add(priority_comment)
 
@@ -55,16 +59,15 @@ class TicketDetailsView(MethodView):
             new_assignee_id = request.form.get("assignee")
             if ticket.assigned_to != new_assignee_id:
                 ticket.assigned_to = new_assignee_id
-                assignee_name = (
-                    User.query.get(new_assignee_id).name
-                    if new_assignee_id
-                    else "Unassigned"
+                user = User.query.get(new_assignee_id)
+                assignee_name = user.name if user else "Unassigned"
+                assignee_comment_text = sanitize_html(
+                    f"Assignee changed to {assignee_name}."
                 )
-                assignee_comment_text = f"Assignee changed to {assignee_name}."
                 assignee_comment = Comment(
-                    comment_text=assignee_comment_text,
-                    ticket_id=ticket.id,
-                    user_id=current_user.id,
+                    comment_text=assignee_comment_text,  # type: ignore
+                    ticket_id=ticket.id,  # type: ignore
+                    user_id=current_user.id,  # type: ignore
                 )
                 db.session.add(assignee_comment)
 

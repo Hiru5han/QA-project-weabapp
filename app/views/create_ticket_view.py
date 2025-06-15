@@ -4,11 +4,14 @@ from flask import flash, redirect, render_template, request, url_for
 from flask.views import MethodView
 from flask_login import current_user, login_required
 
+from app.utils import sanitize_html
+from typing import Any, Callable, ClassVar
+
 from app.models import Ticket, User, db
 
 
 class CreateTicketView(MethodView):
-    decorators = [login_required]
+    decorators: ClassVar[list[Callable[[Any], Any]]] = [login_required]
 
     def get(self):
         referrer = request.args.get("referrer", url_for("main.all_tickets"))
@@ -137,13 +140,17 @@ class CreateTicketView(MethodView):
                 form_data=request.form,  # Pass the form data back on validation failure
             )
 
+        # Sanitize the title and description to prevent XSS
+        title = sanitize_html(title)
+        description = sanitize_html(description)
+
         # Create new ticket and save to database
         new_ticket = Ticket(
-            title=title,
-            description=description,
-            priority=priority,
-            status=status,
-            user_id=user_id,
+            title=title,  # type: ignore
+            description=description,  # type: ignore
+            priority=priority,  # type: ignore
+            status=status,  # type: ignore
+            user_id=user_id,  # type: ignore
         )
 
         if current_user.role == "admin" and assigned_to_id:

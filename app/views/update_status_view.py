@@ -3,10 +3,11 @@ from flask.views import MethodView
 from flask_login import current_user, login_required
 
 from app.models import Ticket, db
+from typing import Any, Callable, ClassVar
 
 
 class UpdateStatusView(MethodView):
-    decorators = [login_required]
+    decorators: ClassVar[list[Callable[[Any], Any]]] = [login_required]
 
     def post(self, ticket_id):
         ticket = Ticket.query.get_or_404(ticket_id)

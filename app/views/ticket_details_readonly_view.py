@@ -3,10 +3,11 @@ from flask.views import MethodView
 from flask_login import login_required
 
 from ..models import Comment, Ticket
+from typing import Any, Callable, ClassVar
 
 
 class TicketDetailsReadonlyView(MethodView):
-    decorators = [login_required]
+    decorators: ClassVar[list[Callable[[Any], Any]]] = [login_required]
 
     def get(self, ticket_id):
         """

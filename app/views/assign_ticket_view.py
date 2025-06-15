@@ -3,10 +3,14 @@ from flask.views import MethodView
 from flask_login import current_user, login_required
 
 from app.models import Comment, Ticket, User, db
+from app.utils import sanitize_html
+
+
+from typing import Any, Callable, ClassVar
 
 
 class AssignTicketView(MethodView):
-    decorators = [login_required]
+    decorators: ClassVar[list[Callable[[Any], Any]]] = [login_required]
 
     def get(self, ticket_id):
         """
@@ -48,9 +52,9 @@ class AssignTicketView(MethodView):
         db.session.commit()
 
         # Add a comment about the assignment
-        comment_text = f"Ticket assigned to {assignee.name}."
+        comment_text = sanitize_html(f"Ticket assigned to {assignee.name}.")
         new_comment = Comment(
-            comment_text=comment_text, ticket_id=ticket.id, user_id=current_user.id
+            comment_text=comment_text, ticket_id=ticket.id, user_id=current_user.id  # type: ignore
         )
         db.session.add(new_comment)
         db.session.commit()

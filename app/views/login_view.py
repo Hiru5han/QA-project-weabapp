@@ -3,7 +3,7 @@ from flask.views import MethodView
 from flask_login import current_user, login_user
 
 from app.models import User
-from app.utils import redirect_based_on_role
+from app.utils import redirect_based_on_role, sanitize_html
 
 
 class LoginView(MethodView):
@@ -16,7 +16,7 @@ class LoginView(MethodView):
         if current_user.is_authenticated:
             return redirect_based_on_role()
 
-        email = request.form.get("email")
+        email = sanitize_html(request.form.get("email", ""))
         password = request.form.get("password")
         user = User.query.filter_by(email=email).first()
 

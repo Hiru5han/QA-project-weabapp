@@ -3,10 +3,11 @@ from flask.views import MethodView
 from flask_login import current_user, login_required
 
 from app.models import Ticket
+from typing import Any, Callable, ClassVar
 
 
 class ClosedTicketsView(MethodView):
-    decorators = [login_required]
+    decorators: ClassVar[list[Callable[[Any], Any]]] = [login_required]
 
     def get(self):
         if current_user.role == "admin":

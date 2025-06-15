@@ -3,10 +3,12 @@ from flask.views import MethodView
 from flask_login import current_user, login_required
 
 from app.models import Comment, Ticket, User, db
+from app.utils import sanitize_html
+from typing import Any, Callable, ClassVar
 
 
 class UnassignedTicketsView(MethodView):
-    decorators = [login_required]
+    decorators: ClassVar[list[Callable[[Any], Any]]] = [login_required]
 
     def get(self):
         if current_user.role not in ["support", "admin"]:
@@ -27,12 +29,15 @@ class UnassignedTicketsView(MethodView):
         ticket_id = request.form.get("ticket_id")
         ticket = Ticket.query.get(ticket_id)
 
+        if not ticket:
+            flash("Ticket not found.", "danger")
+            return redirect(url_for("main.unassigned_tickets"))
+
         if current_user.role == "support":
             ticket.assigned_to = current_user.id
-            comment_text = f"Ticket assigned to {current_user.name}."
+            comment_text = sanitize_html(f"Ticket assigned to {current_user.name}.")
         elif current_user.role == "admin":
             assigned_to_id = request.form.get("assigned_to")
-            print(f"Assigned to ID: {assigned_to_id}")  # Debugging line
             if not assigned_to_id:
                 flash("No assignee selected.", "warning")
                 return redirect(url_for("main.unassigned_tickets"))
@@ -44,12 +49,12 @@ class UnassignedTicketsView(MethodView):
                 return redirect(url_for("main.unassigned_tickets"))
 
             ticket.assigned_to = assigned_to_id
-            comment_text = f"Ticket assigned to {assignee.name}."
+            comment_text = sanitize_html(f"Ticket assigned to {assignee.name}.")
 
         db.session.commit()
 
         new_comment = Comment(
-            comment_text=comment_text, ticket_id=ticket.id, user_id=current_user.id
+            comment_text=comment_text, ticket_id=ticket.id, user_id=current_user.id  # type: ignore
         )
         db.session.add(new_comment)
         db.session.commit()

@@ -2,6 +2,7 @@ from urllib.parse import urljoin, urlparse
 
 from flask import redirect, request, url_for
 from flask_login import current_user
+from markupsafe import escape
 
 from app.models import Ticket
 
@@ -11,6 +12,13 @@ UPLOAD_FOLDER = "app/static/uploads/profile_images"
 
 def allowed_file(filename):
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
+def sanitize_html(value: str) -> str:
+    """Escape HTML to prevent XSS."""
+    if value is None:
+        return ""
+    return escape(value)
 
 
 def is_safe_url(target):
