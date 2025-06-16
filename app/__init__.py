@@ -27,6 +27,11 @@ def create_app(config=None):
     else:
         app.config.from_pyfile("config.py")
 
+    if not app.config.get("TESTING") and app.config.get("SECRET_KEY") == "default_secret_key":
+        raise ValueError(
+            "SECRET_KEY is using the insecure default. Set the SECRET_KEY environment variable."
+        )
+
     db.init_app(app)
     login_manager.init_app(app)
     migrate.init_app(app, db)
