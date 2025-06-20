@@ -41,7 +41,12 @@ def create_app(config=None):
             "style-src 'self' 'unsafe-inline' https://stackpath.bootstrapcdn.com https://cdn.datatables.net https://cdnjs.cloudflare.com; "
             "script-src 'self' 'unsafe-inline' https://code.jquery.com https://cdnjs.cloudflare.com https://cdn.datatables.net https://stackpath.bootstrapcdn.com; "
             "font-src 'self' https://cdnjs.cloudflare.com; "
-            "img-src 'self' data:"
+            "img-src 'self' data:; "
+            "base-uri 'self'; "
+            "form-action 'self'; "
+            "object-src 'none'; "
+            "frame-ancestors 'none'; "
+            "connect-src 'self'"
         )
         response.headers.setdefault("Content-Security-Policy", csp)
         response.headers.setdefault("X-Content-Type-Options", "nosniff")
