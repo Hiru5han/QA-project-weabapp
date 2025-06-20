@@ -5,6 +5,7 @@ from flask import flash, render_template, request
 from flask.views import MethodView
 from flask_login import login_user
 from PIL import Image, ImageOps
+from werkzeug.utils import secure_filename
 
 from app.models import User, db
 from app.utils import (
@@ -91,7 +92,7 @@ class RegisterView(MethodView):
             try:
                 if profile_image.filename and "." in profile_image.filename:
                     file_ext = profile_image.filename.rsplit(".", 1)[1].lower()
-                    filename = f"user_{new_user.id}.{file_ext}"
+                    filename = secure_filename(f"user_{new_user.id}.{file_ext}")
                     file_path = os.path.join(UPLOAD_FOLDER, filename)
 
                     # Ensure the upload folder exists

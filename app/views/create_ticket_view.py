@@ -4,7 +4,7 @@ from flask import flash, redirect, render_template, request, url_for
 from flask.views import MethodView
 from flask_login import current_user, login_required
 
-from app.utils import sanitize_html
+from app.utils import is_safe_url, sanitize_html
 from typing import Any, Callable, ClassVar
 
 from app.models import Ticket, User, db
@@ -14,7 +14,9 @@ class CreateTicketView(MethodView):
     decorators: ClassVar[list[Callable[[Any], Any]]] = [login_required]
 
     def get(self):
-        referrer = request.args.get("referrer", url_for("main.all_tickets"))
+        referrer = request.args.get("referrer")
+        if not referrer or not is_safe_url(referrer):
+            referrer = url_for("main.all_tickets")
 
         all_users = []
         support_staff = []
@@ -57,6 +59,12 @@ class CreateTicketView(MethodView):
         if not user_id:
             user_id = current_user.id
 
+        safe_referrer = (
+            request.referrer
+            if request.referrer and is_safe_url(request.referrer)
+            else url_for("main.all_tickets")
+        )
+
         # Validation: Title should not be empty, not only numbers, length should be between 5-100
         if not title or title.isdigit() or len(title) < 5 or len(title) > 100:
             flash(
@@ -67,7 +75,7 @@ class CreateTicketView(MethodView):
                 "create_ticket.html",
                 support_staff=support_staff,
                 all_users=all_users,
-                referrer=request.referrer,
+                referrer=safe_referrer,
                 form_data=request.form,  # Pass the form data back on validation failure
             )
 
@@ -86,7 +94,7 @@ class CreateTicketView(MethodView):
                 "create_ticket.html",
                 support_staff=support_staff,
                 all_users=all_users,
-                referrer=request.referrer,
+                referrer=safe_referrer,
                 form_data=request.form,  # Pass the form data back on validation failure
             )
 
@@ -101,7 +109,7 @@ class CreateTicketView(MethodView):
                 "create_ticket.html",
                 support_staff=support_staff,
                 all_users=all_users,
-                referrer=request.referrer,
+                referrer=safe_referrer,
                 form_data=request.form,  # Pass the form data back on validation failure
             )
 
@@ -114,7 +122,7 @@ class CreateTicketView(MethodView):
                     "create_ticket.html",
                     support_staff=support_staff,
                     all_users=all_users,
-                    referrer=request.referrer,
+                    referrer=safe_referrer,
                     form_data=request.form,  # Pass the form data back on validation failure
                 )
 
@@ -136,7 +144,7 @@ class CreateTicketView(MethodView):
                 "create_ticket.html",
                 support_staff=support_staff,
                 all_users=all_users,
-                referrer=request.referrer,
+                referrer=safe_referrer,
                 form_data=request.form,  # Pass the form data back on validation failure
             )
 
@@ -160,5 +168,7 @@ class CreateTicketView(MethodView):
         db.session.commit()
 
         referrer = request.form.get("referrer")
+        if not referrer or not is_safe_url(referrer):
+            referrer = url_for("main.all_tickets")
         flash("Ticket created successfully!", "success")
-        return redirect(referrer or url_for("main.all_tickets"))
+        return redirect(referrer)

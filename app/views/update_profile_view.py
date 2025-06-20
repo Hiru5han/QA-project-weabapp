@@ -5,6 +5,7 @@ from flask import flash, redirect, render_template, request, url_for
 from flask.views import MethodView
 from flask_login import current_user, login_required
 from PIL import Image, ImageOps
+from werkzeug.utils import secure_filename
 
 from app.models import User, db
 from app.utils import UPLOAD_FOLDER, allowed_file, is_safe_url, sanitize_html
@@ -111,7 +112,7 @@ class UpdateProfileView(MethodView):
 
                 # Generate a unique filename based on the user's ID
                 file_ext = filename_raw.rsplit(".", 1)[1].lower()
-                filename = f"user_{current_user.id}.{file_ext}"
+                filename = secure_filename(f"user_{current_user.id}.{file_ext}")
 
                 file_path = os.path.join(UPLOAD_FOLDER, filename)
 
