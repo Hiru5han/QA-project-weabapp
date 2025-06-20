@@ -37,6 +37,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Zip source code
+        run: zip -r deploy.zip .
+
       - name: Deploy to Elastic Beanstalk
         uses: einaregilsson/beanstalk-deploy@v21
         with:
@@ -46,3 +49,4 @@ jobs:
           environment_name: uni-flask-ticket-env
           region: eu-west-2
           version_label: github-${{ github.sha }}
+          deployment_package: deploy.zip
