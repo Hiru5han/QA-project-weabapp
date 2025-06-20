@@ -1,4 +1,4 @@
-from flask import Blueprint
+from flask import Blueprint, current_app, send_from_directory
 from flask_login import LoginManager, login_manager
 
 from app.models import User
@@ -80,6 +80,11 @@ bp.add_url_rule(
     view_func=UpdateProfileView.as_view("update_profile"),
     methods=["GET", "POST"],
 )
+
+@bp.route("/sitemap.xml")
+def sitemap():
+    """Serve the sitemap file with security headers."""
+    return send_from_directory(current_app.static_folder, "sitemap.xml")
 
 login_manager = LoginManager()
 login_manager.login_view = "main.login"
