@@ -139,34 +139,8 @@
 
   <!-- Your Custom Scripts -->
   <script src="{{ url_for('static', filename='theme-toggle.js') }}"></script>
-
-  <!-- Initialize DataTables on specific tables -->
-  <script>
-    $(document).ready(function () {
-      $("#tickets-table").DataTable({
-        responsive: true, // Enable responsive behavior
-        paging: true,
-        ordering: true,
-        info: true,
-        searching: true,
-        lengthMenu: [5, 10, 25, 50, 100],
-        pageLength: 5,
-
-        // Fix the width of the Actions column (assuming it's the last column)
-        columnDefs: [
-          { targets: -1, width: "220px" }, // Set width of the last column (Actions)
-        ],
-      });
-
-      // Customize search input styling
-      $(".dataTables_filter input")
-        .attr("placeholder", "Search across all categories...")
-        .css({
-          color: "grey",
-          width: "250px",
-        });
-    });
-  </script>
+  <script src="{{ url_for('static', filename='js/datatables-init.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/confirm-delete.js') }}"></script>
 
   <!-- Include Flask-Moment JavaScript -->
   {{ moment.include_moment() }}

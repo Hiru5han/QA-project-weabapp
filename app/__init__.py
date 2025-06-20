@@ -38,9 +38,9 @@ def create_app(config=None):
         """Add security headers to mitigate XSS."""
         csp = (
             "default-src 'self'; "
-            "style-src 'self' 'unsafe-inline' https://stackpath.bootstrapcdn.com https://cdn.datatables.net https://cdnjs.cloudflare.com; "
-            "script-src 'self' 'unsafe-inline' https://code.jquery.com https://cdnjs.cloudflare.com https://cdn.datatables.net https://stackpath.bootstrapcdn.com; "
-            "font-src 'self' https://cdnjs.cloudflare.com; "
+            "style-src 'self' 'unsafe-inline' https://stackpath.bootstrapcdn.com https://cdn.datatables.net https://cdnjs.cloudflare.com https://fonts.googleapis.com; "
+            "script-src 'self' https://code.jquery.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://cdn.datatables.net https://stackpath.bootstrapcdn.com; "
+            "font-src 'self' https://cdnjs.cloudflare.com https://fonts.gstatic.com; "
             "img-src 'self' data:; "
             "base-uri 'self'; "
             "form-action 'self'; "

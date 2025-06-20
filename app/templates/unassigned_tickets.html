@@ -160,7 +160,7 @@
                 </a>
                 {% if current_user.role == 'admin' %}
                 <form method="POST" action="{{ url_for('main.delete_ticket', ticket_id=ticket.id) }}"
-                  style="display: inline" onsubmit="return confirm('Are you sure you want to delete this ticket?');">
+                  style="display: inline" class="confirm-delete-form">
                   <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
                   <button type="submit" class="btn btn-outline-danger btn-sm">
                     <i class="fas fa-trash"></i> Delete

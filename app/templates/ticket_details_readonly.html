@@ -1,10 +1,11 @@
 {% extends "base.html" %} {% block content %}
 <div class="auth-page">
+  <input type="hidden" id="allTicketsUrl" value="{{ url_for('main.all_tickets') }}">
   <div class="create-ticket-card">
     <!-- Back Button, Header, and Profile Image -->
     <div class="row mb-4 align-items-center justify-content-between">
       <div class="col-md-2 text-start d-flex align-items-center">
-        <a href="javascript:void(0);" onclick="goBack();">
+        <a href="#" id="back-button">
           <i class="fas fa-chevron-left back-button-icon"></i>
         </a>
       </div>
@@ -124,19 +125,5 @@
   </div>
 </div>
 
-<script>
-  function goBack() {
-    const previousPageUrl = sessionStorage.getItem("previousPageUrl");
-    if (previousPageUrl) {
-      window.location.href = previousPageUrl;
-    } else {
-      window.location.href = "{{ url_for('main.all_tickets') }}";
-    }
-  }
-
-  // Store the previous page's URL if it's not already stored
-  if (!sessionStorage.getItem("previousPageUrl")) {
-    sessionStorage.setItem("previousPageUrl", document.referrer);
-  }
-</script>
+<script src="{{ url_for('static', filename='js/ticket_details.js') }}"></script>
 {% endblock %}

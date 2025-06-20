@@ -3,7 +3,7 @@
 <div class="auth-page">
     <div class="auth-card">
         <div class="auth-header d-flex align-items-center mb-4">
-            <a href="javascript:void(0);" onclick="window.history.back();" class="me-2">
+            <a href="{{ url_for('main.index') }}" class="me-2">
                 <i class="fas fa-chevron-left back-button-icon"></i>
             </a>
             <h2 class="auth-title mb-0">Register</h2>
@@ -60,9 +60,8 @@
                 <!-- Profile Image Upload -->
                 <div class="form-group file-upload">
                     <label for="profile_image">Upload Profile Image (optional)</label>
-                    <button class="file-upload-btn" type="button">Choose File</button>
-                    <input type="file" class="form-control" id="profile_image" name="profile_image" accept="image/*"
-                        onchange="displayFileName()">
+                    <button class="file-upload-btn" type="button" id="chooseFile">Choose File</button>
+                    <input type="file" class="form-control" id="profile_image" name="profile_image" accept="image/*">
                     <span id="file-name" class="file-name">No file selected</span>
                 </div>
 
@@ -72,90 +71,5 @@
     </div>
 </div>
 
-<!-- Inline JavaScript -->
-<script type="text/javascript">
-    function displayFileName() {
-        const input = document.getElementById("profile_image");
-        const fileName = input.files.length > 0 ? input.files[0].name : "No file selected";
-        document.getElementById("file-name").textContent = fileName;
-    }
-
-    document.addEventListener("DOMContentLoaded", function () {
-        const passwordInput = document.getElementById("password");
-        const lengthCriteria = document.getElementById("length");
-        const numberCriteria = document.getElementById("number");
-        const uppercaseCriteria = document.getElementById("uppercase");
-        const lowercaseCriteria = document.getElementById("lowercase");
-        const specialCriteria = document.getElementById("special");
-        const togglePassword = document.getElementById("togglePassword");
-
-        passwordInput.addEventListener("input", function () {
-            const password = passwordInput.value;
-
-            // Check the length
-            if (password.length >= 8) {
-                lengthCriteria.classList.add("valid");
-                lengthCriteria.classList.remove("invalid");
-                lengthCriteria.innerHTML = "✓ 8 characters minimum";
-            } else {
-                lengthCriteria.classList.add("invalid");
-                lengthCriteria.classList.remove("valid");
-                lengthCriteria.innerHTML = "✗ 8 characters minimum";
-            }
-
-            // Check for numbers
-            if (/\d/.test(password)) {
-                numberCriteria.classList.add("valid");
-                numberCriteria.classList.remove("invalid");
-                numberCriteria.innerHTML = "✓ One number";
-            } else {
-                numberCriteria.classList.add("invalid");
-                numberCriteria.classList.remove("valid");
-                numberCriteria.innerHTML = "✗ One number";
-            }
-
-            // Check for uppercase letters
-            if (/[A-Z]/.test(password)) {
-                uppercaseCriteria.classList.add("valid");
-                uppercaseCriteria.classList.remove("invalid");
-                uppercaseCriteria.innerHTML = "✓ One uppercase letter";
-            } else {
-                uppercaseCriteria.classList.add("invalid");
-                uppercaseCriteria.classList.remove("valid");
-                uppercaseCriteria.innerHTML = "✗ One uppercase letter";
-            }
-
-            // Check for lowercase letters
-            if (/[a-z]/.test(password)) {
-                lowercaseCriteria.classList.add("valid");
-                lowercaseCriteria.classList.remove("invalid");
-                lowercaseCriteria.innerHTML = "✓ One lowercase letter";
-            } else {
-                lowercaseCriteria.classList.add("invalid");
-                lowercaseCriteria.classList.remove("valid");
-                lowercaseCriteria.innerHTML = "✗ One lowercase letter";
-            }
-
-            // Check for special characters
-            if (/[!@#$%^&*()_+\-=[\]{}|;:,.<>?/]/.test(password)) {
-                specialCriteria.classList.add("valid");
-                specialCriteria.classList.remove("invalid");
-                specialCriteria.innerHTML =
-                    "✓ One special character !@#$%^&*()_+-=[]{}|;:,.<>?/";
-            } else {
-                specialCriteria.classList.add("invalid");
-                specialCriteria.classList.remove("valid");
-                specialCriteria.innerHTML =
-                    "✗ One special character !@#$%^&*()_+-=[]{}|;:,.<>?/";
-            }
-        });
-
-        // Toggle password visibility
-        togglePassword.addEventListener("click", function () {
-            const type = passwordInput.getAttribute("type") === "password" ? "text" : "password";
-            passwordInput.setAttribute("type", type);
-            this.textContent = type === "password" ? "Show" : "Hide";
-        });
-    });
-</script>
+<script src="{{ url_for('static', filename='js/register.js') }}"></script>
 {% endblock %}
