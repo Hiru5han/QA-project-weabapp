@@ -271,7 +271,9 @@ def test_closed_tickets_button_visible_for_all_roles(
         response = client.get(url_for("main.all_tickets"))
 
         # Verify the response is successful
-        assert response.status_code == 200
+        expected_status = 403 if user_role == "support" else 200
+        assert response.status_code == expected_status
 
-        # Check that the "Closed Tickets" button is visible for all roles
-        assert b"Closed Tickets" in response.data
+        # Check that the "Closed Tickets" button is visible when access is allowed
+        if expected_status == 200:
+            assert b"Closed Tickets" in response.data

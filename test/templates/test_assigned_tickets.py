@@ -234,7 +234,12 @@ def test_admin_delete_button_visibility_for_assigned_ticket(client, app, admin_u
         # Parse the page to find the CSRF token in the delete form
         soup = BeautifulSoup(response.data.decode("utf-8"), "html.parser")
         delete_form = soup.find(
-            "form", {"action": url_for("main.delete_ticket", ticket_id=ticket.id)}
+            "form",
+            {
+                "action": url_for(
+                    "main.delete_ticket", ticket_id=ticket.id, _external=False
+                )
+            },
         )
         assert delete_form is not None, "Delete form not found"
 

@@ -1,9 +1,10 @@
-from flask import render_template
+from typing import Any, Callable, ClassVar
+
+from flask import abort, render_template
 from flask.views import MethodView
 from flask_login import current_user, login_required
 
 from app.models import Ticket
-from typing import Any, Callable, ClassVar
 
 
 class AllTicketsView(MethodView):
@@ -13,9 +14,11 @@ class AllTicketsView(MethodView):
         """
         Renders a page displaying all tickets.
         """
-        if current_user.role in ["admin", "support"]:
+        if current_user.role == "admin":
             tickets = Ticket.query.all()
             view = "all"
+        elif current_user.role == "support":
+            abort(403)
         else:
             tickets = Ticket.query.filter_by(user_id=current_user.id).all()
             view = "active"
