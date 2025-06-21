@@ -61,11 +61,22 @@ The system is fully responsive, includes night mode support, and enables admins,
    python reset_db.py
    ```
 
-6. **Run the Application**
+6. **Run the Application Locally**
 
    ```bash
-   flask run --host=0.0.0.0
+   export FLASK_APP=run.py  # On Windows use `set FLASK_APP=run.py`
+   flask run
    ```
+
+   Alternatively, start the server directly:
+
+   ```bash
+   python run.py
+   ```
+
+7. **Open the Web App**
+
+   Visit `http://127.0.0.1:5000` in your browser.
 
 ---
 
@@ -142,9 +153,8 @@ To access the application from a mobile device:
 
 ```plaintext
 QA-project-weabapp/
-│
+├── Dockerfile
 ├── README.md
-├── SoftEng Design Doc.docx
 ├── app
 │   ├── __init__.py
 │   ├── __pycache__
@@ -165,7 +175,14 @@ QA-project-weabapp/
 │   ├── routes.py
 │   ├── static
 │   │   ├── favicon.ico
+│   │   ├── js
+│   │   │   ├── confirm-delete.js
+│   │   │   ├── datatables-init.js
+│   │   │   ├── register.js
+│   │   │   ├── ticket_details.js
+│   │   │   └── update_profile.js
 │   │   ├── logo.png
+│   │   ├── sitemap.xml
 │   │   ├── styles.css
 │   │   ├── theme-toggle.js
 │   │   └── uploads
@@ -224,18 +241,51 @@ QA-project-weabapp/
 │   ├── function_index.html
 │   ├── index.html
 │   ├── keybd_closed_cb_ce680311.png
+│   ├── reset_db_py.html
 │   ├── run_py.html
 │   ├── status.json
 │   ├── style_cb_8e611ae1.css
 │   ├── z_36f028580bb02cc8___init___py.html
 │   ├── z_36f028580bb02cc8_conftest_py.html
 │   ├── z_36f028580bb02cc8_test_config_py.html
+│   ├── z_36f028580bb02cc8_test_routes_py.html
+│   ├── z_36f028580bb02cc8_test_security_headers_py.html
+│   ├── z_36f028580bb02cc8_test_xss_py.html
+│   ├── z_53b0b65ea9480206___init___py.html
+│   ├── z_53b0b65ea9480206_active_tickets_view_py.html
+│   ├── z_53b0b65ea9480206_all_tickets_view_py.html
+│   ├── z_53b0b65ea9480206_assign_ticket_view_py.html
+│   ├── z_53b0b65ea9480206_assigned_tickets_view_py.html
+│   ├── z_53b0b65ea9480206_closed_tickets_view_py.html
+│   ├── z_53b0b65ea9480206_create_ticket_view_py.html
+│   ├── z_53b0b65ea9480206_delete_ticket_view_py.html
+│   ├── z_53b0b65ea9480206_index_view_py.html
+│   ├── z_53b0b65ea9480206_login_view_py.html
+│   ├── z_53b0b65ea9480206_logout_view_py.html
+│   ├── z_53b0b65ea9480206_register_view_py.html
+│   ├── z_53b0b65ea9480206_ticket_details_readonly_view_py.html
+│   ├── z_53b0b65ea9480206_ticket_details_view_py.html
+│   ├── z_53b0b65ea9480206_unassigned_tickets_view_py.html
+│   ├── z_53b0b65ea9480206_update_profile_view_py.html
+│   ├── z_53b0b65ea9480206_update_status_view_py.html
+│   ├── z_597f13e2a8a136ec_test_active_tickets_view_py.html
+│   ├── z_597f13e2a8a136ec_test_all_tickets_view_py.html
+│   ├── z_597f13e2a8a136ec_test_assign_ticket_view_py.html
+│   ├── z_597f13e2a8a136ec_test_assigned_tickets_view_py.html
+│   ├── z_597f13e2a8a136ec_test_closed_tickets_view_py.html
+│   ├── z_597f13e2a8a136ec_test_create_ticket_view_py.html
 │   ├── z_5f5a17c013354698___init___py.html
+│   ├── z_5f5a17c013354698_config_py.html
 │   ├── z_5f5a17c013354698_models_py.html
 │   ├── z_5f5a17c013354698_routes_py.html
+│   ├── z_5f5a17c013354698_utils_py.html
+│   ├── z_cb9fd7c543aa674d_test_all_tickets_html_py.html
+│   ├── z_cb9fd7c543aa674d_test_assigned_tickets_py.html
 │   ├── z_cb9fd7c543aa674d_test_base_html_py.html
+│   ├── z_cb9fd7c543aa674d_test_base_py.html
 │   ├── z_cb9fd7c543aa674d_test_login_html_py.html
-│   └── z_cb9fd7c543aa674d_test_register_html_py.html
+│   ├── z_cb9fd7c543aa674d_test_register_html_py.html
+│   └── z_dd2a0a53da0d74d3_config_py.html
 ├── instance
 │   ├── config.py
 │   └── helpdesk.db
@@ -264,6 +314,8 @@ QA-project-weabapp/
 │   ├── test_files
 │   │   └── profile.jpg
 │   ├── test_routes.py
+│   ├── test_security_headers.py
+│   ├── test_xss.py
 │   ├── tree.txt
 │   └── views
 │       ├── test_active_tickets_view.py
