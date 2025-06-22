@@ -24,15 +24,8 @@ def create_app(config=None):
     elif isinstance(config, dict):
         # Load the configuration directly from the dictionary (useful for testing)
         app.config.update(config)
-    elif config is not None:
-        # Allow passing a config object, such as a TestingConfig class
-        app.config.from_object(config)
     else:
         app.config.from_pyfile("config.py")
-
-    # Ensure SERVER_NAME is set so url_for works outside a request context
-    if not app.config.get("SERVER_NAME"):
-        app.config["SERVER_NAME"] = "localhost"
 
     db.init_app(app)
     login_manager.init_app(app)
