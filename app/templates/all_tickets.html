@@ -3,7 +3,7 @@
   <div class="row mb-2">
     <div class="col-12 text-center">
       <h2 class="text-primary mb-0">
-        {% if current_user.role == 'admin' or current_user.role == 'support' %}
+        {% if current_user.role == 'admin' %}
         All Tickets {% else %} My Active Tickets {% endif %}
       </h2>
       <p class="lead">Welcome, {{ current_user.name }}!</p>
@@ -13,7 +13,7 @@
   <div class="card shadow-sm">
     <!-- Begin .card-header -->
     <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center position-relative">
-      {% if current_user.role == 'admin' or current_user.role == 'support' %}
+      {% if current_user.role == 'admin' %}
       <div class="d-flex align-items-center">
         <span class="badge {{ badge_class }}">
           {{ open_tickets_count }} active
@@ -24,7 +24,7 @@
       <!-- Toggle buttons for medium and larger screens -->
       <div class="toggle-buttons d-none d-md-block">
         <div class="btn-group toggle-group" role="group" aria-label="Ticket Status Toggle">
-          {% if current_user.role in ['admin', 'support'] %}
+          {% if current_user.role in ['admin'] %}
           <a href="{{ url_for('main.unassigned_tickets') }}"
             class="btn btn-toggle {% if view == 'unassigned' %}active{% endif %}">
             Unassigned
@@ -55,7 +55,7 @@
           All Tickets
         </button>
         <div class="dropdown-menu" aria-labelledby="ticketStatusDropdown">
-          {% if current_user.role in ['admin', 'support'] %}
+          {% if current_user.role in ['admin'] %}
           <a class="dropdown-item {% if view == 'unassigned' %}active{% endif %}"
             href="{{ url_for('main.unassigned_tickets') }}">
             Unassigned Tickets

@@ -251,7 +251,7 @@ def test_non_admin_delete_button_visibility(client, app, regular_user):
 import pytest
 
 
-@pytest.mark.parametrize("user_role", ["admin", "support", "regular"])
+@pytest.mark.parametrize("user_role", ["admin", "regular"])
 def test_closed_tickets_button_visible_for_all_roles(
     client, app, user_role, admin_user, support_user, regular_user
 ):
@@ -260,9 +260,6 @@ def test_closed_tickets_button_visible_for_all_roles(
         if user_role == "admin":
             admin_user = db.session.merge(admin_user)
             login_user(client, admin_user.email, "ValidPassword1!")
-        elif user_role == "support":
-            support_user = db.session.merge(support_user)
-            login_user(client, support_user.email, "ValidPassword1!")
         elif user_role == "regular":
             regular_user = db.session.merge(regular_user)
             login_user(client, regular_user.email, "ValidPassword1!")
