@@ -3,7 +3,7 @@ from sqlite3 import IntegrityError
 
 import logging
 from app import create_app, db
-from app.models import User, Ticket, Comment
+from app.models import User, Ticket, Comment, AuditLog
 from datetime import datetime, timedelta
 import random
 
@@ -283,6 +283,17 @@ def populate_database():
             db.session.commit()
             logging.info("Initial data with mocked dates successfully added.")
 
+            # Add audit log entry for reset
+            reset_log = AuditLog(
+                user_id=None,
+                action="database reset",
+                target_type="system",
+                target_id=None,
+                details=f"The database was reset using reset_db.py script at {datetime.utcnow().isoformat()} UTC.",
+            )
+            db.session.add(reset_log)
+            db.session.commit()
+
         except IntegrityError as e:
             db.session.rollback()
             logging.error(f"IntegrityError occurred while populating the database: {e}")
@@ -295,8 +306,6 @@ def reset_database():
     """Resets the database by performing all necessary steps."""
     drop_database()
     initialise_database()
-    create_migration()
-    apply_migration()
     populate_database()
     print("Database reset complete.")
 
