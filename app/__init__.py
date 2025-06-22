@@ -74,6 +74,13 @@ def create_app(config=None):
         file_handler.addFilter(RequestFilter())
         file_handler.setFormatter(JsonFormatter())
         app.logger.addHandler(file_handler)
+
+        stream_handler = logging.StreamHandler()
+        stream_handler.setLevel(logging.INFO)
+        stream_handler.addFilter(RequestFilter())
+        stream_handler.setFormatter(JsonFormatter())
+        app.logger.addHandler(stream_handler)
+
         app.logger.setLevel(logging.INFO)
 
     @app.after_request
