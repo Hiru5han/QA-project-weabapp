@@ -128,4 +128,4 @@ jobs:
 
       - name: Smoke test
         run: |
-          curl -f https://your-live-domain.com || exit 1
+          curl -f https://uniwebapp.hirushan.dev || exit 1
