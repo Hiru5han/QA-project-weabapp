@@ -1,14 +1,7 @@
-<<<<<<< Updated upstream
-import pytest
-=======
->>>>>>> Stashed changes
 from flask import url_for
 from flask_login import login_user, logout_user
 
 from app.models import User, Ticket, db
-<<<<<<< Updated upstream
-from app.utils import allowed_file, sanitize_html, is_safe_url, redirect_based_on_role, inject_open_tickets_count
-=======
 from app.utils import (
     allowed_file,
     sanitize_html,
@@ -16,7 +9,6 @@ from app.utils import (
     redirect_based_on_role,
     inject_open_tickets_count,
 )
->>>>>>> Stashed changes
 
 
 def test_allowed_file():
