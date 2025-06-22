@@ -54,10 +54,6 @@ def test_inject_open_tickets_count(app):
         user = User(name="User", email="u@e", role="admin", password_hash="x")
         db.session.add(user)
         db.session.commit()
-<<<<<<< Updated upstream
-        db.session.add(Ticket(title="Open", description="d", status="open", priority="low", user_id=user.id))
-        db.session.add(Ticket(title="Closed", description="d", status="closed", priority="low", user_id=user.id))
-=======
         db.session.add(
             Ticket(
                 title="Open",
@@ -76,7 +72,6 @@ def test_inject_open_tickets_count(app):
                 user_id=user.id,
             )
         )
->>>>>>> Stashed changes
         db.session.commit()
         result = inject_open_tickets_count()
         assert result["open_tickets_count"] == 1

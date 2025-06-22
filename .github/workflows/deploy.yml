@@ -7,7 +7,48 @@ on:
     branches: [main]
 
 jobs:
-  test:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Validate Dockerfile
+        run: docker build -t ticket-app .
+
+  security-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Install and run pip-audit
+        run: |
+          pip install pip-audit
+          pip-audit
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Install flake8
+        run: |
+          pip install flake8
+          flake8 app test
+
+  unit-tests:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -35,20 +76,36 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Run flake8 linting
-        run: |
-          pip install flake8
-          flake8 app test
-
       - name: Run tests and generate coverage report
         run: |
+          pip install pytest pytest-cov
           pytest test/ --cov=. --cov-report=html
 
+  deploy-preview:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Zip source code
+        run: zip -r deploy.zip .
+
+      - name: Deploy to Elastic Beanstalk Staging
+        uses: einaregilsson/beanstalk-deploy@v21
+        with:
+          aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          application_name: uni-flask-ticket-app
+          environment_name: uni-flask-ticket-env-staging
+          region: eu-west-2
+          version_label: preview-${{ github.sha }}
+          deployment_package: deploy.zip
+
   deploy:
-    needs: test
+    needs: [unit-tests, lint, security-scan, build]
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -66,3 +123,7 @@ jobs:
           region: eu-west-2
           version_label: github-${{ github.sha }}
           deployment_package: deploy.zip
+
+      - name: Smoke test
+        run: |
+          curl -f https://your-live-domain.com || exit 1
