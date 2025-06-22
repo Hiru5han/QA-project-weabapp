@@ -3,7 +3,7 @@ from flask.views import MethodView
 from flask_login import current_user, login_required
 
 from app.models import Comment, Ticket, User, db
-from app.utils import sanitize_html
+from app.utils import sanitise_html
 from typing import Any, Callable, ClassVar
 
 
@@ -23,7 +23,7 @@ class TicketDetailsView(MethodView):
         ticket = Ticket.query.get_or_404(ticket_id)
 
         if "comment_text" in request.form:
-            comment_text = sanitize_html(request.form.get("comment_text", ""))
+            comment_text = sanitise_html(request.form.get("comment_text", ""))
             new_comment = Comment(
                 comment_text=comment_text, ticket_id=ticket.id, user_id=current_user.id  # type: ignore
             )
@@ -33,7 +33,7 @@ class TicketDetailsView(MethodView):
             status = request.form.get("status")
             if ticket.status != status:
                 ticket.status = status
-                status_comment_text = sanitize_html(f"Status changed to {status}.")
+                status_comment_text = sanitise_html(f"Status changed to {status}.")
                 status_comment = Comment(
                     comment_text=status_comment_text,  # type: ignore
                     ticket_id=ticket.id,  # type: ignore
@@ -45,7 +45,7 @@ class TicketDetailsView(MethodView):
             priority = request.form.get("priority")
             if ticket.priority != priority:
                 ticket.priority = priority
-                priority_comment_text = sanitize_html(
+                priority_comment_text = sanitise_html(
                     f"Priority changed to {priority}."
                 )
                 priority_comment = Comment(
@@ -61,7 +61,7 @@ class TicketDetailsView(MethodView):
                 ticket.assigned_to = new_assignee_id
                 user = User.query.get(new_assignee_id)
                 assignee_name = user.name if user else "Unassigned"
-                assignee_comment_text = sanitize_html(
+                assignee_comment_text = sanitise_html(
                     f"Assignee changed to {assignee_name}."
                 )
                 assignee_comment = Comment(

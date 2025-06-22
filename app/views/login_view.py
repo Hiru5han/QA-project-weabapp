@@ -1,9 +1,9 @@
-from flask import flash, render_template, request
+from flask import flash, render_template, request, current_app
 from flask.views import MethodView
 from flask_login import current_user, login_user
 
 from app.models import User
-from app.utils import redirect_based_on_role, sanitize_html
+from app.utils import redirect_based_on_role, sanitise_html
 
 
 class LoginView(MethodView):
@@ -16,7 +16,7 @@ class LoginView(MethodView):
         if current_user.is_authenticated:
             return redirect_based_on_role()
 
-        email = sanitize_html(request.form.get("email", ""))
+        email = sanitise_html(request.form.get("email", ""))
         password = request.form.get("password")
         user = User.query.filter_by(email=email).first()
 
@@ -24,5 +24,10 @@ class LoginView(MethodView):
             login_user(user)
             return redirect_based_on_role()
         else:
+            current_app.logger.warning(
+                "Failed login attempt for %s from %s",
+                email,
+                request.remote_addr,
+            )
             flash("Login failed. Check your email and password.", "warning")
             return render_template("login.html")

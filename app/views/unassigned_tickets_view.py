@@ -3,7 +3,7 @@ from flask.views import MethodView
 from flask_login import current_user, login_required
 
 from app.models import Comment, Ticket, User, db
-from app.utils import sanitize_html
+from app.utils import sanitise_html
 from typing import Any, Callable, ClassVar
 
 
@@ -35,7 +35,7 @@ class UnassignedTicketsView(MethodView):
 
         if current_user.role == "support":
             ticket.assigned_to = current_user.id
-            comment_text = sanitize_html(f"Ticket assigned to {current_user.name}.")
+            comment_text = sanitise_html(f"Ticket assigned to {current_user.name}.")
         elif current_user.role == "admin":
             assigned_to_id = request.form.get("assigned_to")
             if not assigned_to_id:
@@ -49,7 +49,7 @@ class UnassignedTicketsView(MethodView):
                 return redirect(url_for("main.unassigned_tickets"))
 
             ticket.assigned_to = assigned_to_id
-            comment_text = sanitize_html(f"Ticket assigned to {assignee.name}.")
+            comment_text = sanitise_html(f"Ticket assigned to {assignee.name}.")
 
         db.session.commit()
 

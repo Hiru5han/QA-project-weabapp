@@ -4,7 +4,7 @@ from flask_login import login_user, logout_user
 from app.models import User, Ticket, db
 from app.utils import (
     allowed_file,
-    sanitize_html,
+    sanitise_html,
     is_safe_url,
     redirect_based_on_role,
     inject_open_tickets_count,
@@ -17,9 +17,9 @@ def test_allowed_file():
     assert not allowed_file("archive.zip")
 
 
-def test_sanitize_html():
-    assert sanitize_html("<b>bold</b>") == "&lt;b&gt;bold&lt;/b&gt;"
-    assert sanitize_html(None) == ""
+def test_sanitise_html():
+    assert sanitise_html("<b>bold</b>") == "&lt;b&gt;bold&lt;/b&gt;"
+    assert sanitise_html(None) == ""
 
 
 def test_is_safe_url(app):

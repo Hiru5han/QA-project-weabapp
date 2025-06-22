@@ -14,7 +14,7 @@ def allowed_file(filename):
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
-def sanitize_html(value: str) -> str:
+def sanitise_html(value: str) -> str:
     """Escape HTML to prevent XSS."""
     if value is None:
         return ""

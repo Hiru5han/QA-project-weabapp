@@ -1,10 +1,10 @@
 from datetime import datetime
 
-from flask import flash, redirect, render_template, request, url_for
+from flask import flash, redirect, render_template, request, url_for, current_app
 from flask.views import MethodView
 from flask_login import current_user, login_required
 
-from app.utils import is_safe_url, sanitize_html
+from app.utils import is_safe_url, sanitise_html
 from typing import Any, Callable, ClassVar
 
 from app.models import Ticket, User, db
@@ -67,6 +67,9 @@ class CreateTicketView(MethodView):
 
         # Validation: Title should not be empty, not only numbers, length should be between 5-100
         if not title or title.isdigit() or len(title) < 5 or len(title) > 100:
+            current_app.logger.warning(
+                "Ticket validation error (title) from %s", request.remote_addr
+            )
             flash(
                 "Title must contain non-numeric characters, be at least 5 characters long, and not exceed 100 characters.",
                 "warning",
@@ -86,6 +89,9 @@ class CreateTicketView(MethodView):
             or len(description) < 10
             or len(description) > 1000
         ):
+            current_app.logger.warning(
+                "Ticket validation error (description) from %s", request.remote_addr
+            )
             flash(
                 "Description must contain non-numeric characters, be at least 10 characters long, and not exceed 1000 characters.",
                 "warning",
@@ -101,6 +107,9 @@ class CreateTicketView(MethodView):
         # Validation: Priority must be one of 'low', 'medium', or 'high'
         valid_priorities = ["low", "medium", "high"]
         if priority not in valid_priorities:
+            current_app.logger.warning(
+                "Ticket validation error (priority) from %s", request.remote_addr
+            )
             flash(
                 "Invalid priority value. Choose either 'low', 'medium', or 'high'.",
                 "warning",
@@ -117,6 +126,10 @@ class CreateTicketView(MethodView):
         if current_user.role == "admin" and assigned_to_id:
             assigned_user = User.query.get(assigned_to_id)
             if not assigned_user:
+                current_app.logger.warning(
+                    "Ticket validation error (invalid assignee) from %s",
+                    request.remote_addr,
+                )
                 flash("Invalid user selected for assignment.", "warning")
                 return render_template(
                     "create_ticket.html",
@@ -136,6 +149,9 @@ class CreateTicketView(MethodView):
             recent_ticket
             and (datetime.utcnow() - recent_ticket.created_at).total_seconds() < 60
         ):
+            current_app.logger.warning(
+                "Ticket validation error (duplicate) from %s", request.remote_addr
+            )
             flash(
                 "A similar ticket was created within the last minute. Please wait before creating a new one.",
                 "warning",
@@ -148,9 +164,9 @@ class CreateTicketView(MethodView):
                 form_data=request.form,  # Pass the form data back on validation failure
             )
 
-        # Sanitize the title and description to prevent XSS
-        title = sanitize_html(title)
-        description = sanitize_html(description)
+        # Sanitise the title and description to prevent XSS
+        title = sanitise_html(title)
+        description = sanitise_html(description)
 
         # Create new ticket and save to database
         new_ticket = Ticket(

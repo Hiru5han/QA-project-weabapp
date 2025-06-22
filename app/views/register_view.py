@@ -1,7 +1,7 @@
 import os
 import re
 
-from flask import flash, render_template, request
+from flask import flash, render_template, request, current_app
 from flask.views import MethodView
 from flask_login import login_user
 from PIL import Image, ImageOps
@@ -12,7 +12,7 @@ from app.utils import (
     UPLOAD_FOLDER,
     allowed_file,
     redirect_based_on_role,
-    sanitize_html,
+    sanitise_html,
 )
 
 
@@ -29,52 +29,92 @@ class RegisterView(MethodView):
 
         # Check if the name contains numbers
         if any(char.isdigit() for char in name):
+            current_app.logger.warning(
+                "Registration validation error (name digits) from %s",
+                request.remote_addr,
+            )
             flash("Name cannot contain numbers.", "warning")
             return render_template("register.html", name=name, email=email, role=role)
 
         # Check if the name is empty
         if not name.strip():
+            current_app.logger.warning(
+                "Registration validation error (empty name) from %s",
+                request.remote_addr,
+            )
             flash("Name cannot be empty.", "warning")
             return render_template("register.html", name=name, email=email, role=role)
 
         # Validate email format
         email_regex = r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
         if not re.fullmatch(email_regex, email):
+            current_app.logger.warning(
+                "Registration validation error (invalid email) from %s",
+                request.remote_addr,
+            )
             flash("Invalid email address.", "warning")
             return render_template("register.html", name=name, email=email, role=role)
 
         # Check if the email already exists
         existing_user = User.query.filter_by(email=email).first()
         if existing_user:
+            current_app.logger.warning(
+                "Registration validation error (duplicate email) from %s",
+                request.remote_addr,
+            )
             flash("Email address already in use.", "warning")
             return render_template("register.html", name=name, email=email, role=role)
 
         # Check password complexity
         if len(password) < 8:
+            current_app.logger.warning(
+                "Registration validation error (password length) from %s",
+                request.remote_addr,
+            )
             flash("Password must be at least 8 characters long.", "warning")
             return render_template("register.html", name=name, email=email, role=role)
         if not any(char.isdigit() for char in password):
+            current_app.logger.warning(
+                "Registration validation error (password digit) from %s",
+                request.remote_addr,
+            )
             flash("Password must contain at least one number.", "warning")
             return render_template("register.html", name=name, email=email, role=role)
         if not any(char.isupper() for char in password):
+            current_app.logger.warning(
+                "Registration validation error (password uppercase) from %s",
+                request.remote_addr,
+            )
             flash("Password must contain at least one uppercase letter.", "warning")
             return render_template("register.html", name=name, email=email, role=role)
         if not any(char.islower() for char in password):
+            current_app.logger.warning(
+                "Registration validation error (password lowercase) from %s",
+                request.remote_addr,
+            )
             flash("Password must contain at least one lowercase letter.", "warning")
             return render_template("register.html", name=name, email=email, role=role)
         if not any(char in "!@#$%^&*()_+-=[]{}|;:,.<>?/" for char in password):
+            current_app.logger.warning(
+                "Registration validation error (password special char) from %s",
+                request.remote_addr,
+            )
             flash("Password must contain at least one special character.", "warning")
             return render_template("register.html", name=name, email=email, role=role)
 
         # Check if the role is valid
         valid_roles = {"admin", "support", "regular"}
         if role not in valid_roles:
+            current_app.logger.warning(
+                "Registration validation error (invalid role) from %s",
+                request.remote_addr,
+            )
             flash("Invalid role selected.", "warning")
             return render_template("register.html", name=name, email=email, role=role)
 
-        # Sanitize inputs before saving
-        name = sanitize_html(name)
-        email = sanitize_html(email)
+        # Sanitise inputs before saving
+        name = sanitise_html(name)
+        email = sanitise_html(email)
 
         # Create the new user
         new_user = User(
@@ -109,8 +149,15 @@ class RegisterView(MethodView):
                     new_user.profile_image = filename
                     db.session.commit()
                 else:
+                    current_app.logger.warning(
+                        "Registration validation error (invalid filename) from %s",
+                        request.remote_addr,
+                    )
                     flash("Invalid profile image filename.", "warning")
             except Exception as e:
+                current_app.logger.error(
+                    "Image upload error from %s: %s", request.remote_addr, e
+                )
                 flash(f"An error occurred while uploading the image: {e}", "danger")
 
         # Log the new user in

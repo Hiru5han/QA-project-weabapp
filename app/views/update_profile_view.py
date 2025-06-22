@@ -8,7 +8,7 @@ from PIL import Image, ImageOps
 from werkzeug.utils import secure_filename
 
 from app.models import User, db
-from app.utils import UPLOAD_FOLDER, allowed_file, is_safe_url, sanitize_html
+from app.utils import UPLOAD_FOLDER, allowed_file, is_safe_url, sanitise_html
 from typing import Any, Callable, ClassVar
 
 
@@ -140,13 +140,13 @@ class UpdateProfileView(MethodView):
                     "warning",
                 )
 
-        # Sanitize inputs before saving
-        sanitized_name = sanitize_html(name)
-        sanitized_email = sanitize_html(email)
+        # Sanitise inputs before saving
+        sanitised_name = sanitise_html(name)
+        sanitised_email = sanitise_html(email)
 
         # Update user profile and save to database
-        current_user.name = sanitized_name
-        current_user.email = sanitized_email
+        current_user.name = sanitised_name
+        current_user.email = sanitised_email
         db.session.commit()
 
         flash("Your profile has been updated.", "success")

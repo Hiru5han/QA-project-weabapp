@@ -1,4 +1,7 @@
-from flask import Flask
+from flask import Flask, request, redirect, url_for
+import logging
+from logging.handlers import RotatingFileHandler
+import os
 from flask_login import LoginManager
 from flask_migrate import Migrate
 from flask_moment import Moment
@@ -32,6 +35,21 @@ def create_app(config=None):
     migrate.init_app(app, db)
     csrf.init_app(app)
     moment.init_app(app)
+
+    # Configure application logging
+    if not app.testing:
+        logs_dir = os.path.join(app.root_path, "..", "logs")
+        os.makedirs(logs_dir, exist_ok=True)
+        file_handler = RotatingFileHandler(
+            os.path.join(logs_dir, "app.log"), maxBytes=10240, backupCount=10
+        )
+        formatter = logging.Formatter(
+            "%(asctime)s - %(levelname)s - %(message)s [in %(pathname)s:%(lineno)d]"
+        )
+        file_handler.setFormatter(formatter)
+        file_handler.setLevel(logging.INFO)
+        app.logger.addHandler(file_handler)
+        app.logger.setLevel(logging.INFO)
 
     @app.after_request
     def set_security_headers(response):
@@ -68,6 +86,15 @@ def create_app(config=None):
 
     setattr(login_manager, "login_view", "main.login")
     login_manager.login_message_category = "info"
+
+    @login_manager.unauthorized_handler
+    def unauthorized():
+        app.logger.warning(
+            "Unauthorized access attempt from %s to %s",
+            request.remote_addr,
+            request.path,
+        )
+        return redirect(url_for("main.login"))
 
     @login_manager.user_loader
     def load_user(user_id):

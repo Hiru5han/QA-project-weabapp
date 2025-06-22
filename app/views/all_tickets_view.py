@@ -1,6 +1,6 @@
 from typing import Any, Callable, ClassVar
 
-from flask import abort, render_template
+from flask import abort, render_template, current_app, request
 from flask.views import MethodView
 from flask_login import current_user, login_required
 
@@ -18,6 +18,11 @@ class AllTicketsView(MethodView):
             tickets = Ticket.query.all()
             view = "all"
         elif current_user.role == "support":
+            current_app.logger.warning(
+                "Unauthorized access by user %s from %s to all tickets",
+                current_user.id,
+                request.remote_addr,
+            )
             abort(403)
         else:
             tickets = Ticket.query.filter_by(user_id=current_user.id).all()
