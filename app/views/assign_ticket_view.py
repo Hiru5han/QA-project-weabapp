@@ -3,7 +3,7 @@ from flask.views import MethodView
 from flask_login import current_user, login_required
 
 from app.models import Comment, Ticket, User, db
-from app.utils import sanitise_html
+from app.utils import sanitise_html, log_audit_event
 
 
 from typing import Any, Callable, ClassVar
@@ -50,6 +50,7 @@ class AssignTicketView(MethodView):
 
         ticket.assigned_to = assigned_to_id
         db.session.commit()
+        log_audit_event(current_user.id, "ticket assigned", "ticket", ticket.id)
 
         # Add a comment about the assignment
         comment_text = sanitise_html(f"Ticket assigned to {assignee.name}.")
@@ -58,6 +59,7 @@ class AssignTicketView(MethodView):
         )
         db.session.add(new_comment)
         db.session.commit()
+        log_audit_event(current_user.id, "ticket comment", "ticket", ticket.id)
 
         flash("Ticket assigned successfully.", "success")
         return redirect(url_for("main.all_tickets"))

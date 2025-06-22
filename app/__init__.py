@@ -1,5 +1,7 @@
 from flask import Flask, request, redirect, url_for
+from flask_login import current_user
 import logging
+import json
 from logging.handlers import RotatingFileHandler
 import os
 from flask_login import LoginManager
@@ -38,16 +40,39 @@ def create_app(config=None):
 
     # Configure application logging
     if not app.testing:
+        class RequestFilter(logging.Filter):
+            def filter(self, record):
+                try:
+                    record.remote_addr = request.remote_addr
+                except RuntimeError:
+                    record.remote_addr = None
+                try:
+                    record.user_id = current_user.get_id()
+                except Exception:
+                    record.user_id = None
+                return True
+
+        class JsonFormatter(logging.Formatter):
+            def format(self, record):
+                log_record = {
+                    "time": self.formatTime(record, self.datefmt),
+                    "level": record.levelname,
+                    "message": record.getMessage(),
+                    "pathname": record.pathname,
+                    "lineno": record.lineno,
+                    "remote_addr": getattr(record, "remote_addr", None),
+                    "user_id": getattr(record, "user_id", None),
+                }
+                return json.dumps(log_record)
+
         logs_dir = os.path.join(app.root_path, "..", "logs")
         os.makedirs(logs_dir, exist_ok=True)
         file_handler = RotatingFileHandler(
             os.path.join(logs_dir, "app.log"), maxBytes=10240, backupCount=10
         )
-        formatter = logging.Formatter(
-            "%(asctime)s - %(levelname)s - %(message)s [in %(pathname)s:%(lineno)d]"
-        )
-        file_handler.setFormatter(formatter)
         file_handler.setLevel(logging.INFO)
+        file_handler.addFilter(RequestFilter())
+        file_handler.setFormatter(JsonFormatter())
         app.logger.addHandler(file_handler)
         app.logger.setLevel(logging.INFO)
 
@@ -94,6 +119,8 @@ def create_app(config=None):
             request.remote_addr,
             request.path,
         )
+        from .utils import log_audit_event
+        log_audit_event(None, "unauthorized access", details=request.path)
         return redirect(url_for("main.login"))
 
     @login_manager.user_loader

@@ -113,3 +113,19 @@ class Comment(db.Model):
     commenter = db.relationship(
         "User", back_populates="user_comments", overlaps="comments"
     )
+
+
+class AuditLog(db.Model):
+    """Append-only audit log for high value actions."""
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=True)
+    action = db.Column(db.String(150), nullable=False)
+    target_type = db.Column(db.String(50), nullable=True)
+    target_id = db.Column(db.Integer, nullable=True)
+    details = db.Column(db.Text, nullable=True)
+    timestamp = db.Column(
+        db.DateTime, default=lambda: datetime.now(timezone.utc), nullable=False
+    )
+
+    user = db.relationship("User", backref="audit_logs")

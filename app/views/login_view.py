@@ -3,7 +3,7 @@ from flask.views import MethodView
 from flask_login import current_user, login_user
 
 from app.models import User
-from app.utils import redirect_based_on_role, sanitise_html
+from app.utils import redirect_based_on_role, sanitise_html, log_audit_event
 
 
 class LoginView(MethodView):
@@ -22,6 +22,7 @@ class LoginView(MethodView):
 
         if user and user.check_password(password):
             login_user(user)
+            log_audit_event(user.id, "login success")
             return redirect_based_on_role()
         else:
             current_app.logger.warning(
@@ -29,5 +30,6 @@ class LoginView(MethodView):
                 email,
                 request.remote_addr,
             )
+            log_audit_event(None, "login failed", details=f"email={email}")
             flash("Login failed. Check your email and password.", "warning")
             return render_template("login.html")

@@ -3,7 +3,7 @@ from flask.views import MethodView
 from flask_login import current_user, login_required
 
 from app.models import Comment, Ticket, User, db
-from app.utils import sanitise_html
+from app.utils import sanitise_html, log_audit_event
 from typing import Any, Callable, ClassVar
 
 
@@ -28,6 +28,7 @@ class TicketDetailsView(MethodView):
                 comment_text=comment_text, ticket_id=ticket.id, user_id=current_user.id  # type: ignore
             )
             db.session.add(new_comment)
+            log_audit_event(current_user.id, "comment added", "ticket", ticket.id)
 
         if "status" in request.form:
             status = request.form.get("status")
@@ -40,6 +41,7 @@ class TicketDetailsView(MethodView):
                     user_id=current_user.id,  # type: ignore
                 )
                 db.session.add(status_comment)
+                log_audit_event(current_user.id, "status changed", "ticket", ticket.id, status)
 
         if "priority" in request.form:
             priority = request.form.get("priority")
@@ -54,6 +56,7 @@ class TicketDetailsView(MethodView):
                     user_id=current_user.id,  # type: ignore
                 )
                 db.session.add(priority_comment)
+                log_audit_event(current_user.id, "priority changed", "ticket", ticket.id, priority)
 
         if "assignee" in request.form:
             new_assignee_id = request.form.get("assignee")
@@ -70,6 +73,7 @@ class TicketDetailsView(MethodView):
                     user_id=current_user.id,  # type: ignore
                 )
                 db.session.add(assignee_comment)
+                log_audit_event(current_user.id, "assignee changed", "ticket", ticket.id, assignee_name)
 
         db.session.commit()
         return redirect(url_for("main.ticket_details", ticket_id=ticket_id))

@@ -4,7 +4,7 @@ from flask import flash, redirect, render_template, request, url_for, current_ap
 from flask.views import MethodView
 from flask_login import current_user, login_required
 
-from app.utils import is_safe_url, sanitise_html
+from app.utils import is_safe_url, sanitise_html, log_audit_event
 from typing import Any, Callable, ClassVar
 
 from app.models import Ticket, User, db
@@ -182,6 +182,7 @@ class CreateTicketView(MethodView):
 
         db.session.add(new_ticket)
         db.session.commit()
+        log_audit_event(current_user.id, "ticket created", "ticket", new_ticket.id)
 
         referrer = request.form.get("referrer")
         if not referrer or not is_safe_url(referrer):

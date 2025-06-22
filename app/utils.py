@@ -4,7 +4,7 @@ from flask import redirect, request, url_for
 from flask_login import current_user
 from markupsafe import escape
 
-from app.models import Ticket
+from app.models import Ticket, AuditLog, db
 
 ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "gif"}
 UPLOAD_FOLDER = "app/static/uploads/profile_images"
@@ -58,3 +58,16 @@ def inject_open_tickets_count():
         badge_class = "badge-active-tickets-info"  # Blue or default color
 
     return {"open_tickets_count": open_tickets_count, "badge_class": badge_class}
+
+
+def log_audit_event(user_id, action, target_type=None, target_id=None, details=None):
+    """Record an auditable event in the append-only audit table."""
+    audit = AuditLog(
+        user_id=user_id,
+        action=sanitise_html(action),
+        target_type=sanitise_html(target_type) if target_type else None,
+        target_id=target_id,
+        details=sanitise_html(details) if details else None,
+    )
+    db.session.add(audit)
+    db.session.commit()

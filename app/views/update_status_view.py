@@ -3,6 +3,7 @@ from flask.views import MethodView
 from flask_login import current_user, login_required
 
 from app.models import Ticket, db
+from app.utils import log_audit_event
 from typing import Any, Callable, ClassVar
 
 
@@ -19,5 +20,6 @@ class UpdateStatusView(MethodView):
         if status:
             ticket.status = status
             db.session.commit()
+            log_audit_event(current_user.id, "status updated", "ticket", ticket.id, status)
             flash("Status has been updated.", "success")
         return redirect(url_for("main.ticket_details", ticket_id=ticket.id))

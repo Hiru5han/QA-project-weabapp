@@ -1,14 +1,20 @@
 import os
 import re
 
-from flask import flash, redirect, render_template, request, url_for
+from flask import flash, redirect, render_template, request, url_for, current_app
 from flask.views import MethodView
 from flask_login import current_user, login_required
 from PIL import Image, ImageOps
 from werkzeug.utils import secure_filename
 
 from app.models import User, db
-from app.utils import UPLOAD_FOLDER, allowed_file, is_safe_url, sanitise_html
+from app.utils import (
+    UPLOAD_FOLDER,
+    allowed_file,
+    is_safe_url,
+    sanitise_html,
+    log_audit_event,
+)
 from typing import Any, Callable, ClassVar
 
 
@@ -37,12 +43,22 @@ class UpdateProfileView(MethodView):
 
         # Validate name
         if not name.strip():
+            current_app.logger.warning(
+                "Profile update validation error (empty name) for %s from %s",
+                current_user.id,
+                request.remote_addr,
+            )
             flash("Name cannot be empty.", "warning")
             return render_template(
                 "update_profile.html", current_user=current_user, next_url=next_url
             )
 
         if any(char.isdigit() for char in name):
+            current_app.logger.warning(
+                "Profile update validation error (name digits) for %s from %s",
+                current_user.id,
+                request.remote_addr,
+            )
             flash("Name cannot contain numbers.", "warning")
             return render_template(
                 "update_profile.html", current_user=current_user, next_url=next_url
@@ -51,6 +67,11 @@ class UpdateProfileView(MethodView):
         # Validate email format
         email_regex = r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
         if not re.match(email_regex, email):
+            current_app.logger.warning(
+                "Profile update validation error (invalid email) for %s from %s",
+                current_user.id,
+                request.remote_addr,
+            )
             flash("Invalid email address.", "warning")
             return render_template(
                 "update_profile.html", current_user=current_user, next_url=next_url
@@ -58,6 +79,11 @@ class UpdateProfileView(MethodView):
 
         # Check if email is already in use by another user
         if User.query.filter(User.email == email, User.id != current_user.id).first():
+            current_app.logger.warning(
+                "Profile update validation error (duplicate email) for %s from %s",
+                current_user.id,
+                request.remote_addr,
+            )
             flash("Email address already in use.", "warning")
             return render_template(
                 "update_profile.html", current_user=current_user, next_url=next_url
@@ -66,6 +92,11 @@ class UpdateProfileView(MethodView):
         # Update password if provided
         if password:
             if password != password_confirm:
+                current_app.logger.warning(
+                    "Profile update validation error (password mismatch) for %s from %s",
+                    current_user.id,
+                    request.remote_addr,
+                )
                 flash("Passwords do not match.", "warning")
                 return render_template(
                     "update_profile.html", current_user=current_user, next_url=next_url
@@ -73,26 +104,51 @@ class UpdateProfileView(MethodView):
 
             # Password complexity checks
             if len(password) < 8:
+                current_app.logger.warning(
+                    "Profile update validation error (password length) for %s from %s",
+                    current_user.id,
+                    request.remote_addr,
+                )
                 flash("Password must be at least 8 characters long.", "warning")
                 return render_template(
                     "update_profile.html", current_user=current_user, next_url=next_url
                 )
             if not any(char.isdigit() for char in password):
+                current_app.logger.warning(
+                    "Profile update validation error (password digit) for %s from %s",
+                    current_user.id,
+                    request.remote_addr,
+                )
                 flash("Password must contain at least one number.", "warning")
                 return render_template(
                     "update_profile.html", current_user=current_user, next_url=next_url
                 )
             if not any(char.isupper() for char in password):
+                current_app.logger.warning(
+                    "Profile update validation error (password uppercase) for %s from %s",
+                    current_user.id,
+                    request.remote_addr,
+                )
                 flash("Password must contain at least one uppercase letter.", "warning")
                 return render_template(
                     "update_profile.html", current_user=current_user, next_url=next_url
                 )
             if not any(char.islower() for char in password):
+                current_app.logger.warning(
+                    "Profile update validation error (password lowercase) for %s from %s",
+                    current_user.id,
+                    request.remote_addr,
+                )
                 flash("Password must contain at least one lowercase letter.", "warning")
                 return render_template(
                     "update_profile.html", current_user=current_user, next_url=next_url
                 )
             if not any(char in "!@#$%^&*()_+-=[]{}|;:,.<>?/" for char in password):
+                current_app.logger.warning(
+                    "Profile update validation error (password special char) for %s from %s",
+                    current_user.id,
+                    request.remote_addr,
+                )
                 flash(
                     "Password must contain at least one special character.", "warning"
                 )
@@ -135,6 +191,11 @@ class UpdateProfileView(MethodView):
                 flash(f"An error occurred while uploading the image: {e}", "danger")
         else:
             if file:
+                current_app.logger.warning(
+                    "Profile update validation error (invalid image) for %s from %s",
+                    current_user.id,
+                    request.remote_addr,
+                )
                 flash(
                     "Invalid file format. Only PNG, JPG, JPEG, and GIF are allowed.",
                     "warning",
@@ -148,6 +209,7 @@ class UpdateProfileView(MethodView):
         current_user.name = sanitised_name
         current_user.email = sanitised_email
         db.session.commit()
+        log_audit_event(current_user.id, "profile updated", "user", current_user.id)
 
         flash("Your profile has been updated.", "success")
         return redirect(next_url)

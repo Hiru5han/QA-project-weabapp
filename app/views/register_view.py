@@ -13,6 +13,7 @@ from app.utils import (
     allowed_file,
     redirect_based_on_role,
     sanitise_html,
+    log_audit_event,
 )
 
 
@@ -162,5 +163,6 @@ class RegisterView(MethodView):
 
         # Log the new user in
         login_user(new_user)
+        log_audit_event(new_user.id, "user registered")
 
         return redirect_based_on_role()

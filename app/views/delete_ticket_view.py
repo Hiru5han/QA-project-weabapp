@@ -3,6 +3,7 @@ from flask.views import MethodView
 from flask_login import current_user, login_required
 
 from app.models import Ticket, db
+from app.utils import log_audit_event
 from typing import Any, Callable, ClassVar
 
 
@@ -18,5 +19,6 @@ class DeleteTicketView(MethodView):
 
         db.session.delete(ticket)
         db.session.commit()
+        log_audit_event(current_user.id, "ticket deleted", "ticket", ticket.id)
         flash("Ticket has been deleted successfully.", "success")
         return redirect(url_for("main.all_tickets"))

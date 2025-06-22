@@ -1,0 +1,941 @@
+ (cd "$(git rev-parse --show-toplevel)" && git apply --3way <<'EOF' 
+diff --git a/app/__init__.py b/app/__init__.py
+index 4d91cfa8e07973df076106965e4194e01b11be68..40598dc2f83aabbc52c5809e4dcd32108e2e8a81 100755
+--- a/app/__init__.py
++++ b/app/__init__.py
+@@ -1,114 +1,141 @@
+ from flask import Flask, request, redirect, url_for
++from flask_login import current_user
+ import logging
++import json
+ from logging.handlers import RotatingFileHandler
+ import os
+ from flask_login import LoginManager
+ from flask_migrate import Migrate
+ from flask_moment import Moment
+ from flask_sqlalchemy import SQLAlchemy
+ from flask_wtf import CSRFProtect
+ 
+ db = SQLAlchemy()
+ login_manager: LoginManager = LoginManager()
+ migrate = Migrate()
+ csrf = CSRFProtect()
+ moment = Moment()
+ 
+ 
+ def create_app(config=None):
+     """
+     Initialise the Flask application.
+     """
+     app = Flask(__name__, instance_relative_config=True)
+ 
+     if isinstance(config, str):
+         # Load the config by string reference, assuming 'TestingConfig' is in app.config
+         app.config.from_object(f"app.config.{config}")
+     elif isinstance(config, dict):
+         # Load the configuration directly from the dictionary (useful for testing)
+         app.config.update(config)
+     else:
+         app.config.from_pyfile("config.py")
+ 
+     db.init_app(app)
+     login_manager.init_app(app)
+     migrate.init_app(app, db)
+     csrf.init_app(app)
+     moment.init_app(app)
+ 
+     # Configure application logging
+     if not app.testing:
++        class RequestFilter(logging.Filter):
++            def filter(self, record):
++                try:
++                    record.remote_addr = request.remote_addr
++                except RuntimeError:
++                    record.remote_addr = None
++                try:
++                    record.user_id = current_user.get_id()
++                except Exception:
++                    record.user_id = None
++                return True
++
++        class JsonFormatter(logging.Formatter):
++            def format(self, record):
++                log_record = {
++                    "time": self.formatTime(record, self.datefmt),
++                    "level": record.levelname,
++                    "message": record.getMessage(),
++                    "pathname": record.pathname,
++                    "lineno": record.lineno,
++                    "remote_addr": getattr(record, "remote_addr", None),
++                    "user_id": getattr(record, "user_id", None),
++                }
++                return json.dumps(log_record)
++
+         logs_dir = os.path.join(app.root_path, "..", "logs")
+         os.makedirs(logs_dir, exist_ok=True)
+         file_handler = RotatingFileHandler(
+             os.path.join(logs_dir, "app.log"), maxBytes=10240, backupCount=10
+         )
+-        formatter = logging.Formatter(
+-            "%(asctime)s - %(levelname)s - %(message)s [in %(pathname)s:%(lineno)d]"
+-        )
+-        file_handler.setFormatter(formatter)
+         file_handler.setLevel(logging.INFO)
++        file_handler.addFilter(RequestFilter())
++        file_handler.setFormatter(JsonFormatter())
+         app.logger.addHandler(file_handler)
+         app.logger.setLevel(logging.INFO)
+ 
+     @app.after_request
+     def set_security_headers(response):
+         """Add security headers to mitigate XSS."""
+         csp = (
+             "default-src 'self'; "
+             "style-src 'self' 'unsafe-inline' https://stackpath.bootstrapcdn.com https://cdn.datatables.net https://cdnjs.cloudflare.com https://fonts.googleapis.com; "
+             "script-src 'self' https://code.jquery.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://cdn.datatables.net https://stackpath.bootstrapcdn.com; "
+             "font-src 'self' https://cdnjs.cloudflare.com https://fonts.gstatic.com; "
+             "img-src 'self' data:; "
+             "base-uri 'self'; "
+             "form-action 'self'; "
+             "object-src 'none'; "
+             "frame-ancestors 'none'; "
+             "connect-src 'self'"
+         )
+         response.headers.setdefault("Content-Security-Policy", csp)
+         response.headers.setdefault("X-Content-Type-Options", "nosniff")
+         response.headers.setdefault("X-Frame-Options", "SAMEORIGIN")
+         response.headers.setdefault("X-XSS-Protection", "1; mode=block")
+         response.headers.setdefault(
+             "Strict-Transport-Security", "max-age=31536000; includeSubDomains"
+         )
+         response.headers.setdefault("Referrer-Policy", "no-referrer")
+         response.headers.setdefault(
+             "Permissions-Policy", "camera=(), microphone=(), geolocation=()"
+         )
+         response.headers.setdefault("Cross-Origin-Opener-Policy", "same-origin")
+         response.headers.setdefault("Cross-Origin-Resource-Policy", "same-origin")
+         response.headers.setdefault("Cross-Origin-Embedder-Policy", "require-corp")
+         return response
+ 
+     from .models import User
+ 
+     setattr(login_manager, "login_view", "main.login")
+     login_manager.login_message_category = "info"
+ 
+     @login_manager.unauthorized_handler
+     def unauthorized():
+         app.logger.warning(
+             "Unauthorized access attempt from %s to %s",
+             request.remote_addr,
+             request.path,
+         )
++        from .utils import log_audit_event
++        log_audit_event(None, "unauthorized access", details=request.path)
+         return redirect(url_for("main.login"))
+ 
+     @login_manager.user_loader
+     def load_user(user_id):
+         """
+         Load a user by their user ID.
+         """
+         return User.query.get(int(user_id))
+ 
+     from .routes import bp
+ 
+     app.register_blueprint(bp)
+ 
+     from .utils import inject_open_tickets_count
+ 
+     app.context_processor(inject_open_tickets_count)
+ 
+     return app
+diff --git a/app/models.py b/app/models.py
+index 7a531c5eb202528e8a89d0fdd63faaf5135cb5ae..9bb1c8f6e44ec8e790b2e730024c6c80115579d2 100755
+--- a/app/models.py
++++ b/app/models.py
+@@ -91,25 +91,41 @@ class Ticket(db.Model):
+     )
+     assignee = db.relationship(
+         "User",
+         foreign_keys=[assigned_to],
+         back_populates="assigned_tickets",
+         overlaps="created_tickets,comments",
+     )
+     ticket_comments = db.relationship("Comment", back_populates="ticket")
+ 
+ 
+ class Comment(db.Model):
+     """
+     Represents a comment on a ticket.
+     """
+ 
+     id = db.Column(db.Integer, primary_key=True)
+     ticket_id = db.Column(db.Integer, db.ForeignKey("ticket.id"))
+     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+     comment_text = db.Column(db.Text, nullable=False)
+     created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
+ 
+     ticket = db.relationship("Ticket", back_populates="ticket_comments")
+     commenter = db.relationship(
+         "User", back_populates="user_comments", overlaps="comments"
+     )
++
++
++class AuditLog(db.Model):
++    """Append-only audit log for high value actions."""
++
++    id = db.Column(db.Integer, primary_key=True)
++    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=True)
++    action = db.Column(db.String(150), nullable=False)
++    target_type = db.Column(db.String(50), nullable=True)
++    target_id = db.Column(db.Integer, nullable=True)
++    details = db.Column(db.Text, nullable=True)
++    timestamp = db.Column(
++        db.DateTime, default=lambda: datetime.now(timezone.utc), nullable=False
++    )
++
++    user = db.relationship("User", backref="audit_logs")
+diff --git a/app/utils.py b/app/utils.py
+index aca1f7f22c613bac77b90f9e6a2dd05be860fa8f..b1b0dd08070e178de010e6ee9276db6e23b01d02 100644
+--- a/app/utils.py
++++ b/app/utils.py
+@@ -1,32 +1,32 @@
+ from urllib.parse import urljoin, urlparse
+ 
+ from flask import redirect, request, url_for
+ from flask_login import current_user
+ from markupsafe import escape
+ 
+-from app.models import Ticket
++from app.models import Ticket, AuditLog, db
+ 
+ ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "gif"}
+ UPLOAD_FOLDER = "app/static/uploads/profile_images"
+ 
+ 
+ def allowed_file(filename):
+     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
+ 
+ 
+ def sanitise_html(value: str) -> str:
+     """Escape HTML to prevent XSS."""
+     if value is None:
+         return ""
+     return escape(value)
+ 
+ 
+ def is_safe_url(target):
+     """
+     Check if the target URL is safe by ensuring it's a local URL.
+     """
+     ref_url = urlparse(request.host_url)
+     test_url = urlparse(urljoin(request.host_url, target))
+     return test_url.scheme in ("http", "https") and ref_url.netloc == test_url.netloc
+ 
+ 
+@@ -36,25 +36,38 @@ def redirect_based_on_role():
+     """
+     if current_user.role == "admin":
+         return redirect(url_for("main.all_tickets"))
+     elif current_user.role == "support":
+         return redirect(url_for("main.assigned_tickets"))
+     else:
+         return redirect(url_for("main.all_tickets"))
+ 
+ 
+ def inject_open_tickets_count():
+     open_tickets_count = Ticket.query.filter(
+         Ticket.status.in_(["open", "in-progress"])
+     ).count()
+ 
+     # Determine the badge class based on the count
+     if open_tickets_count > 10:
+         badge_class = "badge-active-tickets-high"  # Red
+     elif open_tickets_count > 5:
+         badge_class = "badge-active-tickets-medium"  # Yellow
+     elif open_tickets_count > 0:
+         badge_class = "badge-active-tickets-low"  # Green
+     else:
+         badge_class = "badge-active-tickets-info"  # Blue or default color
+ 
+     return {"open_tickets_count": open_tickets_count, "badge_class": badge_class}
++
++
++def log_audit_event(user_id, action, target_type=None, target_id=None, details=None):
++    """Record an auditable event in the append-only audit table."""
++    audit = AuditLog(
++        user_id=user_id,
++        action=sanitise_html(action),
++        target_type=sanitise_html(target_type) if target_type else None,
++        target_id=target_id,
++        details=sanitise_html(details) if details else None,
++    )
++    db.session.add(audit)
++    db.session.commit()
+diff --git a/app/views/assign_ticket_view.py b/app/views/assign_ticket_view.py
+index d476e59451147dae5079ef39a57174af3db660eb..e6b096cdea20e07bf562abea33b01297e5b1a09b 100644
+--- a/app/views/assign_ticket_view.py
++++ b/app/views/assign_ticket_view.py
+@@ -1,63 +1,65 @@
+ from flask import flash, redirect, render_template, request, url_for
+ from flask.views import MethodView
+ from flask_login import current_user, login_required
+ 
+ from app.models import Comment, Ticket, User, db
+-from app.utils import sanitise_html
++from app.utils import sanitise_html, log_audit_event
+ 
+ 
+ from typing import Any, Callable, ClassVar
+ 
+ 
+ class AssignTicketView(MethodView):
+     decorators: ClassVar[list[Callable[[Any], Any]]] = [login_required]
+ 
+     def get(self, ticket_id):
+         """
+         Allows admins to assign a ticket to a support staff member.
+         """
+         if current_user.role != "admin":
+             flash("Only admins can assign tickets.", "warning")
+             return redirect(url_for("main.all_tickets"))
+ 
+         ticket = Ticket.query.get_or_404(ticket_id)
+         support_staff = User.query.filter(User.role.in_(["admin", "support"])).all()
+ 
+         return render_template(
+             "assign_ticket.html", ticket=ticket, support_staff=support_staff
+         )
+ 
+     def post(self, ticket_id):
+         """
+         Handles the assignment of a ticket to a support staff member.
+         """
+         if current_user.role != "admin":
+             flash("Only admins can assign tickets.", "warning")
+             return redirect(url_for("main.all_tickets"))
+ 
+         ticket = Ticket.query.get_or_404(ticket_id)
+         assigned_to_id = request.form.get("assigned_to")
+ 
+         if not assigned_to_id:
+             flash("No assignee selected.", "warning")
+             return redirect(url_for("main.assign_ticket", ticket_id=ticket_id))
+ 
+         # Validate that the assigned user exists and is support staff
+         assignee = User.query.filter_by(id=assigned_to_id).first()
+         if not assignee or assignee.role not in ["admin", "support"]:
+             flash("Invalid assignee selected.", "warning")
+             return redirect(url_for("main.assign_ticket", ticket_id=ticket_id))
+ 
+         ticket.assigned_to = assigned_to_id
+         db.session.commit()
++        log_audit_event(current_user.id, "ticket assigned", "ticket", ticket.id)
+ 
+         # Add a comment about the assignment
+         comment_text = sanitise_html(f"Ticket assigned to {assignee.name}.")
+         new_comment = Comment(
+             comment_text=comment_text, ticket_id=ticket.id, user_id=current_user.id  # type: ignore
+         )
+         db.session.add(new_comment)
+         db.session.commit()
++        log_audit_event(current_user.id, "ticket comment", "ticket", ticket.id)
+ 
+         flash("Ticket assigned successfully.", "success")
+         return redirect(url_for("main.all_tickets"))
+diff --git a/app/views/create_ticket_view.py b/app/views/create_ticket_view.py
+index d168071a4563dc82ec3870809870eefb1ce6f63c..adb55b0f8ff45f903e6f0525d5b46d1c643661ad 100644
+--- a/app/views/create_ticket_view.py
++++ b/app/views/create_ticket_view.py
+@@ -1,32 +1,32 @@
+ from datetime import datetime
+ 
+ from flask import flash, redirect, render_template, request, url_for, current_app
+ from flask.views import MethodView
+ from flask_login import current_user, login_required
+ 
+-from app.utils import is_safe_url, sanitise_html
++from app.utils import is_safe_url, sanitise_html, log_audit_event
+ from typing import Any, Callable, ClassVar
+ 
+ from app.models import Ticket, User, db
+ 
+ 
+ class CreateTicketView(MethodView):
+     decorators: ClassVar[list[Callable[[Any], Any]]] = [login_required]
+ 
+     def get(self):
+         referrer = request.args.get("referrer")
+         if not referrer or not is_safe_url(referrer):
+             referrer = url_for("main.all_tickets")
+ 
+         all_users = []
+         support_staff = []
+         if current_user.role in ["admin", "support"]:
+             all_users = User.query.all()
+         if current_user.role == "admin":
+             support_staff = User.query.filter(User.role.in_(["admin", "support"])).all()
+ 
+         # Pass an empty form_data dictionary to the template
+         return render_template(
+             "create_ticket.html",
+             support_staff=support_staff,
+             all_users=all_users,
+@@ -160,31 +160,32 @@ class CreateTicketView(MethodView):
+                 "create_ticket.html",
+                 support_staff=support_staff,
+                 all_users=all_users,
+                 referrer=safe_referrer,
+                 form_data=request.form,  # Pass the form data back on validation failure
+             )
+ 
+         # Sanitise the title and description to prevent XSS
+         title = sanitise_html(title)
+         description = sanitise_html(description)
+ 
+         # Create new ticket and save to database
+         new_ticket = Ticket(
+             title=title,  # type: ignore
+             description=description,  # type: ignore
+             priority=priority,  # type: ignore
+             status=status,  # type: ignore
+             user_id=user_id,  # type: ignore
+         )
+ 
+         if current_user.role == "admin" and assigned_to_id:
+             new_ticket.assigned_to = assigned_to_id
+ 
+         db.session.add(new_ticket)
+         db.session.commit()
++        log_audit_event(current_user.id, "ticket created", "ticket", new_ticket.id)
+ 
+         referrer = request.form.get("referrer")
+         if not referrer or not is_safe_url(referrer):
+             referrer = url_for("main.all_tickets")
+         flash("Ticket created successfully!", "success")
+         return redirect(referrer)
+diff --git a/app/views/delete_ticket_view.py b/app/views/delete_ticket_view.py
+index 8457fc2415a567ff1f4995cb92a97cd9508d67b1..938f694931077577e14ca7bd31e7ade5c3a52bc4 100644
+--- a/app/views/delete_ticket_view.py
++++ b/app/views/delete_ticket_view.py
+@@ -1,22 +1,24 @@
+ from flask import flash, redirect, url_for
+ from flask.views import MethodView
+ from flask_login import current_user, login_required
+ 
+ from app.models import Ticket, db
++from app.utils import log_audit_event
+ from typing import Any, Callable, ClassVar
+ 
+ 
+ class DeleteTicketView(MethodView):
+     decorators: ClassVar[list[Callable[[Any], Any]]] = [login_required]
+ 
+     def post(self, ticket_id):
+         ticket = Ticket.query.get_or_404(ticket_id)
+ 
+         if current_user.role != "admin":
+             flash("You do not have permission to delete this ticket.", "danger")
+             return redirect(url_for("main.ticket_details", ticket_id=ticket_id))
+ 
+         db.session.delete(ticket)
+         db.session.commit()
++        log_audit_event(current_user.id, "ticket deleted", "ticket", ticket.id)
+         flash("Ticket has been deleted successfully.", "success")
+         return redirect(url_for("main.all_tickets"))
+diff --git a/app/views/login_view.py b/app/views/login_view.py
+index a233ad0c3b5f15b1fc38c92d18d19c3c0fa1873d..0d69ef4021b8ba2c88c5fd370e205c420713762f 100644
+--- a/app/views/login_view.py
++++ b/app/views/login_view.py
+@@ -1,33 +1,35 @@
+ from flask import flash, render_template, request, current_app
+ from flask.views import MethodView
+ from flask_login import current_user, login_user
+ 
+ from app.models import User
+-from app.utils import redirect_based_on_role, sanitise_html
++from app.utils import redirect_based_on_role, sanitise_html, log_audit_event
+ 
+ 
+ class LoginView(MethodView):
+     def get(self):
+         if current_user.is_authenticated:
+             return redirect_based_on_role()
+         return render_template("login.html")
+ 
+     def post(self):
+         if current_user.is_authenticated:
+             return redirect_based_on_role()
+ 
+         email = sanitise_html(request.form.get("email", ""))
+         password = request.form.get("password")
+         user = User.query.filter_by(email=email).first()
+ 
+         if user and user.check_password(password):
+             login_user(user)
++            log_audit_event(user.id, "login success")
+             return redirect_based_on_role()
+         else:
+             current_app.logger.warning(
+                 "Failed login attempt for %s from %s",
+                 email,
+                 request.remote_addr,
+             )
++            log_audit_event(None, "login failed", details=f"email={email}")
+             flash("Login failed. Check your email and password.", "warning")
+             return render_template("login.html")
+diff --git a/app/views/register_view.py b/app/views/register_view.py
+index fa623abca210029f2edd7b2d51938a1782ab403b..ed21af1c15ac78b1cef38f2066b9f99ef92f1a1a 100644
+--- a/app/views/register_view.py
++++ b/app/views/register_view.py
+@@ -1,40 +1,41 @@
+ import os
+ import re
+ 
+ from flask import flash, render_template, request, current_app
+ from flask.views import MethodView
+ from flask_login import login_user
+ from PIL import Image, ImageOps
+ from werkzeug.utils import secure_filename
+ 
+ from app.models import User, db
+ from app.utils import (
+     UPLOAD_FOLDER,
+     allowed_file,
+     redirect_based_on_role,
+     sanitise_html,
++    log_audit_event,
+ )
+ 
+ 
+ class RegisterView(MethodView):
+     def get(self):
+         return render_template("register.html")
+ 
+     def post(self):
+         name = request.form.get("name", "")
+         email = request.form.get("email", "")
+         password = request.form.get("password", "")
+         role = request.form.get("role")
+         profile_image = request.files.get("profile_image")
+ 
+         # Check if the name contains numbers
+         if any(char.isdigit() for char in name):
+             current_app.logger.warning(
+                 "Registration validation error (name digits) from %s",
+                 request.remote_addr,
+             )
+             flash("Name cannot contain numbers.", "warning")
+             return render_template("register.html", name=name, email=email, role=role)
+ 
+         # Check if the name is empty
+         if not name.strip():
+@@ -140,27 +141,28 @@ class RegisterView(MethodView):
+                         os.makedirs(UPLOAD_FOLDER)
+ 
+                     # Save and resize the file
+                     profile_image.save(file_path)
+                     img = Image.open(file_path)
+                     img = ImageOps.fit(img, (200, 200), Image.Resampling.LANCZOS)
+                     img.save(file_path)
+ 
+                     # Update DB with filename
+                     new_user.profile_image = filename
+                     db.session.commit()
+                 else:
+                     current_app.logger.warning(
+                         "Registration validation error (invalid filename) from %s",
+                         request.remote_addr,
+                     )
+                     flash("Invalid profile image filename.", "warning")
+             except Exception as e:
+                 current_app.logger.error(
+                     "Image upload error from %s: %s", request.remote_addr, e
+                 )
+                 flash(f"An error occurred while uploading the image: {e}", "danger")
+ 
+         # Log the new user in
+         login_user(new_user)
++        log_audit_event(new_user.id, "user registered")
+ 
+         return redirect_based_on_role()
+diff --git a/app/views/ticket_details_view.py b/app/views/ticket_details_view.py
+index c73587682a398399e41a709bdc9c3dc07e1abb0e..be634c4149d4646cad92f82688ac198d707806e6 100644
+--- a/app/views/ticket_details_view.py
++++ b/app/views/ticket_details_view.py
+@@ -1,75 +1,79 @@
+ from flask import redirect, render_template, request, url_for
+ from flask.views import MethodView
+ from flask_login import current_user, login_required
+ 
+ from app.models import Comment, Ticket, User, db
+-from app.utils import sanitise_html
++from app.utils import sanitise_html, log_audit_event
+ from typing import Any, Callable, ClassVar
+ 
+ 
+ class TicketDetailsView(MethodView):
+     decorators: ClassVar[list[Callable[[Any], Any]]] = [login_required]
+ 
+     def get(self, ticket_id):
+         ticket = Ticket.query.get_or_404(ticket_id)
+         comments = Comment.query.filter_by(ticket_id=ticket.id).all()
+         users = User.query.filter(User.role.in_(["admin", "support"])).all()
+ 
+         return render_template(
+             "ticket_details.html", ticket=ticket, comments=comments, users=users
+         )
+ 
+     def post(self, ticket_id):
+         ticket = Ticket.query.get_or_404(ticket_id)
+ 
+         if "comment_text" in request.form:
+             comment_text = sanitise_html(request.form.get("comment_text", ""))
+             new_comment = Comment(
+                 comment_text=comment_text, ticket_id=ticket.id, user_id=current_user.id  # type: ignore
+             )
+             db.session.add(new_comment)
++            log_audit_event(current_user.id, "comment added", "ticket", ticket.id)
+ 
+         if "status" in request.form:
+             status = request.form.get("status")
+             if ticket.status != status:
+                 ticket.status = status
+                 status_comment_text = sanitise_html(f"Status changed to {status}.")
+                 status_comment = Comment(
+                     comment_text=status_comment_text,  # type: ignore
+                     ticket_id=ticket.id,  # type: ignore
+                     user_id=current_user.id,  # type: ignore
+                 )
+                 db.session.add(status_comment)
++                log_audit_event(current_user.id, "status changed", "ticket", ticket.id, status)
+ 
+         if "priority" in request.form:
+             priority = request.form.get("priority")
+             if ticket.priority != priority:
+                 ticket.priority = priority
+                 priority_comment_text = sanitise_html(
+                     f"Priority changed to {priority}."
+                 )
+                 priority_comment = Comment(
+                     comment_text=priority_comment_text,  # type: ignore
+                     ticket_id=ticket.id,  # type: ignore
+                     user_id=current_user.id,  # type: ignore
+                 )
+                 db.session.add(priority_comment)
++                log_audit_event(current_user.id, "priority changed", "ticket", ticket.id, priority)
+ 
+         if "assignee" in request.form:
+             new_assignee_id = request.form.get("assignee")
+             if ticket.assigned_to != new_assignee_id:
+                 ticket.assigned_to = new_assignee_id
+                 user = User.query.get(new_assignee_id)
+                 assignee_name = user.name if user else "Unassigned"
+                 assignee_comment_text = sanitise_html(
+                     f"Assignee changed to {assignee_name}."
+                 )
+                 assignee_comment = Comment(
+                     comment_text=assignee_comment_text,  # type: ignore
+                     ticket_id=ticket.id,  # type: ignore
+                     user_id=current_user.id,  # type: ignore
+                 )
+                 db.session.add(assignee_comment)
++                log_audit_event(current_user.id, "assignee changed", "ticket", ticket.id, assignee_name)
+ 
+         db.session.commit()
+         return redirect(url_for("main.ticket_details", ticket_id=ticket_id))
+diff --git a/app/views/update_profile_view.py b/app/views/update_profile_view.py
+index f34c139450f89c8efe1aae7a2eedcdec3ea592f4..158537468bbf7296bd0d1231e1d697e33952ade5 100644
+--- a/app/views/update_profile_view.py
++++ b/app/views/update_profile_view.py
+@@ -1,153 +1,215 @@
+ import os
+ import re
+ 
+-from flask import flash, redirect, render_template, request, url_for
++from flask import flash, redirect, render_template, request, url_for, current_app
+ from flask.views import MethodView
+ from flask_login import current_user, login_required
+ from PIL import Image, ImageOps
+ from werkzeug.utils import secure_filename
+ 
+ from app.models import User, db
+-from app.utils import UPLOAD_FOLDER, allowed_file, is_safe_url, sanitise_html
++from app.utils import (
++    UPLOAD_FOLDER,
++    allowed_file,
++    is_safe_url,
++    sanitise_html,
++    log_audit_event,
++)
+ from typing import Any, Callable, ClassVar
+ 
+ 
+ class UpdateProfileView(MethodView):
+     decorators: ClassVar[list[Callable[[Any], Any]]] = [login_required]
+ 
+     def get(self):
+         next_url = request.args.get("next") or url_for("main.index")
+         if not is_safe_url(next_url):
+             next_url = url_for("main.index")
+         return render_template(
+             "update_profile.html", current_user=current_user, next_url=next_url
+         )
+ 
+     def post(self):
+         next_url = request.form.get("next") or url_for("main.index")
+         if not is_safe_url(next_url):
+             next_url = url_for("main.index")
+ 
+         # Get form data
+         name = request.form.get("name", "")
+         email = request.form.get("email", "")
+         password = request.form.get("password", "")
+         password_confirm = request.form.get("password_confirm", "")
+         file = request.files.get("profile_image")
+ 
+         # Validate name
+         if not name.strip():
++            current_app.logger.warning(
++                "Profile update validation error (empty name) for %s from %s",
++                current_user.id,
++                request.remote_addr,
++            )
+             flash("Name cannot be empty.", "warning")
+             return render_template(
+                 "update_profile.html", current_user=current_user, next_url=next_url
+             )
+ 
+         if any(char.isdigit() for char in name):
++            current_app.logger.warning(
++                "Profile update validation error (name digits) for %s from %s",
++                current_user.id,
++                request.remote_addr,
++            )
+             flash("Name cannot contain numbers.", "warning")
+             return render_template(
+                 "update_profile.html", current_user=current_user, next_url=next_url
+             )
+ 
+         # Validate email format
+         email_regex = r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
+         if not re.match(email_regex, email):
++            current_app.logger.warning(
++                "Profile update validation error (invalid email) for %s from %s",
++                current_user.id,
++                request.remote_addr,
++            )
+             flash("Invalid email address.", "warning")
+             return render_template(
+                 "update_profile.html", current_user=current_user, next_url=next_url
+             )
+ 
+         # Check if email is already in use by another user
+         if User.query.filter(User.email == email, User.id != current_user.id).first():
++            current_app.logger.warning(
++                "Profile update validation error (duplicate email) for %s from %s",
++                current_user.id,
++                request.remote_addr,
++            )
+             flash("Email address already in use.", "warning")
+             return render_template(
+                 "update_profile.html", current_user=current_user, next_url=next_url
+             )
+ 
+         # Update password if provided
+         if password:
+             if password != password_confirm:
++                current_app.logger.warning(
++                    "Profile update validation error (password mismatch) for %s from %s",
++                    current_user.id,
++                    request.remote_addr,
++                )
+                 flash("Passwords do not match.", "warning")
+                 return render_template(
+                     "update_profile.html", current_user=current_user, next_url=next_url
+                 )
+ 
+             # Password complexity checks
+             if len(password) < 8:
++                current_app.logger.warning(
++                    "Profile update validation error (password length) for %s from %s",
++                    current_user.id,
++                    request.remote_addr,
++                )
+                 flash("Password must be at least 8 characters long.", "warning")
+                 return render_template(
+                     "update_profile.html", current_user=current_user, next_url=next_url
+                 )
+             if not any(char.isdigit() for char in password):
++                current_app.logger.warning(
++                    "Profile update validation error (password digit) for %s from %s",
++                    current_user.id,
++                    request.remote_addr,
++                )
+                 flash("Password must contain at least one number.", "warning")
+                 return render_template(
+                     "update_profile.html", current_user=current_user, next_url=next_url
+                 )
+             if not any(char.isupper() for char in password):
++                current_app.logger.warning(
++                    "Profile update validation error (password uppercase) for %s from %s",
++                    current_user.id,
++                    request.remote_addr,
++                )
+                 flash("Password must contain at least one uppercase letter.", "warning")
+                 return render_template(
+                     "update_profile.html", current_user=current_user, next_url=next_url
+                 )
+             if not any(char.islower() for char in password):
++                current_app.logger.warning(
++                    "Profile update validation error (password lowercase) for %s from %s",
++                    current_user.id,
++                    request.remote_addr,
++                )
+                 flash("Password must contain at least one lowercase letter.", "warning")
+                 return render_template(
+                     "update_profile.html", current_user=current_user, next_url=next_url
+                 )
+             if not any(char in "!@#$%^&*()_+-=[]{}|;:,.<>?/" for char in password):
++                current_app.logger.warning(
++                    "Profile update validation error (password special char) for %s from %s",
++                    current_user.id,
++                    request.remote_addr,
++                )
+                 flash(
+                     "Password must contain at least one special character.", "warning"
+                 )
+                 return render_template(
+                     "update_profile.html", current_user=current_user, next_url=next_url
+                 )
+ 
+             # Set new password
+             current_user.set_password(password)
+ 
+         # Handle profile image upload
+         if file and hasattr(file, "filename") and allowed_file(file.filename):
+             try:
+                 filename_raw = file.filename
+                 if not filename_raw or "." not in filename_raw:
+                     raise ValueError("Filename is missing or invalid.")
+ 
+                 # Generate a unique filename based on the user's ID
+                 file_ext = filename_raw.rsplit(".", 1)[1].lower()
+                 filename = secure_filename(f"user_{current_user.id}.{file_ext}")
+ 
+                 file_path = os.path.join(UPLOAD_FOLDER, filename)
+ 
+                 # Ensure the upload folder exists
+                 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+ 
+                 # Save the file
+                 file.save(file_path)
+ 
+                 # Resize/crop the image
+                 img = Image.open(file_path)
+                 img = ImageOps.fit(img, (200, 200), Image.Resampling.LANCZOS)
+                 img.save(file_path)
+ 
+                 current_user.profile_image = filename
+                 db.session.commit()
+ 
+                 flash("Profile image updated successfully!", "success")
+             except Exception as e:
+                 flash(f"An error occurred while uploading the image: {e}", "danger")
+         else:
+             if file:
++                current_app.logger.warning(
++                    "Profile update validation error (invalid image) for %s from %s",
++                    current_user.id,
++                    request.remote_addr,
++                )
+                 flash(
+                     "Invalid file format. Only PNG, JPG, JPEG, and GIF are allowed.",
+                     "warning",
+                 )
+ 
+         # Sanitise inputs before saving
+         sanitised_name = sanitise_html(name)
+         sanitised_email = sanitise_html(email)
+ 
+         # Update user profile and save to database
+         current_user.name = sanitised_name
+         current_user.email = sanitised_email
+         db.session.commit()
++        log_audit_event(current_user.id, "profile updated", "user", current_user.id)
+ 
+         flash("Your profile has been updated.", "success")
+         return redirect(next_url)
+diff --git a/app/views/update_status_view.py b/app/views/update_status_view.py
+index 2596d1acbc653e0b8306d440a3c7f3e695eaa9fd..b3b3bc3bcc3401c15a58e7cc25cd0311cbf8565d 100644
+--- a/app/views/update_status_view.py
++++ b/app/views/update_status_view.py
+@@ -1,23 +1,25 @@
+ from flask import flash, redirect, request, url_for
+ from flask.views import MethodView
+ from flask_login import current_user, login_required
+ 
+ from app.models import Ticket, db
++from app.utils import log_audit_event
+ from typing import Any, Callable, ClassVar
+ 
+ 
+ class UpdateStatusView(MethodView):
+     decorators: ClassVar[list[Callable[[Any], Any]]] = [login_required]
+ 
+     def post(self, ticket_id):
+         ticket = Ticket.query.get_or_404(ticket_id)
+         if current_user.role not in ["admin", "support"]:
+             flash("You do not have permission to update the status.", "warning")
+             return redirect(url_for("main.ticket_details", ticket_id=ticket.id))
+ 
+         status = request.form.get("status")
+         if status:
+             ticket.status = status
+             db.session.commit()
++            log_audit_event(current_user.id, "status updated", "ticket", ticket.id, status)
+             flash("Status has been updated.", "success")
+         return redirect(url_for("main.ticket_details", ticket_id=ticket.id))
+diff --git a/migrations/versions/f842a1bbac33_add_audit_log_table.py b/migrations/versions/f842a1bbac33_add_audit_log_table.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..80259f27af073a632692a3a8fbecda3ba7308272
+--- /dev/null
++++ b/migrations/versions/f842a1bbac33_add_audit_log_table.py
+@@ -0,0 +1,34 @@
++"""add audit log table
++
++Revision ID: f842a1bbac33
++Revises: b2c9f5207fcb
++Create Date: 2024-09-18 00:00:00.000000
++"""
++from alembic import op
++import sqlalchemy as sa
++
++# revision identifiers, used by Alembic.
++revision = 'f842a1bbac33'
++down_revision = 'b2c9f5207fcb'
++branch_labels = None
++depends_on = None
++
++
++def upgrade():
++    op.create_table(
++        'audit_log',
++        sa.Column('id', sa.Integer(), nullable=False),
++        sa.Column('user_id', sa.Integer(), nullable=True),
++        sa.Column('action', sa.String(length=150), nullable=False),
++        sa.Column('target_type', sa.String(length=50), nullable=True),
++        sa.Column('target_id', sa.Integer(), nullable=True),
++        sa.Column('details', sa.Text(), nullable=True),
++        sa.Column('timestamp', sa.DateTime(), nullable=False),
++        sa.ForeignKeyConstraint(['user_id'], ['user.id']),
++        sa.PrimaryKeyConstraint('id')
++    )
++
++
++def downgrade():
++    op.drop_table('audit_log')
++
+ 
+EOF
+)
