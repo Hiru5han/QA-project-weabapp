@@ -4,7 +4,6 @@ from flask import url_for
 
 from app import create_app
 from app.models import Ticket, User, db
-from test.test_config import TestConfig
 
 
 @pytest.fixture

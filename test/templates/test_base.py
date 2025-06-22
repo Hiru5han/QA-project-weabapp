@@ -2,7 +2,7 @@ import pytest
 from bs4 import BeautifulSoup
 from flask import url_for
 
-from app import create_app, db
+from app import create_app
 from app.models import User, db
 
 

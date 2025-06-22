@@ -1,9 +1,22 @@
+<<<<<<< Updated upstream
 import pytest
+=======
+>>>>>>> Stashed changes
 from flask import url_for
 from flask_login import login_user, logout_user
 
 from app.models import User, Ticket, db
+<<<<<<< Updated upstream
 from app.utils import allowed_file, sanitize_html, is_safe_url, redirect_based_on_role, inject_open_tickets_count
+=======
+from app.utils import (
+    allowed_file,
+    sanitize_html,
+    is_safe_url,
+    redirect_based_on_role,
+    inject_open_tickets_count,
+)
+>>>>>>> Stashed changes
 
 
 def test_allowed_file():
@@ -49,8 +62,29 @@ def test_inject_open_tickets_count(app):
         user = User(name="User", email="u@e", role="admin", password_hash="x")
         db.session.add(user)
         db.session.commit()
+<<<<<<< Updated upstream
         db.session.add(Ticket(title="Open", description="d", status="open", priority="low", user_id=user.id))
         db.session.add(Ticket(title="Closed", description="d", status="closed", priority="low", user_id=user.id))
+=======
+        db.session.add(
+            Ticket(
+                title="Open",
+                description="d",
+                status="open",
+                priority="low",
+                user_id=user.id,
+            )
+        )
+        db.session.add(
+            Ticket(
+                title="Closed",
+                description="d",
+                status="closed",
+                priority="low",
+                user_id=user.id,
+            )
+        )
+>>>>>>> Stashed changes
         db.session.commit()
         result = inject_open_tickets_count()
         assert result["open_tickets_count"] == 1

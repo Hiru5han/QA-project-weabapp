@@ -1,4 +1,3 @@
-from unittest.mock import patch
 from bs4 import BeautifulSoup
 from flask import url_for
 import pytest

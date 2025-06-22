@@ -1,5 +1,5 @@
 from flask import Blueprint, current_app, send_from_directory
-from flask_login import LoginManager, login_manager
+from flask_login import LoginManager
 
 from app.models import User
 from app.utils import inject_open_tickets_count
@@ -81,10 +81,12 @@ bp.add_url_rule(
     methods=["GET", "POST"],
 )
 
+
 @bp.route("/sitemap.xml")
 def sitemap():
     """Serve the sitemap file with security headers."""
     return send_from_directory(current_app.static_folder, "sitemap.xml")
+
 
 login_manager = LoginManager()
 login_manager.login_view = "main.login"

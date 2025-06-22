@@ -248,9 +248,6 @@ def test_non_admin_delete_button_visibility(client, app, regular_user):
     assert b"Delete" not in response.data
 
 
-import pytest
-
-
 @pytest.mark.parametrize("user_role", ["admin", "regular"])
 def test_closed_tickets_button_visible_for_all_roles(
     client, app, user_role, admin_user, support_user, regular_user
