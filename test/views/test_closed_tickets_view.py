@@ -1,5 +1,3 @@
-# tests/test_closed_tickets_view.py
-
 import pytest
 from bs4 import BeautifulSoup
 from flask import url_for
@@ -15,9 +13,9 @@ def app():
         {
             "TESTING": True,
             "SECRET_KEY": "test-secret-key",
-            "SQLALCHEMY_DATABASE_URI": "sqlite:///:memory:",  # In-memory DB for testing
+            "SQLALCHEMY_DATABASE_URI": "sqlite:///:memory:",
             "SQLALCHEMY_TRACK_MODIFICATIONS": False,
-            "WTF_CSRF_ENABLED": False,  # Disable CSRF for testing
+            "WTF_CSRF_ENABLED": False,
         }
     )
 
@@ -71,42 +69,30 @@ def login_regular_user(client):
 def setup_test_data(app):
     """Fixture to set up test data in the in-memory database."""
     with app.app_context():
-        # Clear any existing data
         db.session.query(User).delete()
         db.session.query(Ticket).delete()
-
-        # Create an admin user
         admin_user = User(email="admin@example.com", name="Admin User", role="admin")
         admin_user.set_password("gyjvo9-kewvoh-Vurmuj")
         db.session.add(admin_user)
-
-        # Create a support user
         support_user = User(
             email="support@example.com", name="Support User", role="support"
         )
         support_user.set_password("gyjvo9-kewvoh-Vurmuj")
         db.session.add(support_user)
-
-        # Create a regular user
         regular_user = User(
             email="regular@example.com", name="Regular User", role="regular"
         )
         regular_user.set_password("gyjvo9-kewvoh-Vurmuj")
         db.session.add(regular_user)
-
         db.session.commit()
-
-        # Create tickets
-        # Closed tickets
         closed_ticket_admin = Ticket(
             title="Closed Ticket Admin",
             description="Closed ticket created by admin",
-            status="closed",  # Ensure lowercase to match view's filter
+            status="closed",
             priority="High",
             user_id=admin_user.id,
             assigned_to=admin_user.id,
         )
-
         closed_ticket_support = Ticket(
             title="Closed Ticket Support",
             description="Closed ticket assigned to support",
@@ -115,7 +101,6 @@ def setup_test_data(app):
             user_id=admin_user.id,
             assigned_to=support_user.id,
         )
-
         closed_ticket_regular = Ticket(
             title="Closed Ticket Regular",
             description="Closed ticket created by regular user",
@@ -124,8 +109,6 @@ def setup_test_data(app):
             user_id=regular_user.id,
             assigned_to=regular_user.id,
         )
-
-        # Open tickets (should not appear in closed_tickets_view)
         open_ticket_admin = Ticket(
             title="Open Ticket Admin",
             description="Open ticket created by admin",
@@ -134,7 +117,6 @@ def setup_test_data(app):
             user_id=admin_user.id,
             assigned_to=admin_user.id,
         )
-
         open_ticket_support = Ticket(
             title="Open Ticket Support",
             description="Open ticket assigned to support",
@@ -143,7 +125,6 @@ def setup_test_data(app):
             user_id=admin_user.id,
             assigned_to=support_user.id,
         )
-
         open_ticket_regular = Ticket(
             title="Open Ticket Regular",
             description="Open ticket created by regular user",
@@ -152,7 +133,6 @@ def setup_test_data(app):
             user_id=regular_user.id,
             assigned_to=regular_user.id,
         )
-
         db.session.add_all(
             [
                 closed_ticket_admin,
@@ -165,44 +145,27 @@ def setup_test_data(app):
         )
         db.session.commit()
 
-    yield  # Run the test
-
-    # Cleanup: Drop tables from the in-memory database
+    yield
     with app.app_context():
         db.drop_all()
 
 
 def test_closed_tickets_view_admin(client, setup_test_data):
     """Test that admin users see all closed tickets."""
-    # Log in as the admin user
     login_admin_user(client)
-
-    # Make a GET request to the '/closed_tickets' route
     response = client.get("/closed_tickets")
-
-    # Check that the response status code is 200
     assert (
         response.status_code == 200
     ), f"Expected status code 200, got {response.status_code}"
-
-    # Parse the response data
     soup = BeautifulSoup(response.data, "html.parser")
-
-    # Find the table body
     table_body = soup.find("tbody")
     assert table_body is not None, "Table body not found in the response"
-
-    # Get all ticket titles from the table
     ticket_titles = [
         row.find_all("td")[0].text.strip() for row in table_body.find_all("tr")
     ]
-
-    # Admin should see all closed tickets
     assert "Closed Ticket Admin" in ticket_titles, "Closed Ticket Admin not found"
     assert "Closed Ticket Support" in ticket_titles, "Closed Ticket Support not found"
     assert "Closed Ticket Regular" in ticket_titles, "Closed Ticket Regular not found"
-
-    # Ensure no open tickets are displayed
     assert (
         "Open Ticket Admin" not in ticket_titles
     ), "Open Ticket Admin should not be visible"
@@ -216,30 +179,17 @@ def test_closed_tickets_view_admin(client, setup_test_data):
 
 def test_closed_tickets_view_support(client, setup_test_data):
     """Test that support users see only closed tickets assigned to them."""
-    # Log in as the support user
     login_support_user(client)
-
-    # Make a GET request to the '/closed_tickets' route
     response = client.get("/closed_tickets")
-
-    # Check that the response status code is 200
     assert (
         response.status_code == 200
     ), f"Expected status code 200, got {response.status_code}"
-
-    # Parse the response data
     soup = BeautifulSoup(response.data, "html.parser")
-
-    # Find the table body
     table_body = soup.find("tbody")
     assert table_body is not None, "Table body not found in the response"
-
-    # Get all ticket titles from the table
     ticket_titles = [
         row.find_all("td")[0].text.strip() for row in table_body.find_all("tr")
     ]
-
-    # Support should see only their assigned closed tickets
     assert "Closed Ticket Support" in ticket_titles, "Closed Ticket Support not found"
     assert (
         "Closed Ticket Admin" not in ticket_titles
@@ -247,8 +197,6 @@ def test_closed_tickets_view_support(client, setup_test_data):
     assert (
         "Closed Ticket Regular" not in ticket_titles
     ), "Closed Ticket Regular should not be visible"
-
-    # Ensure no open tickets are displayed
     assert (
         "Open Ticket Admin" not in ticket_titles
     ), "Open Ticket Admin should not be visible"
@@ -262,30 +210,17 @@ def test_closed_tickets_view_support(client, setup_test_data):
 
 def test_closed_tickets_view_regular_user(client, setup_test_data):
     """Test that regular users see only closed tickets they created."""
-    # Log in as the regular user
     login_regular_user(client)
-
-    # Make a GET request to the '/closed_tickets' route
     response = client.get("/closed_tickets")
-
-    # Check that the response status code is 200
     assert (
         response.status_code == 200
     ), f"Expected status code 200, got {response.status_code}"
-
-    # Parse the response data
     soup = BeautifulSoup(response.data, "html.parser")
-
-    # Find the table body
     table_body = soup.find("tbody")
     assert table_body is not None, "Table body not found in the response"
-
-    # Get all ticket titles from the table
     ticket_titles = [
         row.find_all("td")[0].text.strip() for row in table_body.find_all("tr")
     ]
-
-    # Regular user should see only their created closed tickets
     assert "Closed Ticket Regular" in ticket_titles, "Closed Ticket Regular not found"
     assert (
         "Closed Ticket Admin" not in ticket_titles
@@ -293,8 +228,6 @@ def test_closed_tickets_view_regular_user(client, setup_test_data):
     assert (
         "Closed Ticket Support" not in ticket_titles
     ), "Closed Ticket Support should not be visible"
-
-    # Ensure no open tickets are displayed
     assert (
         "Open Ticket Admin" not in ticket_titles
     ), "Open Ticket Admin should not be visible"
@@ -308,20 +241,13 @@ def test_closed_tickets_view_regular_user(client, setup_test_data):
 
 def test_closed_tickets_view_unauthenticated(client):
     """Test that unauthenticated users are redirected to the login page."""
-    # Make a GET request to the '/closed_tickets' route without logging in
     response = client.get("/closed_tickets", follow_redirects=True)
-
-    # Check that the response status code is 200 (since we're following redirects)
     assert (
         response.status_code == 200
     ), f"Expected status code 200 after redirect, got {response.status_code}"
-
-    # Verify redirection to the login page by checking for "Login" in the response
     assert (
         "Login" in response.data.decode()
     ), "Did not redirect to login page for unauthenticated user"
-
-    # Optionally, verify that no tickets are displayed on the login page
     soup = BeautifulSoup(response.data, "html.parser")
     table_body = soup.find("tbody")
     if table_body:

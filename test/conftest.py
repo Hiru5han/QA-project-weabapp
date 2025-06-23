@@ -16,14 +16,12 @@ def app():
     Yields:
         Flask: The Flask application instance with a test configuration.
     """
-    app = create_app(config=TestConfig)  # Pass the test configuration here
+    app = create_app(config=TestConfig)
 
     with app.app_context():
         db.create_all()
-
-        # Create a test user without passing `password` directly
         user = User(name="Test User", email="test@example.com", role="Admin")
-        user.set_password("ValidPassword1!")  # Set password via the model's method
+        user.set_password("ValidPassword1!")
         db.session.add(user)
         db.session.commit()
 
@@ -87,7 +85,7 @@ def existing_user(app):
             email="existing@example.com",
             role="admin",
         )
-        user.set_password("ValidPassword1!")  # Use `set_password` instead of `password`
+        user.set_password("ValidPassword1!")
         db.session.add(user)
         db.session.commit()
     return user

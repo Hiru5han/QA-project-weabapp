@@ -1,5 +1,3 @@
-# tests/test_assigned_tickets_view.py
-
 import pytest
 from bs4 import BeautifulSoup
 from flask import url_for
@@ -17,7 +15,7 @@ def app():
             "SECRET_KEY": "test-secret-key",
             "SQLALCHEMY_DATABASE_URI": "sqlite:///:memory:",
             "SQLALCHEMY_TRACK_MODIFICATIONS": False,
-            "WTF_CSRF_ENABLED": False,  # Disable CSRF for testing
+            "WTF_CSRF_ENABLED": False,
         }
     )
 
@@ -71,33 +69,22 @@ def login_regular_user(client):
 def setup_test_data(app):
     """Fixture to set up test data in the in-memory database."""
     with app.app_context():
-        # Clear any existing data
         db.session.query(User).delete()
         db.session.query(Ticket).delete()
-
-        # Create an admin user
         admin_user = User(email="admin@example.com", name="Admin User", role="admin")
         admin_user.set_password("gyjvo9-kewvoh-Vurmuj")
         db.session.add(admin_user)
-
-        # Create a support user
         support_user = User(
             email="support@example.com", name="Support User", role="support"
         )
         support_user.set_password("gyjvo9-kewvoh-Vurmuj")
         db.session.add(support_user)
-
-        # Create a regular user
         regular_user = User(
             email="regular@example.com", name="Regular User", role="regular"
         )
         regular_user.set_password("gyjvo9-kewvoh-Vurmuj")
         db.session.add(regular_user)
-
         db.session.commit()
-
-        # Create tickets
-        # Admin assigned ticket
         admin_ticket = Ticket(
             title="Admin Assigned Ticket",
             description="Ticket assigned to admin",
@@ -106,8 +93,6 @@ def setup_test_data(app):
             user_id=admin_user.id,
             assigned_to=admin_user.id,
         )
-
-        # Support assigned ticket
         support_ticket = Ticket(
             title="Support Assigned Ticket",
             description="Ticket assigned to support",
@@ -116,8 +101,6 @@ def setup_test_data(app):
             user_id=admin_user.id,
             assigned_to=support_user.id,
         )
-
-        # Regular user assigned ticket (should not be visible to support/admin)
         regular_ticket = Ticket(
             title="Regular Assigned Ticket",
             description="Ticket assigned to regular user",
@@ -126,8 +109,6 @@ def setup_test_data(app):
             user_id=regular_user.id,
             assigned_to=regular_user.id,
         )
-
-        # Closed ticket (should not be visible)
         closed_ticket = Ticket(
             title="Closed Assigned Ticket",
             description="Closed ticket assigned to support",
@@ -142,39 +123,23 @@ def setup_test_data(app):
         )
         db.session.commit()
 
-    yield  # Run the test
-
-    # Cleanup: Drop tables from the in-memory database
+    yield
     with app.app_context():
         db.drop_all()
 
 
-# Test cases for AssignedTicketsView
 def test_assigned_tickets_view_admin(client, setup_test_data):
-    # Log in as the admin user
     login_admin_user(client)
-
-    # Make a GET request to the '/assigned_tickets' route
     response = client.get("/assigned_tickets")
-
-    # Check that the response status code is 200
     assert (
         response.status_code == 200
     ), f"Expected status code 200, got {response.status_code}"
-
-    # Parse the response data
     soup = BeautifulSoup(response.data, "html.parser")
-
-    # Find the table body
     table_body = soup.find("tbody")
     assert table_body is not None, "Table body not found in the response"
-
-    # Get all ticket titles from the table
     ticket_titles = [
         row.find_all("td")[0].text.strip() for row in table_body.find_all("tr")
     ]
-
-    # Admin should see all assigned tickets except closed ones
     assert "Admin Assigned Ticket" in ticket_titles, "Admin assigned ticket not found"
     assert (
         "Support Assigned Ticket" in ticket_titles
@@ -188,30 +153,17 @@ def test_assigned_tickets_view_admin(client, setup_test_data):
 
 
 def test_assigned_tickets_view_support(client, setup_test_data):
-    # Log in as the support user
     login_support_user(client)
-
-    # Make a GET request to the '/assigned_tickets' route
     response = client.get("/assigned_tickets")
-
-    # Check that the response status code is 200
     assert (
         response.status_code == 200
     ), f"Expected status code 200, got {response.status_code}"
-
-    # Parse the response data
     soup = BeautifulSoup(response.data, "html.parser")
-
-    # Find the table body
     table_body = soup.find("tbody")
     assert table_body is not None, "Table body not found in the response"
-
-    # Get all ticket titles from the table
     ticket_titles = [
         row.find_all("td")[0].text.strip() for row in table_body.find_all("tr")
     ]
-
-    # Support should see only their assigned tickets and not closed tickets
     assert (
         "Support Assigned Ticket" in ticket_titles
     ), "Support assigned ticket not found"
@@ -227,30 +179,16 @@ def test_assigned_tickets_view_support(client, setup_test_data):
 
 
 def test_assigned_tickets_view_regular_user(client, setup_test_data):
-    # Log in as the regular user
     login_regular_user(client)
-
-    # Make a GET request to the '/assigned_tickets' route
     response = client.get("/assigned_tickets", follow_redirects=True)
-
-    # Check that the response status code is 200 (since we're following redirects)
     assert (
         response.status_code == 200
     ), f"Expected status code 200 after redirect, got {response.status_code}"
-
-    # Verify redirection to '/all_tickets'
     assert (
         response.request.path == "/all_tickets"
     ), f"Expected to be redirected to '/all_tickets', but was on '{response.request.path}'"
-
-    # Parse the response data
     soup = BeautifulSoup(response.data, "html.parser")
-
-    # Verify that the user was flashed a warning message
-    flash_messages = soup.find_all(
-        "div", class_="alert-warning"
-    )  # Adjust class if different
-
+    flash_messages = soup.find_all("div", class_="alert-warning")
     warning_found = False
     for message in flash_messages:
         if "Only support staff and admins can view this page." in message.text:
@@ -260,9 +198,6 @@ def test_assigned_tickets_view_regular_user(client, setup_test_data):
     assert (
         warning_found
     ), "Warning message not found when regular user accesses assigned_tickets_view"
-
-    # Verify specific content unique to 'all_tickets' page
-    # For example, a heading like "My Active Tickets"
     all_tickets_heading = soup.find("h2", text=lambda x: x and "My Active Tickets" in x)
     assert (
         all_tickets_heading is not None
@@ -270,10 +205,7 @@ def test_assigned_tickets_view_regular_user(client, setup_test_data):
 
 
 def test_assigned_tickets_view_unauthenticated(client):
-    # Make a GET request to the '/assigned_tickets' route without logging in
     response = client.get("/assigned_tickets", follow_redirects=True)
-
-    # Check that the response redirects to the login page
     assert (
         response.status_code == 200
     ), f"Expected status code 200 after redirect, got {response.status_code}"
