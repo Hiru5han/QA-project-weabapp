@@ -80,6 +80,19 @@ The system is fully responsive, includes night mode support, and enables admins,
 
 ---
 
+## **Running with Docker**
+
+An alternative to setting up a Python environment is to use Docker. Build and start the container with:
+
+```bash
+docker build -t help-desk-app .
+docker run -p 5000:5000 help-desk-app
+```
+
+Then open `http://localhost:5000` in your browser.
+
+---
+
 ## **Usage**
 
 ### **Accessing the Application**
